@@ -5,11 +5,11 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: Montserrat;
     /* background-color: white; */
-    background-image: url('images/Wall.jpg');
+    background-image: url('../images/Wall.jpg');
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: scroll;
     background-size: cover;
 }
 
@@ -19,31 +19,15 @@ header {
     align-items: center;
     padding: 10px 20px;
     background-color: white;
-    color: #fff;
+    color: black;
+    font-size: 20px;
+    font-weight: 900;
 }
+
 
 .logo {
     width: 50px;
     height: auto;
-}
-.search-bar {
-    display: flex;
-    align-items: center;
-}
-
-.search-bar input {
-    padding: 5px;
-    font-size: 1em;
-    border: 1px solid #f60;
-    border-radius: 5px 0 0 5px;
-}
-
-.search-bar button {
-    padding: 5px;
-    border: none;
-    background-color: #f60;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
 }
 
 .header-links a {
@@ -53,7 +37,7 @@ header {
 }
 
 nav {
-    background-color: white;
+    background-color: rgb(255, 255, 255);
 }
 
 nav ul {
@@ -81,46 +65,58 @@ main {
     text-align: center;
 }
 
-
-
-.hero-image {
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    padding: 20px;
     position: relative;
-    width: 100%;
-    height: 400px;
+    margin-top: 15px;
+    z-index: 1; /* Ensure the container content is above the background */
+}
+
+.text-wrapper {
+    position: relative;
     overflow: hidden;
 }
 
-.hero-image img {
+.centered-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+    position: relative;
+    margin-top: 15%;
+}
+
+.text-reveal {
+    position: relative;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: 10%;
+    /* background: rgba(63, 63, 63, 0.8); */
+    transform: translateY(20px);
+    transition: transform 5s ease-out;
 }
-
-.hero-text {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2em;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 10px 20px;
-    border-radius: 10px;
-}
-
 footer {
     background-color: #333;
     color: #fff;
     width: auto;
     padding: 1px 0;
     text-align: center;
-    position: absolute;
+    position: fixed;
     bottom: 0;
+    opacity: 50;
     clear: both;
     position: relative;
     height:max-content;
     margin-right:0%;
-    margin-top: 100%;
+    margin-top: 20%;
 }
 
 .footer-content {
@@ -155,4 +151,9 @@ footer {
 .footer-social img {
     width: 24px;
     height: 24px;
+}
+
+footer:hover {
+    background-color: #555;
+    color: #ddd;
 }

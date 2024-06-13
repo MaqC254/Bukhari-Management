@@ -1,7 +1,7 @@
 const menuData = {
   mainDishes: [
       {
-          image: 'C:\Users\ADMIN\Desktop\Final Year Project\images\Chips Plain.jpg',
+          image: '/home/mego/Documents/Project/Bukhari-Management-main/images/Chips Plain.jpg',
           name: 'Chips Plain',
           description: 'Crunchy French Fries',
           price: '2000'
