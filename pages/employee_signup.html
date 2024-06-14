@@ -13,7 +13,7 @@
             <h1>Employee Sign Up</h1>
         </header>
         <main>
-            <form>
+            <form id="signUpForm">
                 <label for="name">Name:</label>
                 <input type="text" id="name" placeholder="Enter your name" required>
                 
@@ -33,7 +33,29 @@
                 <input type="password" id="confirm-password" placeholder="Confirm your password" required>
                 
                 <button type="submit" class="confirm-button">Sign Up</button>
+                <a href="employee_signin.html">Already have an account? Sign In</a>
             </form>
+            <script>
+                document.getElementById("signUpForm").addEventListener("submit", function(event) {
+                    event.preventDefault(); // Prevent the form from submitting the traditional way
+                
+                    // Get all the input elements
+                    const name = document.getElementById("name").value;
+                    const phone = document.getElementById("phone").value;
+                    const workId = document.getElementById("work-id").value;
+                    const role = document.getElementById("role").value;
+                    const password = document.getElementById("password").value;
+                    const confirmPassword = document.getElementById("confirm-password").value;
+                
+                    // Check if all fields are filled
+                    if (name && phone && workId && role && password == confirmPassword) {
+                        // Redirect to menu.html
+                        window.location.href = 'employee_signin.html';
+                    } else {
+                        alert("Please fill in all fields and ensure passwords match");
+                    }
+                });
+                </script>
         </main>
         <footer>
             <img src="../images/Bukhari logo.jpg" alt="Bukhari Small Logo" class="small-logo">

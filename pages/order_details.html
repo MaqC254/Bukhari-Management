@@ -11,13 +11,12 @@
         <img src="../images/Bukhari logo.jpg" alt="Bukhari Restaurant Logo" class="logo">
         <h1>Bukhari Restaurant</h1>
         <h2>Waiting Application</h2>
-        <button class="payment-button">Make payment</button>
     </header>
     
     <main>
         <section class="order-details">
             <h3>Order Details</h3>
-            <form>
+            <form id="orderForm">
                 <input type="text" placeholder="Table Number" required>
                 <input type="text" placeholder="Customer Name" required>
                 <input type="text" placeholder="Customer Phone Number" required>
@@ -32,5 +31,22 @@
         <p>2024</p>
         <p>version 1.0.0</p>
     </footer>
+
+    <script>
+        document.getElementById("orderForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            
+            const tableNumber = document.querySelector('input[placeholder="Table Number"]').value;
+            const customerName = document.querySelector('input[placeholder="Customer Name"]').value;
+            const customerPhoneNumber = document.querySelector('input[placeholder="Customer Phone Number"]').value;
+            
+            if (tableNumber && customerName && customerPhoneNumber) {
+                alert("Order was placed");
+                window.location.href = 'venueMenu.html';
+            } else {
+                alert("Some cells are not filled");
+            }
+        });
+    </script>
 </body>
 </html>
