@@ -13,7 +13,7 @@
             <h1>Customer Sign In</h1>
         </header>
         <main>
-            <form>
+            <form id="customer_signin">
                 <label for="phone">Phone Number:</label>
                 <input type="text" id="phone" placeholder="Enter your phone number" required>
                 
@@ -22,7 +22,26 @@
                 
                 <button type="submit" class="confirm-button">Sign In</button>
             </form>
-            <button class="signup-button" onclick="location.href='customer-signup.html'">Sign Up</button>
+            <script>
+                //check db for matching credentials here
+                document.getElementById("customer_signin").addEventListener("submit", function(event) {
+                    event.preventDefault(); // Prevent the form from submitting the traditional way
+                
+                    // Get all the input elements
+                    const phone = document.getElementById("phone").value;
+                    const password = document.getElementById("password").value;
+                
+                    // Check if all fields are filled
+                    if (phone && password) {
+                        // Redirect to menu.html
+                        window.location.href = 'Delivery.html';
+                    } else {
+                        alert("Please fill in all fields.");
+                    }
+                });
+                </script>
+            <button class="signup-button" onclick="location.href='employee_signin.html'">Staff Sign In</button>
+            <a href="customer_signup.html">Don't have an account? Sign Up</a>
         </main>
         <footer>
             <img src="../images/Bukhari logo.jpg" alt="Bukhari Small Logo" class="small-logo">
