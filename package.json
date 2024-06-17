@@ -1,0 +1,19 @@
+{
+  "name": "bukhari-management",
+  "version": "1.0.0",
+  "description": "Bukhari Restaurant Management System is a comprehensive solution developed as part of the requirements for a degree in Computer Science.  This system is designed to streamline and enhance the operations of a restaurant located in Tanga, Tanzania. The system covers various aspects of restaurant management, including in-location dining, takeaway, and ordering.  Additionally, it features a management panel to facilitate efficient administration and control.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  }
+}
