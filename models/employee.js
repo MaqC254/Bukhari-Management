@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { required } = require('nodemon/lib/config');
 const Schema = mongoose.Schema;
 
 const employeeSchema = new Schema({
@@ -25,7 +24,6 @@ const employeeSchema = new Schema({
     },
 });
 
+const Employee = mongoose.model('Employee', employeeSchema);
 
-const employee = mongoose.model('Employee',employeeSchema);
-
-module.exports = employee;
+module.exports = Employee;

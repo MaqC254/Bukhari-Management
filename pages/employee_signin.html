@@ -33,8 +33,26 @@
                 
                     // Check if all fields are filled
                     if (workId && password) {
-                        // Redirect to menu.html
-                        window.location.href = 'menu.html';
+                        // Check for matching records in the database
+                        fetch('/employee_signin', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ workId, password }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = 'venueMenu.html';
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                        
                     } else {
                         alert("Please fill in all fields.");
                     }

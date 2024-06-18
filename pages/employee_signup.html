@@ -13,71 +13,28 @@
             <h1>Employee Sign Up</h1>
         </header>
         <main>
-            <form id="signUpForm">
+            <form id="signUpForm" action="/saveData" method="POST"> <!-- Updated action attribute -->
                 <label for="name">Name:</label>
-                <input type="text" id="name" placeholder="Enter your name" required>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
                 
                 <label for="phone">Phone Number:</label>
-                <input type="text" id="phone" placeholder="Enter your phone number" required>
+                <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
                 
-                <label for="work-id">Work ID:</label>
-                <input type="text" id="work-id" placeholder="Enter your work ID" required>
-
+                <label for="work-id">Work ID:</label> <!-- Corrected id attribute to work-id -->
+                <input type="text" id="work-id" name="work-id" placeholder="Enter your work ID" required> <!-- Corrected name attribute -->
+                
                 <label for="role">Role:</label>
-                <input type="text" id="role" placeholder="Enter your role" required>
-
+                <input type="text" id="role" name="role" placeholder="Enter your role" required>
+                
                 <label for="password">Password:</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
                 
                 <label for="confirm-password">Confirm Password:</label>
-                <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
                 
                 <button type="submit" class="confirm-button">Sign Up</button>
                 <a href="employee_signin.html">Already have an account? Sign In</a>
             </form>
-            <script>
-                document.getElementById("signUpForm").addEventListener("submit", function(event) {
-                    event.preventDefault(); // Prevent the form from submitting the traditional way
-                
-                    // Get all the input elements
-                    const name = document.getElementById("name").value;
-                    const phone = document.getElementById("phone").value;
-                    const workId = document.getElementById("work-id").value;
-                    const role = document.getElementById("role").value;
-                    const password = document.getElementById("password").value;
-                    const confirmPassword = document.getElementById("confirm-password").value;
-                
-                    // Check if all fields are filled
-                    if (name && phone && workId && role && password == confirmPassword) {
-                        // Redirect to menu.html
-                        //window.location.href = 'employee_signin.html';
-                    } else {
-                        alert("Please fill in all fields and ensure passwords match");
-                    }
-                    if (password !== confirmPassword) {
-                        return res.status(400).send('Passwords do not match');
-                    }
-                    else{
-                        // Create a new employee
-                        const newEmployee = new Employee({
-                                name: name,
-                                phone: phone,        
-                                workId: workId,
-                                role: role,
-                                password: password,
-                            });
-
-    
-                            // Save the employee to the database
-                            newEmployee.save((err) => {
-                                if (err) {
-                                    return res.status(500).send('Error saving employee to the database');
-                                }
-                                res.redirect('../pages/employee_signin.html');
-                            });
-                    }
-                 });
-                 </script>
         </main>
         <footer>
             <img src="../images/Bukhari logo.jpg" alt="Bukhari Small Logo" class="small-logo">
