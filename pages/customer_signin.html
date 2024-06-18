@@ -23,23 +23,33 @@
                 <button type="submit" class="confirm-button">Sign In</button>
             </form>
             <script>
-                //check db for matching credentials here
                 document.getElementById("customer_signin").addEventListener("submit", function(event) {
                     event.preventDefault(); // Prevent the form from submitting the traditional way
-                
-                    // Get all the input elements
+
                     const phone = document.getElementById("phone").value;
                     const password = document.getElementById("password").value;
-                
-                    // Check if all fields are filled
-                    if (phone && password) {
-                        // Redirect to menu.html
-                        window.location.href = 'Delivery.html';
-                    } else {
-                        alert("Please fill in all fields.");
-                    }
+
+                    fetch('/customer_signin', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ phone, password })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = 'Delivery.html';
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while signing in. Please try again.');
+                    });
                 });
-                </script>
+            </script>
             <button class="signup-button" onclick="location.href='employee_signin.html'">Staff Sign In</button>
             <a href="customer_signup.html">Don't have an account? Sign Up</a>
         </main>

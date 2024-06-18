@@ -33,6 +33,7 @@ app.use('/pages', express.static(path.join(__dirname, 'pages')));
 
 // Import Employee model
 const Employee = require('./models/employee.js');
+const Customer = require('./models/customer.js');
 
 // Route to serve the homepage
 app.get('/', (req, res) => {
@@ -164,4 +165,60 @@ app.post('/employee_signin', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error checking credentials' });
     }
 });
+
+app.post('/saveCustomerData', async (req, res) => {
+    const { name, phone, password } = req.body;
+
+    const newCustomer = new Customer({
+        name,
+        phone,
+        password
+    });
+
+    try {
+        await newCustomer.save();
+        res.status(200).json({ success: true, message: 'Customer registered successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Error saving customer to the database' });
+    }
+});
+
+app.post('/customer_signin', async (req, res) => {
+    const { phone, password } = req.body;
+
+    try {
+        const customer = await Customer.findOne({ phone: phone, password: password });
+        if (!customer) {
+            return res.status(401).json({ success: false, message: 'Incorrect work ID or password' });
+        }
+        res.status(200).json({ success: true, message: 'Sign in successful' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Error checking credentials' });
+    }
+});
+
+app.post('/saveData', (req, res) => {
+    const { name, phone, workId, role, password } = req.body;
+
+    const newEmployee = new Employee({
+        name,
+        phone,
+        workID: workId,
+        role,
+        password
+    });
+
+    newEmployee.save((err) => {
+        if (err) {
+            return res.status(500).send('Error saving employee to the database');
+        } else {
+            res.redirect('/pages/employee_signin.html');
+        }
+    });
+});
+
+
+
 
