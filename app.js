@@ -1,14 +1,27 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const sqlite3 = require('path');
 const app = express();
 const path = require('path');
 const port = 3000;
+const mongoose = require('mongoose');
+const Blog = require('./models/employee');
+const dbURI = 'mongodb+srv://max:h9H9mi5Gbp1IsH2t@nodejsdb.oxlzabu.mongodb.net/?retryWrites=true&w=majority&appName=NodejsDB';
 
+// Connect to MongoDB
+mongoose.connect(dbURI).then((result) =>{
+    app.listen(3000);
+}).catch((err)=>{
+    console.log(err);
+});
 
 // Middleware to serve static files from 'pages' directory
-app.use(express.static(path.join(__dirname, 'pages')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/styles', express.static(path.join(__dirname, 'styles')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
+app.set('view engine','ejs');
 
 // Route to serve the homepage
 app.get('/', (req, res) => {
@@ -77,6 +90,6 @@ app.get('/pages/waiter_orders.html/', (req, res) => {
 });
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:3000`);
-});
+//app.listen(port, () => {
+  //console.log(`Server is running at http://localhost:3000`);
+//});

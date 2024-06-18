@@ -50,12 +50,34 @@
                     // Check if all fields are filled
                     if (name && phone && workId && role && password == confirmPassword) {
                         // Redirect to menu.html
-                        window.location.href = 'employee_signin.html';
+                        //window.location.href = 'employee_signin.html';
                     } else {
                         alert("Please fill in all fields and ensure passwords match");
                     }
-                });
-                </script>
+                    if (password !== confirmPassword) {
+                        return res.status(400).send('Passwords do not match');
+                    }
+                    else{
+                        // Create a new employee
+                        const newEmployee = new Employee({
+                                name: name,
+                                phone: phone,        
+                                workId: workId,
+                                role: role,
+                                password: password,
+                            });
+
+    
+                            // Save the employee to the database
+                            newEmployee.save((err) => {
+                                if (err) {
+                                    return res.status(500).send('Error saving employee to the database');
+                                }
+                                res.redirect('../pages/employee_signin.html');
+                            });
+                    }
+                 });
+                 </script>
         </main>
         <footer>
             <img src="../images/Bukhari logo.jpg" alt="Bukhari Small Logo" class="small-logo">
