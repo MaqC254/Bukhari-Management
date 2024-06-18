@@ -30,23 +30,38 @@
             </form>
             <script>
                 document.getElementById("customer_signup").addEventListener("submit", function(event) {
-                    event.preventDefault(); // Prevent the form from submitting the traditional way
-                
-                    // Get all the input elements
+                    event.preventDefault();
+
                     const name = document.getElementById("name").value;
                     const phone = document.getElementById("phone").value;
                     const password = document.getElementById("password").value;
                     const confirmPassword = document.getElementById("confirm-password").value;
-                
-                    // Check if all fields are filled
-                    if (name && phone && password == confirmPassword) {
-                        // Redirect to menu.html
-                        window.location.href = 'customer_signin.html';
+
+                    if (name && phone && password === confirmPassword) {
+                        fetch('/saveCustomerData', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ name, phone, password })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = 'customer_signin.html';
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while signing up. Please try again.');
+                        });
                     } else {
-                        alert("Please fill in all fields and ensure passwords match");
+                        alert("Please fill in all fields and ensure passwords match.");
                     }
                 });
-                </script>
+            </script>
             <button class="employee-signup-button" onclick="location.href='employee_signup.html'">Employee Sign Up</button>
         </main>
         <footer>
