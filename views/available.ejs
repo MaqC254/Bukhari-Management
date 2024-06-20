@@ -1,0 +1,52 @@
+<!-- views/available.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Meals</title>
+    <link rel="stylesheet" href="../styles/available.css">
+    <script>
+        function deleteMeal(id) {
+            fetch(`/delete-meal/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload(); // Refresh the page after deletion
+                } else {
+                    console.error('Failed to delete the meal');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting meal:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Available Meals</h1>
+        <button class="add-meal-btn" onclick="window.location.href='../pages/add-meal.html'">Add Meal</button>
+    </header>
+
+    <main>
+        <div class="meal-list">
+            <% meals.forEach(meal => { %>
+                <div class="meal">
+                    <img src="<%= meal.image %>" alt="<%= meal.name %>">
+                    <h2><%= meal.name %></h2>
+                    <p><%= meal.description %></p>
+                    <p>Quantity: <%= meal.quantity %></p>
+                    <button class="delete-btn" onclick="deleteMeal('<%= meal._id %>')">Delete</button>
+                </div>
+            <% }); %>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bukhari Restaurant</p>
+    </footer>
+</body>
+</html>
