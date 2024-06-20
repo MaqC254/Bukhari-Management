@@ -2,6 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+const session = require('express-session');
+const ejs = require('ejs');
+const multer = require('multer');
+
 
 const app = express();
 const port = 3000;
@@ -24,16 +28,32 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs'); // Set EJS as the view engine
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'images');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
+
 
 // Serve static files from main directories
 app.use('/styles', express.static(path.join(__dirname, 'styles')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
 app.use('/pages', express.static(path.join(__dirname, 'pages')));
+app.use(session({ secret: 'your_secret_key', resave: false, saveUninitialized: true }));
 
 // Import Employee model
 const Employee = require('./models/employee.js');
 const Customer = require('./models/customer.js');
+const MenuItem = require('./models/MenuItem.js');
+
+const { functions } = require('lodash');
 
 // Route to serve the homepage
 app.get('/', (req, res) => {
@@ -121,6 +141,23 @@ app.get('/pages/waiter_orders.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'waiter_orders.html'));
 });
 
+// Route to serve add-meal.html
+app.get('/add-meal', (req, res) => {
+    res.sendFile(path.join(__dirname, 'pages', 'add-meal.html'));
+});
+
+app.get('/views/available.ejs', async (req, res) => {
+    const meals = await MenuItem.find();
+    console.log(meals);
+    res.render('available',{
+        meals: meals
+    })
+    // MenuItem.find({},function(err,foodList){
+    //     res.render('available',{
+    //         meals: foodList
+        });
+            
+
 // Endpoint to save form data to MongoDB
 app.post('/saveData', function(req, res) {
     const employeeData = req.body;
@@ -160,6 +197,10 @@ app.post('/employee_signin', async (req, res) => {
             return res.status(401).json({ success: false, message: 'Incorrect work ID or password' });
         }
         res.status(200).json({ success: true, message: 'Sign in successful' });
+        // Set session for logged-in waiter
+        req.session.employeeId = employee._id;
+        req.session.role = employee.role;
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Error checking credentials' });
@@ -219,6 +260,38 @@ app.post('/saveData', (req, res) => {
     });
 });
 
+// Route to handle form submission for add-meal.html
+app.post('/add-meal', upload.single('image'), async (req, res) => {
+    const { name, description, quantity, category } = req.body;
+    const image = req.file ? `/images/${req.file.filename}` : '';
 
+    const newMenuItem = new MenuItem({
+        name,
+        description,
+        image,
+        quantity,
+        category // Include category in the new meal object
+    });
 
+    try {
+        await newMenuItem.save();
+        res.redirect('/pages/server.html');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Route to delete a meal
+app.delete('/delete-meal/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await MenuItem.findByIdAndDelete(id);
+        res.sendStatus(200); // Send success response
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
 

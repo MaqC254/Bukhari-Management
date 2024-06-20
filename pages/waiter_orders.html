@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Waiter Orders</title>
-    <link rel="stylesheet" href="../styles/waiter_orders.css"> <!-- Assuming you have a CSS file -->
+    <link rel="stylesheet" href="../styles/waiter_orders.css"> <!-- Your CSS file -->
 </head>
 <body>
     <header>
@@ -19,13 +19,6 @@
     <main>
         <ul id="order-list">
             <!-- Orders will be dynamically added here -->
-            <!-- Example of an order item:
-            <li data-order-id="1">
-                <span>Order #1 - Table 5</span>
-                <button class="order-status" onclick="updateOrderStatus(this, 'served')">&#10003;</button>
-                <button class="order-status" onclick="updateOrderStatus(this, 'pending')">&#10005;</button>
-            </li>
-            -->
         </ul>
     </main>
 
@@ -34,44 +27,53 @@
     </footer>
 
     <script>
-        // Example order data - This would normally come from your server
-        const orders = [
-            { id: 1, table: 5, status: 'pending' },
-            { id: 2, table: 3, status: 'served' },
-            // Add more orders as needed
-        ];
+        // Function to load orders for the logged-in waiter
+        async function loadOrdersForWaiter() {
+            try {
+                const response = await fetch('/getWaiterOrders'); // Replace with your server route to fetch orders for the logged-in waiter
+                if (!response.ok) {
+                    throw new Error('Failed to fetch orders for waiter');
+                }
+                const orders = await response.json(); // Assuming server returns JSON array of orders for the waiter
 
-        // Function to load orders
-        function loadOrders() {
-            const orderList = document.getElementById('order-list');
-            orderList.innerHTML = ''; // Clear existing orders
+                const orderList = document.getElementById('order-list');
+                orderList.innerHTML = ''; // Clear existing orders
 
-            orders.forEach(order => {
-                const orderItem = document.createElement('li');
-                orderItem.dataset.orderId = order.id;
-                orderItem.innerHTML = `
-                    <span>Order #${order.id} - Table ${order.table}</span>
-                    <button class="order-status" onclick="updateOrderStatus(this, 'served')" ${order.status === 'served' ? 'disabled' : ''}>&#10003;</button>
-                    <button class="order-status" onclick="updateOrderStatus(this, 'pending')" ${order.status === 'pending' ? 'disabled' : ''}>&#10005;</button>
-                `;
-                orderList.appendChild(orderItem);
-            });
+                orders.forEach(order => {
+                    const orderItem = document.createElement('li');
+                    orderItem.dataset.orderId = order._id; // Assuming MongoDB ObjectId
+                    orderItem.innerHTML = `
+                        <span>Order #${order.orderNumber} - Table ${order.tableNumber}</span>
+                        <button class="order-status" onclick="updateOrderStatus(this, '${order._id}', 'served')" ${order.status === 'served' ? 'disabled' : ''}>&#10003;</button>
+                        <button class="order-status" onclick="updateOrderStatus(this, '${order._id}', 'pending')" ${order.status === 'pending' ? 'disabled' : ''}>&#10005;</button>
+                    `;
+                    orderList.appendChild(orderItem);
+                });
+            } catch (error) {
+                console.error('Error loading orders for waiter:', error.message);
+            }
         }
 
         // Function to update order status
-        //This function should be in the server.html side
-        //Maybe access the same db items and if served state changes and also changes on this screen
-        function updateOrderStatus(button, status) {
-            const orderId = button.parentElement.dataset.orderId;
-            const order = orders.find(order => order.id == orderId);
-            order.status = status;
+        async function updateOrderStatus(button, orderId, status) {
+            try {
+                const response = await fetch(`/updateOrder/${orderId}/${status}`, { method: 'PUT' }); // Replace with your server route to update order status
+                if (!response.ok) {
+                    throw new Error('Failed to update order status');
+                }
 
-            if (status === 'served') {
-                // Redirect to payment procedure if the order is served
-                window.location.href = 'payment_details.html';
-            } else {
-                // Reload orders to update the UI
-                loadOrders();
+                // Handle UI update based on server response (if needed)
+                const result = await response.json(); // Assuming server returns updated order object
+
+                if (status === 'served') {
+                    // Redirect to payment procedure if the order is served
+                    window.location.href = 'payment_details.html'; // Example redirect
+                } else {
+                    // Reload orders to update the UI
+                    loadOrdersForWaiter();
+                }
+            } catch (error) {
+                console.error('Error updating order status:', error.message);
             }
         }
 
@@ -80,9 +82,8 @@
             window.location.href = 'venueMenu.html';
         }
 
-        // Load orders on page load
-        window.onload = loadOrders;
+        // Load orders for the waiter on page load
+        window.onload = loadOrdersForWaiter;
     </script>
 </body>
 </html>
-
