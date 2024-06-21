@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Meals</title>
+    <link rel="stylesheet" href="../styles/deliveryMenu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-fB1c6UrYn1+6k4fgHnhZYDEP5D1XbVNBgh+Ogz9pX4shjvOuvcwR5B+N37yK1hQ=" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <h1>Menu</h1>
+    </header>
+
+    <main>
+        <div class="meal-list">
+            <% meals.forEach(meal => { %>
+                <div class="meal">
+                    <img src="<%= meal.image %>" alt="<%= meal.name %>">
+                    <h2><%= meal.name %></h2>
+                    <p><%= meal.description %></p>
+                    <p>Quantity: <%= meal.quantity %></p>
+                    <a href="#" class="cart-icon"><i class="fas fa-shopping-cart"></i></a>
+                </div>
+            <% }); %>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bukhari Restaurant</p>
+    </footer>
+</body>
+</html>

@@ -44,7 +44,7 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                window.location.href = 'venueMenu.html';
+                                window.location.href = "../views/deliveryMenu.ejs";
                             } else {
                                 alert(data.message);
                             }

@@ -14,7 +14,7 @@ const port = 3000;
 const dbURI = 'mongodb+srv://max:h9H9mi5Gbp1IsH2t@nodejsdb.oxlzabu.mongodb.net/?retryWrites=true&w=majority&appName=NodejsDB';
 
 // Connect to MongoDB
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(dbURI, {})
     .then(() => {
         console.log('Connected to MongoDB');
         app.listen(port, () => {
@@ -28,7 +28,8 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs'); // Set EJS as the view engine
+app.set('view engine', 'ejs');// Set EJS as the view engine
+app.set('views', __dirname + '/views'); // Set EJS as the view engine
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -46,6 +47,7 @@ app.use('/styles', express.static(path.join(__dirname, 'styles')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
 app.use('/pages', express.static(path.join(__dirname, 'pages')));
+//app.use('/views', express.static(path.join(__dirname, 'views')));
 app.use(session({ secret: 'your_secret_key', resave: false, saveUninitialized: true }));
 
 // Import Employee model
@@ -89,10 +91,6 @@ app.get('/pages/deliveryCart.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'deliveryCart.html'));
 });
 
-app.get('/pages/deliveryMenu.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'deliveryMenu.html'));
-});
-
 app.get('/pages/drinks.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'drinks.html'));
 });
@@ -133,10 +131,6 @@ app.get('/pages/snack.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'snack.html'));
 });
 
-app.get('/pages/venueMenu.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'venueMenu.html'));
-});
-
 app.get('/pages/waiter_orders.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'pages', 'waiter_orders.html'));
 });
@@ -151,12 +145,24 @@ app.get('/views/available.ejs', async (req, res) => {
     console.log(meals);
     res.render('available',{
         meals: meals
-    })
-    // MenuItem.find({},function(err,foodList){
-    //     res.render('available',{
-    //         meals: foodList
-        });
-            
+    })  
+});
+
+app.get('/views/deliveryMenu.ejs', async (req, res) => {
+    const meals = await MenuItem.find();
+    console.log(meals);
+    res.render('deliveryMenu',{
+        meals: meals
+    })  
+});
+
+app.get('/pages/venueMenu.ejs', async (req, res) => {
+    const meals = await MenuItem.find();
+    console.log(meals);
+    res.render('venueMenu',{
+        meals: meals
+    })  
+});
 
 // Endpoint to save form data to MongoDB
 app.post('/saveData', function(req, res) {
@@ -294,4 +300,5 @@ app.delete('/delete-meal/:id', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
