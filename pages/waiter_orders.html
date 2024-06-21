@@ -1,89 +1,30 @@
-<!-- This screen shows the orders that are pending for said waiter
- The waiter can access this from the button in venueMenu.html
- It will have an x for the orders that have not been served by the server and a tick for the served ones
- For the ticked ones, you can click them to start their payment procedure which will lead to payment_details.html
- should have a back button that leads back to the venueMenu.html-->
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waiter Orders</title>
-    <link rel="stylesheet" href="../styles/waiter_orders.css"> <!-- Your CSS file -->
+    <title>Pending Orders</title>
+    <link rel="stylesheet" href="../styles/waiter_orders.css">
 </head>
 <body>
     <header>
-        <h1>Pending Orders</h1>
+        <h1 class="orders-heading">Pending Orders</h1>
     </header>
 
     <main>
-        <ul id="order-list">
-            <!-- Orders will be dynamically added here -->
-        </ul>
+        <div class="order-list" id="order-list">
+            <!-- Orders will be inserted here by JavaScript -->
+        </div>
+        <div class="order-actions">
+            <button id="confirm-order">Confirm Order</button>
+            <button id="clear-order">Clear Items</button>
+        </div>
     </main>
 
     <footer>
-        <button onclick="goBack()">Back</button>
+        <p>&copy; 2024 Bukhari Restaurant</p>
     </footer>
 
-    <script>
-        // Function to load orders for the logged-in waiter
-        async function loadOrdersForWaiter() {
-            try {
-                const response = await fetch('/getWaiterOrders'); // Replace with your server route to fetch orders for the logged-in waiter
-                if (!response.ok) {
-                    throw new Error('Failed to fetch orders for waiter');
-                }
-                const orders = await response.json(); // Assuming server returns JSON array of orders for the waiter
-
-                const orderList = document.getElementById('order-list');
-                orderList.innerHTML = ''; // Clear existing orders
-
-                orders.forEach(order => {
-                    const orderItem = document.createElement('li');
-                    orderItem.dataset.orderId = order._id; // Assuming MongoDB ObjectId
-                    orderItem.innerHTML = `
-                        <span>Order #${order.orderNumber} - Table ${order.tableNumber}</span>
-                        <button class="order-status" onclick="updateOrderStatus(this, '${order._id}', 'served')" ${order.status === 'served' ? 'disabled' : ''}>&#10003;</button>
-                        <button class="order-status" onclick="updateOrderStatus(this, '${order._id}', 'pending')" ${order.status === 'pending' ? 'disabled' : ''}>&#10005;</button>
-                    `;
-                    orderList.appendChild(orderItem);
-                });
-            } catch (error) {
-                console.error('Error loading orders for waiter:', error.message);
-            }
-        }
-
-        // Function to update order status
-        async function updateOrderStatus(button, orderId, status) {
-            try {
-                const response = await fetch(`/updateOrder/${orderId}/${status}`, { method: 'PUT' }); // Replace with your server route to update order status
-                if (!response.ok) {
-                    throw new Error('Failed to update order status');
-                }
-
-                // Handle UI update based on server response (if needed)
-                const result = await response.json(); // Assuming server returns updated order object
-
-                if (status === 'served') {
-                    // Redirect to payment procedure if the order is served
-                    window.location.href = 'payment_details.html'; // Example redirect
-                } else {
-                    // Reload orders to update the UI
-                    loadOrdersForWaiter();
-                }
-            } catch (error) {
-                console.error('Error updating order status:', error.message);
-            }
-        }
-
-        // Function to go back to venue menu
-        function goBack() {
-            window.location.href = 'venueMenu.html';
-        }
-
-        // Load orders for the waiter on page load
-        window.onload = loadOrdersForWaiter;
-    </script>
+    <script src="../scripts/waiterOrders.js"></script>
 </body>
 </html>

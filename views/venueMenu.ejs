@@ -9,18 +9,23 @@
 </head>
 <body>
     <header>
-        <h1>Menu</h1>
+        <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
+        <h1 class="menu-heading">Menu</h1>
+        <div class="header-icons">
+            <a href="../pages/waiter_orders.html"><img src="../images/orders.png" alt="Orders"></a>
+            <a href="../pages/deliveryCart.html"><img src="../images/icons8-cart-24.png" alt="Cart"></a>
+        </div>
     </header>
 
     <main>
         <div class="meal-list">
             <% meals.forEach(meal => { %>
-                <div class="meal">
+                <div class="meal" data-name="<%= meal.name %>" data-description="<%= meal.description %>" data-quantity="<%= meal.quantity %>" data-image="<%= meal.image %>">
                     <img src="<%= meal.image %>" alt="<%= meal.name %>">
                     <h2><%= meal.name %></h2>
                     <p><%= meal.description %></p>
                     <p>Quantity: <%= meal.quantity %></p>
-                    <a href="#" class="cart-icon"><i class="fas fa-shopping-cart"></i></a>
+                     <a href="#" class="cart-icon"><i class="fas fa-shopping-cart"></i></a>
                 </div>
             <% }); %>
         </div>
@@ -29,5 +34,8 @@
     <footer>
         <p>&copy; 2024 Bukhari Restaurant</p>
     </footer>
+
+    <script src="../scripts/venueMenu.js"></script>
+
 </body>
 </html>

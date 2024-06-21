@@ -8,7 +8,11 @@
 </head>
 <body>
     <header>
-        <h1>Menu</h1>
+        <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
+        <h1 class="menu-heading">Menu</h1>
+        <div class="header-icons">
+            <a href="../pages/deliveryCart.html"><img src="../images/icons8-cart-24.png" alt="Cart"></a>
+        </div>
     </header>
 
     <main>
@@ -19,6 +23,7 @@
                     <h2><%= meal.name %></h2>
                     <p><%= meal.description %></p>
                     <p>Quantity: <%= meal.quantity %></p>
+                    <button class="add-to-cart" data-id="<%= meal.id %>" data-name="<%= meal.name %>" data-description="<%= meal.description %>" data-image="<%= meal.image %>">Add to Cart</button>
                 </div>
             <% }); %>
         </div>
@@ -27,5 +32,38 @@
     <footer>
         <p>&copy; 2024 Bukhari Restaurant</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', () => {
+                    const id = button.getAttribute('data-id');
+                    const name = button.getAttribute('data-name');
+                    const description = button.getAttribute('data-description');
+                    const image = button.getAttribute('data-image');
+
+                    // Get the current cart from localStorage
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                    // Check if the item is already in the cart
+                    const existingItem = cart.find(item => item.id === id);
+
+                    if (existingItem) {
+                        // If item exists, increment the quantity
+                        existingItem.quantity += 1;
+                    } else {
+                        // If item doesn't exist, add it to the cart with quantity 1
+                        cart.push({ id, name, description, image, quantity: 1 });
+                    }
+
+                    // Save the updated cart back to localStorage
+                    localStorage.setItem('cart', JSON.stringify(cart));
+
+                    // Optionally show a message or update the cart icon
+                    alert(`${name} has been added to the cart.`);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
