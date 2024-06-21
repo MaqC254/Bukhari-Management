@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Meals</title>
+    <link rel="stylesheet" href="../styles/deliveryMenu.css">
+</head>
+<body>
+    <header>
+        <h1>Menu</h1>
+    </header>
+
+    <main>
+        <div class="meal-list">
+            <% meals.forEach(meal => { %>
+                <div class="meal">
+                    <img src="<%= meal.image %>" alt="<%= meal.name %>">
+                    <h2><%= meal.name %></h2>
+                    <p><%= meal.description %></p>
+                    <p>Quantity: <%= meal.quantity %></p>
+                </div>
+            <% }); %>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bukhari Restaurant</p>
+    </footer>
+</body>
+</html>
