@@ -54,6 +54,7 @@ app.use(session({ secret: 'your_secret_key', resave: false, saveUninitialized: t
 const Employee = require('./models/employee.js');
 const Customer = require('./models/customer.js');
 const MenuItem = require('./models/MenuItem.js');
+const Meal = require('./models/meal'); 
 
 const { functions } = require('lodash');
 
@@ -156,7 +157,7 @@ app.get('/views/deliveryMenu.ejs', async (req, res) => {
     })  
 });
 
-app.get('/pages/venueMenu.ejs', async (req, res) => {
+app.get('/views/venueMenu.ejs', async (req, res) => {
     const meals = await MenuItem.find();
     console.log(meals);
     res.render('venueMenu',{
@@ -301,4 +302,27 @@ app.delete('/delete-meal/:id', async (req, res) => {
     }
 });
 
+// Confirm orders by moving them to the 'server' collection
+app.post('/api/orders/confirm', async (req, res) => {
+    try {
+        const orders = await Meal.find();
+        const ServerOrder = mongoose.model('ServerOrder', Meal.schema, 'server');
 
+        await ServerOrder.insertMany(orders);
+        await Meal.deleteMany();
+
+        res.status(200).send({ message: 'Orders confirmed and moved to server collection' });
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
+// Clear orders
+app.delete('/api/orders/clear', async (req, res) => {
+    try {
+        await Meal.deleteMany();
+        res.status(200).send({ message: 'Orders cleared' });
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});

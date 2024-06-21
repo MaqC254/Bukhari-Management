@@ -1,37 +1,90 @@
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-header, footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-}
-
-main {
-    flex: 1;
-    padding: 20px;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    background-color: white;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 5px;
+/* Styling for the cart page header */
+header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+}
+
+header .logo {
+    width: 100px; /* Adjust the logo size as needed */
+}
+
+header .cart-heading {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 24px;
+    margin: 0;
+}
+
+header .header-icons img {
+    width: 24px; /* Adjust the icon size as needed */
+    cursor: pointer;
+}
+
+/* Styling for the cart list container */
+.cart-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+
+/* Styling for the cart items */
+.cart-item {
+    display: flex; /* Flexbox */
+    flex-direction: row; /* Row layout */
+    align-items: center; /* Center align items */
+    border: 1px solid #ddd; /* Border */
+    padding: 15px; /* Padding */
+    margin: 10px 0; /* Margin */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    width: 80%; /* Adjust width as needed */
+    max-width: 800px; /* Max width */
+}
+
+/* Styling for cart item images */
+.cart-item img {
+    width: 100px; /* Set a fixed width */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounded corners for images */
+    margin-right: 20px; /* Margin between image and text */
+}
+
+/* Styling for cart item details */
+.cart-item-details {
+    display: flex; /* Flexbox */
+    flex-direction: column; /* Column layout */
+    align-items: flex-start; /* Align text to the left */
+    flex-grow: 1; /* Take up remaining space */
+}
+
+/* Styling for cart item names */
+.cart-item h2 {
+    font-size: 24px; /* Font size */
+    margin: 0 0 10px 0; /* Margin */
+}
+
+/* Styling for cart item descriptions */
+.cart-item p {
+    font-size: 16px; /* Font size */
+    color: #666; /* Gray color */
+    margin: 5px 0; /* Margin */
+}
+
+/* Footer styling */
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f8f8f8;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+}
+
+footer p {
+    margin: 0;
+    color: #666;
 }
