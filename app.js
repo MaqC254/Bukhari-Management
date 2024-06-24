@@ -55,6 +55,7 @@ const Employee = require('./models/employee.js');
 const Customer = require('./models/customer.js');
 const MenuItem = require('./models/MenuItem.js');
 const Meal = require('./models/meal'); 
+const Item = require('./models/server_items'); 
 
 const { functions } = require('lodash');
 
@@ -269,7 +270,7 @@ app.post('/saveData', (req, res) => {
 
 // Route to handle form submission for add-meal.html
 app.post('/add-meal', upload.single('image'), async (req, res) => {
-    const { name, description, quantity, category } = req.body;
+    const { name, description, quantity, category, price } = req.body;
     const image = req.file ? `/images/${req.file.filename}` : '';
 
     const newMenuItem = new MenuItem({
@@ -277,7 +278,8 @@ app.post('/add-meal', upload.single('image'), async (req, res) => {
         description,
         image,
         quantity,
-        category // Include category in the new meal object
+        category,
+        price // Include category in the new meal object
     });
 
     try {
@@ -324,5 +326,41 @@ app.delete('/api/orders/clear', async (req, res) => {
         res.status(200).send({ message: 'Orders cleared' });
     } catch (err) {
         res.status(500).send(err);
+    }
+});
+
+// Route to display menu items (for no login)
+app.get('/menu', async (req, res) => {
+    try {
+      const menuItems = await MenuItem.find();
+      res.render('menu', { menuItems });
+    } catch (err) {
+      res.status(500).send('Error retrieving menu items');
+    }
+  });
+
+// Route to handle adding multiple items from cart to MongoDB
+app.post('/api/add-items', async (req, res) => {
+    try {
+        const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
+
+        // Create an array of items to insert into MongoDB
+        const itemsToInsert = cartItems.map(item => ({
+            name: item.name,
+            description: item.description,
+            image: item.image || '', // Optional image property
+            quantity: item.quantity,
+            price: item.price,
+            category: item.category, // Assuming each item has a category property
+            state: 'online' // Default state for new items
+        }));
+
+        // Insert all items into MongoDB using create() method
+        const createdItems = await Item.create(itemsToInsert);
+
+        res.status(201).json(createdItems); // Respond with created items in JSON format
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' }); // Handle server errors
     }
 });
