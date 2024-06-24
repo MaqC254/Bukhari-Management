@@ -8,6 +8,8 @@ const menuItemSchema = new Schema({
     description: { type: String },
     image: { type: String }, // Assuming image path or URL
     quantity: { type: Number, default: 0, required: true },
+    price: { type: Number, required: true },
+
 });
 
 module.exports = mongoose.model('MenuItem', menuItemSchema);

@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 name: meal.getAttribute('data-name'),
                 description: meal.getAttribute('data-description'),
                 quantity: meal.getAttribute('data-quantity'),
-                image: meal.getAttribute('data-image')
+                image: meal.getAttribute('data-image'),
+                price: meal.getAttribute('data-price'),
             };
 
             // Store the meal data in localStorage

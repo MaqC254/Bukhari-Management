@@ -22,8 +22,8 @@
                     <img src="<%= meal.image %>" alt="<%= meal.name %>">
                     <h2><%= meal.name %></h2>
                     <p><%= meal.description %></p>
-                    <p>Quantity: <%= meal.quantity %></p>
-                    <button class="add-to-cart" data-id="<%= meal.id %>" data-name="<%= meal.name %>" data-description="<%= meal.description %>" data-image="<%= meal.image %>">Add to Cart</button>
+                    <p>Cost Tsh: <%= meal.price %></p>
+                    <button class="add-to-cart" data-id="<%= meal.id %>" data-name="<%= meal.name %>" data-description="<%= meal.description %>" data-image="<%= meal.image %>" data-price="<%= meal.price %>">Add to Cart</button>
                 </div>
             <% }); %>
         </div>
@@ -41,6 +41,7 @@
                     const name = button.getAttribute('data-name');
                     const description = button.getAttribute('data-description');
                     const image = button.getAttribute('data-image');
+                    const price = button.getAttribute('data-price');
 
                     // Get the current cart from localStorage
                     let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -53,7 +54,7 @@
                         existingItem.quantity += 1;
                     } else {
                         // If item doesn't exist, add it to the cart with quantity 1
-                        cart.push({ id, name, description, image, quantity: 1 });
+                        cart.push({ id, name, description, image, quantity: 1, price });
                     }
 
                     // Save the updated cart back to localStorage

@@ -88,3 +88,27 @@ footer p {
     margin: 0;
     color: #666;
 }
+
+/* deliveryCart.css */
+
+/* Style for the Confirm Order section */
+.confirm-order {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Style for the Confirm Order button */
+#confirm-order-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+#confirm-order-btn:hover {
+    background-color: #45a049;
+}
