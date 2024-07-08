@@ -5,6 +5,9 @@ const path = require('path');
 const session = require('express-session');
 const ejs = require('ejs');
 const multer = require('multer');
+const mongoDBSession = require('connect-mongodb-session')(session);
+const cookieParser = require("cookie-parser");
+//const store = new session.MemoryStore();
 
 
 const app = express();
@@ -25,6 +28,11 @@ mongoose.connect(dbURI, {})
         console.error('Error connecting to MongoDB:', err);
     });
 
+    const store = new mongoDBSession({
+        uri:dbURI,
+        collection:'mySessions'
+    });
+
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,6 +49,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+app.use(session({ secret: 'secret', resave: false, saveUninitialized: false, store: store, cookie: { secure: false } }));
+
+
 
 // Serve static files from main directories
 app.use('/styles', express.static(path.join(__dirname, 'styles')));
@@ -48,7 +59,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
 app.use('/pages', express.static(path.join(__dirname, 'pages')));
 //app.use('/views', express.static(path.join(__dirname, 'views')));
-app.use(session({ secret: 'your_secret_key', resave: false, saveUninitialized: true }));
 
 // Import Employee model
 const Employee = require('./models/employee.js');
@@ -152,7 +162,8 @@ app.get('/views/available.ejs', async (req, res) => {
 
 app.get('/views/deliveryMenu.ejs', async (req, res) => {
     const meals = await MenuItem.find();
-    console.log(meals);
+    //console.log(meals);
+    console.log(req.session);
     res.render('deliveryMenu',{
         meals: meals
     })  
@@ -242,6 +253,11 @@ app.post('/customer_signin', async (req, res) => {
             return res.status(401).json({ success: false, message: 'Incorrect work ID or password' });
         }
         res.status(200).json({ success: true, message: 'Sign in successful' });
+        req.session.authenticated = true;
+        req.session.user = customer.phone;
+        console.log(req.session);
+        req.session.save();
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Error checking credentials' });
@@ -343,6 +359,8 @@ app.get('/menu', async (req, res) => {
 app.post('/api/add-items', async (req, res) => {
     try {
         const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
+        //const customerPhone = req.session.user;
+        console.log(req.session);
 
         // Create an array of items to insert into MongoDB
         const itemsToInsert = cartItems.map(item => ({
@@ -352,7 +370,8 @@ app.post('/api/add-items', async (req, res) => {
             quantity: item.quantity,
             price: item.price,
             category: item.category, // Assuming each item has a category property
-            state: 'online' // Default state for new items
+            state: 'online', // Default state for new items
+            customerPhone: req.session.user,
         }));
 
         // Insert all items into MongoDB using create() method
@@ -363,4 +382,39 @@ app.post('/api/add-items', async (req, res) => {
         console.error(err);
         res.status(500).json({ error: 'Server error' }); // Handle server errors
     }
+});
+
+app.post('/api/add-order', async (req, res) => {
+    try {
+        const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
+        //const customerPhone = req.session.user;
+        console.log(req.session);
+
+        // Create an array of items to insert into MongoDB
+        const itemsToInsert = cartItems.map(item => ({
+            name: item.name,
+            description: item.description,
+            image: item.image || '', // Optional image property
+            quantity: item.quantity,
+            price: item.price,
+            category: item.category, // Assuming each item has a category property
+            state: 'venue', // Default state for new items
+            customerPhone: req.session.user,
+        }));
+
+        // Insert all items into MongoDB using create() method
+        const createdItems = await Item.create(itemsToInsert);
+
+        res.status(201).json(createdItems); // Respond with created items in JSON format
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' }); // Handle server errors
+    }
+});
+
+// Route to get all items to server screen
+app.get('/get-items', (req, res) => {
+    Item.find()
+        .then(items => res.status(200).json(items))
+        .catch(err => res.status(400).send(err));
 });
