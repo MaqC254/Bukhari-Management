@@ -9,7 +9,8 @@ const itemSchema = new mongoose.Schema({
     image: String,
     quantity: Number,
     price: Number,
-    state: { type: String, default: 'online' } // Adding the 'state' field with default value 'online'
+    state: { type: String, default: 'online' }, // Adding the 'state' field with default value 'online'
+    customerPhone: String,
 });
 
 // Create Model

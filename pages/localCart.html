@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="../styles/deliveryCart.css">
+</head>
+<body>
+    <header>
+        <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
+        <h1 class="cart-heading">Your Cart</h1>
+        <div class="header-icons">
+            <a href="../views/deliveryMenu.ejs"><img src="../images/icons8-home-24.png" alt="Home"></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="cart-list" id="cart-list">
+            <!-- Cart items will be inserted here by JavaScript -->
+        </div>
+        <div class="cart-total">
+            <p id="cart-total"></p>
+        </div>
+        <div class="confirm-order">
+            <button id="confirm-order-btn">Confirm Order</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bukhari Restaurant</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            const cartList = document.getElementById('cart-list');
+            const cartTotal = document.getElementById('cart-total');
+
+            function renderCart() {
+                cartList.innerHTML = '';
+                let total = 0;
+
+                if (cart.length === 0) {
+                    cartList.innerHTML = '<p>Your cart is empty.</p>';
+                    cartTotal.innerHTML = '';
+                } else {
+                    cart.forEach((item, index) => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.classList.add('cart-item');
+                        itemDiv.innerHTML = `
+                            <img src="${item.image}" alt="${item.name}">
+                            <div class="cart-item-details">
+                                <h2>${item.name}</h2>
+                                <p>${item.description}</p>
+                                <p>Pieces: ${item.quantity}</p>
+                                <p>Price: Tsh ${item.price * item.quantity}</p>
+                                <button class="remove-from-cart" data-index="${index}">Remove</button>
+                            </div>
+                        `;
+                        cartList.appendChild(itemDiv);
+                        total += item.price * item.quantity;
+                    });
+
+                    cartTotal.innerHTML = `Total: Tsh ${total}`;
+
+                    document.querySelectorAll('.remove-from-cart').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const index = e.target.getAttribute('data-index');
+                            cart.splice(index, 1);
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                            renderCart();
+                        });
+                    });
+                }
+            }
+
+            renderCart();
+
+            // Function to send cartItems to server and confirm order
+            document.getElementById('confirm-order-btn').addEventListener('click', async () => {
+                try {
+                    const response = await fetch('http://localhost:3000/api/add-order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ cartItems: cart }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to add items to server.');
+                    }
+
+                    // Clear local storage after confirming order
+                    localStorage.removeItem('cart');
+                    alert('Order confirmed successfully!');
+                    location.reload(); // Refresh the page or redirect to another page
+                } catch (error) {
+                    console.error('Error confirming order:', error);
+                    alert('Failed to confirm order. Please try again.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
