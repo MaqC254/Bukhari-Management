@@ -11,7 +11,7 @@
         <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
         <h1 class="cart-heading">Your Cart</h1>
         <div class="header-icons">
-            <a href="../views/deliveryMenu.ejs"><img src="../images/icons8-home-24.png" alt="Home"></a>
+            <a href="../views/venueMenu.ejs"><img src="../images/icons8-home-24.png" alt="Home"></a>
         </div>
     </header>
 
@@ -86,7 +86,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ cartItems: cart }),
+                        body: JSON.stringify({ cartItems: cart, workID: localStorage.getItem('workId') }),
                     });
 
                     if (!response.ok) {
@@ -97,6 +97,7 @@
                     localStorage.removeItem('cart');
                     alert('Order confirmed successfully!');
                     location.reload(); // Refresh the page or redirect to another page
+                    window.location.href = '../views/deliveryMenu.ejs';
                 } catch (error) {
                     console.error('Error confirming order:', error);
                     alert('Failed to confirm order. Please try again.');

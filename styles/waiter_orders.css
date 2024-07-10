@@ -95,3 +95,31 @@ footer {
 .order-actions button:hover {
     background-color: #45a049;
 }
+
+.order-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+}
+
+.order-item img {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+}
+
+.order-item-details {
+    flex: 1;
+}
+
+.order-item-details h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.order-item-details p {
+    margin: 5px 0;
+}
+

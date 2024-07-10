@@ -37,6 +37,7 @@
 
             const cartList = document.getElementById('cart-list');
             const cartTotal = document.getElementById('cart-total');
+            const confirmOrderBtn = document.getElementById('confirm-order-btn');
 
             function renderCart() {
                 cartList.innerHTML = '';
@@ -57,6 +58,7 @@
                                 <p>Pieces: ${item.quantity}</p>
                                 <p>Price: Tsh ${item.price * item.quantity}</p>
                                 <button class="remove-from-cart" data-index="${index}">Remove</button>
+                                <button class="reduce-quantity" data-index="${index}">Reduce Quantity</button>
                             </div>
                         `;
                         cartList.appendChild(itemDiv);
@@ -64,6 +66,7 @@
                     });
 
                     cartTotal.innerHTML = `Total: Tsh ${total}`;
+                    localStorage.setItem('total', total);
 
                     document.querySelectorAll('.remove-from-cart').forEach(button => {
                         button.addEventListener('click', (e) => {
@@ -73,30 +76,46 @@
                             renderCart();
                         });
                     });
+
+                    document.querySelectorAll('.reduce-quantity').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const index = e.target.getAttribute('data-index');
+                            if (cart[index].quantity > 1) {
+                                cart[index].quantity -= 1;
+                            } else {
+                                cart.splice(index, 1);
+                            }
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                            renderCart();
+                        });
+                    });
                 }
             }
 
             renderCart();
 
-            // Function to send cartItems to server and confirm order
-            document.getElementById('confirm-order-btn').addEventListener('click', async () => {
+            confirmOrderBtn.addEventListener('click', async () => {
+                if (cart.length === 0) {
+                    alert('Cart is empty');
+                    return;
+                }
                 try {
                     const response = await fetch('http://localhost:3000/api/add-items', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ cartItems: cart }),
+                        body: JSON.stringify({ cartItems: cart, phone: localStorage.getItem('phone')}),
                     });
 
                     if (!response.ok) {
                         throw new Error('Failed to add items to server.');
                     }
 
-                    // Clear local storage after confirming order
                     localStorage.removeItem('cart');
                     alert('Order confirmed successfully!');
-                    location.reload(); // Refresh the page or redirect to another page
+                    window.location.href = 'online_checkout.html';
+
                 } catch (error) {
                     console.error('Error confirming order:', error);
                     alert('Failed to confirm order. Please try again.');

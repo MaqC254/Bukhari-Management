@@ -112,3 +112,73 @@ footer p {
 #confirm-order-btn:hover {
     background-color: #45a049;
 }
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+}
+
+.cart-item img {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+}
+
+.cart-item-details {
+    flex: 1;
+}
+
+.cart-item-details h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.cart-item-details p {
+    margin: 5px 0;
+}
+
+.cart-item-details button {
+    padding: 10px 20px;
+    margin: 5px 5px 0 0;
+    border: none;
+    background-color: #ff4d4d;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.cart-item-details button:hover {
+    background-color: #ff3333;
+}
+
+/* Styling for the reduce quantity button */
+.cart-item-details .reduce-quantity {
+    background-color: #ffa500;
+}
+
+.cart-item-details .reduce-quantity:hover {
+    background-color: #e69500;
+}
+/* Styling for quantity buttons */
+.quantity-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.quantity-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.quantity-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
