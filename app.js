@@ -359,6 +359,7 @@ app.get('/menu', async (req, res) => {
 app.post('/api/add-items', async (req, res) => {
     try {
         const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
+        const phone = req.body.phone;
         //const customerPhone = req.session.user;
         console.log(req.session);
 
@@ -371,7 +372,7 @@ app.post('/api/add-items', async (req, res) => {
             price: item.price,
             category: item.category, // Assuming each item has a category property
             state: 'online', // Default state for new items
-            customerPhone: req.session.user,
+            customerPhone: phone,
         }));
 
         // Insert all items into MongoDB using create() method
@@ -387,6 +388,7 @@ app.post('/api/add-items', async (req, res) => {
 app.post('/api/add-order', async (req, res) => {
     try {
         const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
+        const workID = req.body.workID;
         //const customerPhone = req.session.user;
         console.log(req.session);
 
@@ -399,7 +401,7 @@ app.post('/api/add-order', async (req, res) => {
             price: item.price,
             category: item.category, // Assuming each item has a category property
             state: 'venue', // Default state for new items
-            customerPhone: req.session.user,
+            customerPhone: workID,
         }));
 
         // Insert all items into MongoDB using create() method
@@ -412,9 +414,29 @@ app.post('/api/add-order', async (req, res) => {
     }
 });
 
-// Route to get all items to server screen
+// Route to get all items to server screen that are not "done"
 app.get('/get-items', (req, res) => {
-    Item.find()
+    Item.find({ state: { $ne: 'done' } })
         .then(items => res.status(200).json(items))
         .catch(err => res.status(400).send(err));
+});
+
+// Route to update item state on server screen
+app.put('/update-item/:id', (req, res) => {
+    const { id } = req.params;
+    Item.findByIdAndUpdate(id, { state: 'done' }, { new: true })
+        .then(item => res.status(200).json(item))
+        .catch(err => res.status(400).send(err));
+});
+
+// Route to get items by workId on waiter order screen
+app.get('/api/items', async (req, res) => {
+    const customerPhone = req.query.customerPhone; // Get customerPhone from query parameters
+
+    try {
+        const items = await Item.find({ customerPhone });
+        res.status(200).json(items);
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
 });

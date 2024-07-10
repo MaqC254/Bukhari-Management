@@ -44,7 +44,9 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                window.location.href = "../views/venueMenu.ejs";
+                                localStorage.setItem("workId", workId);
+                                let page = workId[0] === "w" ? "../views/venueMenu.ejs" : "server.html";
+                                window.location.href = `${page}`;
                             } else {
                                 alert(data.message);
                             }

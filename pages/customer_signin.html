@@ -39,6 +39,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
+                            localStorage.setItem("phone", phone);
                             window.location.href = 'Delivery.html';
                         } else {
                             alert(data.message);

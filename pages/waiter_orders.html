@@ -15,16 +15,54 @@
         <div class="order-list" id="order-list">
             <!-- Orders will be inserted here by JavaScript -->
         </div>
-        <div class="order-actions">
-            <button id="confirm-order">Confirm Order</button>
-            <button id="clear-order">Clear Items</button>
-        </div>
     </main>
 
     <footer>
         <p>&copy; 2024 Bukhari Restaurant</p>
     </footer>
 
-    <script src="../scripts/waiterOrders.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const orderList = document.getElementById('order-list');
+            const customerPhone = localStorage.getItem('workId');
+
+            if (!customerPhone) {
+                orderList.innerHTML = '<p>No customer phone found in local storage.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/items?customerPhone=${customerPhone}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch items');
+                }
+
+                const items = await response.json();
+
+                if (items.length === 0) {
+                    orderList.innerHTML = '<p>No pending orders.</p>';
+                    return;
+                }
+
+                items.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('order-item');
+                    itemDiv.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="order-item-details">
+                            <h2>${item.name}</h2>
+                            <p>${item.description}</p>
+                            <p>Pieces: ${item.quantity}</p>
+                            <p>Price: Tsh ${item.price}</p>
+                        </div>
+                    `;
+                    orderList.appendChild(itemDiv);
+                });
+            } catch (error) {
+                console.error('Error fetching items:', error);
+                orderList.innerHTML = '<p>Failed to load orders. Please try again later.</p>';
+            }
+        });
+    </script>
 </body>
 </html>

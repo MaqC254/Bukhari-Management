@@ -46,6 +46,17 @@
                         button.className = `status ${item.state === 'venue' ? 'served' : 'packed'}`;
                         button.textContent = item.state === 'venue' ? 'Served' : 'Packed';
 
+                        button.addEventListener('click', () => {
+                            fetch(`/update-item/${item._id}`, { method: 'PUT' })
+                                .then(response => response.json())
+                                .then(updatedItem => {
+                                    if (updatedItem.state === 'done') {
+                                        orderSection.remove();
+                                    }
+                                })
+                                .catch(error => console.error('Error:', error));
+                        });
+
                         orderHeader.appendChild(span);
                         orderHeader.appendChild(button);
 
