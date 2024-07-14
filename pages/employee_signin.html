@@ -45,7 +45,14 @@
                         .then(data => {
                             if (data.success) {
                                 localStorage.setItem("workId", workId);
-                                let page = workId[0] === "w" ? "../views/venueMenu.ejs" : "server.html";
+                                let page;
+                                if (workId[0] === "w") {
+                                    page = "../views/venueMenu.ejs";
+                                } else if (workId[0] === "s") {
+                                    page = "server.html";
+                                } else if (workId[0] === "a") {
+                                    page = "admin.html";
+                                }
                                 window.location.href = `${page}`;
                             } else {
                                 alert(data.message);
