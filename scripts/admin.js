@@ -1,45 +1,73 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Dummy data for the most wanted item
-    document.getElementById('most-wanted-item').innerText = 'Spaghetti Carbonara';
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Fetch the most wanted item
+        const mostWantedResponse = await fetch('http://localhost:3000/api/most-wanted-item');
+        const mostWantedItem = await mostWantedResponse.json();
+        document.getElementById('most-wanted-item').textContent = `${mostWantedItem._id} (ordered ${mostWantedItem.totalOrdered} times)`;
 
-    // Dummy data for sales figures
-    const salesData = {
-        labels: ['May', 'June', 'July'],
-        datasets: [{
-            label: 'Sales Figures',
-            data: [5000, 7000, 8000],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
-    };
-    const ctx = document.getElementById('salesChart').getContext('2d');
-    const salesChart = new Chart(ctx, {
-        type: 'line',
-        data: salesData,
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+        // Fetch sales figures for the last 3 months (example for a specific month, e.g., July)
+        const salesResponse = await fetch('http://localhost:3000/api/items/7');
+        const salesData = await salesResponse.json();
+
+        const labels = salesData.map(item => item._id);
+        const data = salesData.map(item => item.totalOrdered);
+
+        // Create sales chart
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Orders',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
-
-    // Event listener for the add employee form
-    document.getElementById('addEmployeeForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        // Dummy response for adding an employee
-        document.getElementById('employee-status').innerText = 'Employee added successfully!';
-    });
+        });
+    } catch (err) {
+        console.error('Error fetching data:', err);
+    }
 });
 
-function generateMonthlyReport() {
-    // Dummy function to simulate report generation
-    document.getElementById('report-status').innerText = 'Monthly report generated successfully!';
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const generateMonthlyReportBtn = document.getElementById('generateMonthlyReportBtn');
+    if (generateMonthlyReportBtn) {
+        generateMonthlyReportBtn.addEventListener('click', async () => {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1; // getMonth() returns 0-indexed month
 
-function downloadWeeklyReport() {
-    // Dummy function to simulate downloading a weekly report
-    document.getElementById('report-status').innerText = 'Weekly report downloaded successfully!';
-}
+            try {
+                const response = await fetch(`http://localhost:3000/api/reports/monthly/${year}/${month}`);
+                if (!response.ok) {
+                    throw new Error('Failed to download file');
+                }
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `monthly-report-${year}-${month}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (err) {
+                console.error('Error generating or downloading monthly report:', err);
+                // Handle error and provide feedback to the user
+            }
+        });
+    }
+});
+
+
