@@ -46,6 +46,12 @@
 
                 items.forEach(item => {
                     const itemDiv = document.createElement('div');
+                    //foodState;
+                    // if (item.state === 'done') {
+                    //     foodState = 'Ready';
+                    // }else if( item.state === 'venue'){
+                    //     foodState = 'Being prepared'
+                    // }
                     itemDiv.classList.add('order-item');
                     itemDiv.innerHTML = `
                         <img src="${item.image}" alt="${item.name}">
@@ -54,8 +60,19 @@
                             <p>${item.description}</p>
                             <p>Pieces: ${item.quantity}</p>
                             <p>Price: Tsh ${item.price}</p>
+                            <p>State: ${item.state}</p>
                         </div>
                     `;
+                    
+                    // Add click event listener to each item
+                    itemDiv.addEventListener('click', () => {
+                        // Save item data to local storage
+                        localStorage.setItem('selectedItem', JSON.stringify(item));
+                        
+                        // Redirect to payment_details.html
+                        window.location.href = 'payment_details.html';
+                    });
+
                     orderList.appendChild(itemDiv);
                 });
             } catch (error) {

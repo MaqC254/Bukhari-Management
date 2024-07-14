@@ -7,8 +7,11 @@ const ejs = require('ejs');
 const multer = require('multer');
 const mongoDBSession = require('connect-mongodb-session')(session);
 const cookieParser = require("cookie-parser");
+const { Parser } = require('json2csv');
+const fs = require('fs');
+const xlsx = require('xlsx');
 //const store = new session.MemoryStore();
-
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
@@ -34,6 +37,7 @@ mongoose.connect(dbURI, {})
     });
 
 // Middleware
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');// Set EJS as the view engine
@@ -424,3 +428,92 @@ app.get('/api/items', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+// Route to get items by month
+app.get('/api/items/:month', async (req, res) => {
+    const month = parseInt(req.params.month, 10);
+    try {
+        const items = await Item.aggregate([
+            { $match: { month: month } },
+            { $group: { _id: "$name", totalOrdered: { $sum: "$quantity" } } },
+            { $sort: { totalOrdered: -1 } } // Sort by total ordered in descending order
+        ]);
+        res.json(items);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
+// Route to get the most wanted item
+app.get('/api/most-wanted-item', async (req, res) => {
+    try {
+        const mostWantedItem = await Item.aggregate([
+            { $group: { _id: "$name", totalOrdered: { $sum: "$quantity" } } },
+            { $sort: { totalOrdered: -1 } },
+            { $limit: 1 }
+        ]);
+        res.json(mostWantedItem[0]);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
+// Route to generate monthly report in XLSX format
+app.get('/api/reports/monthly/:year/:month', async (req, res) => {
+    const { year, month } = req.params;
+    const startDate = new Date(year, month - 1, 1); // Month is zero-indexed in JavaScript Date, so subtract 1
+    const endDate = new Date(year, month, 0, 23, 59, 59); // Last day of the month
+
+    try {
+        const monthlyReportData = await Item.find({
+            createdAt: {
+                $gte: startDate,
+                $lte: endDate
+            }
+        });
+
+        // Convert JSON data to XLSX format
+        const worksheet = xlsx.utils.json_to_sheet(monthlyReportData);
+        const workbook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(workbook, worksheet, 'Monthly Report');
+        console.log('Monthly Report Data:', monthlyReportData);
+
+        // Save XLSX file to server
+        const filePath = `monthly-report-${year}-${month}.xlsx`;
+        xlsx.writeFile(workbook, filePath);
+
+        // Respond with file download link or status
+        res.download(filePath, (err) => {
+            if (err) {
+                console.error('Error downloading file:', err);
+                res.status(500).send('Error downloading file');
+            } else {
+                // Optionally, delete the file after download
+                fs.unlinkSync(filePath);
+            }
+        });
+    } catch (err) {
+        console.error('Error generating monthly report:', err);
+        res.status(500).send(err.message);
+    }
+});
+
+// Route to fetch order status
+app.get('/orderstatus', async (req, res) => {
+    const customerPhone = req.query.phone; // Retrieve phone number from query parameter
+  
+    try {
+      // Check if all items for this phone number are 'done'
+      const items = await Item.find({ customerPhone });
+      const allDone = items.every(item => item.state === 'done');
+  
+      if (allDone) {
+        res.send('Being Delivered');
+      } else {
+        res.send('Being Prepared');
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error fetching order status');
+    }
+  });
