@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bukhari Restaurant - Customer Sign In</title>
+    <link rel="stylesheet" href="../styles/signin.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
+            <h1>Customer Sign In</h1>
+        </header>
+        <main>
+            <form id="customer_signin">
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" placeholder="Enter your phone number" required>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+                
+                <button type="submit" class="confirm-button">Sign In</button>
+            </form>
+            <script>
+                document.getElementById("customer_signin").addEventListener("submit", function(event) {
+                    event.preventDefault(); // Prevent the form from submitting the traditional way
+
+                    const phone = document.getElementById("phone").value;
+                    const password = document.getElementById("password").value;
+
+                    fetch('/customer_signin', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ phone, password })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            localStorage.setItem("phone", phone);
+                            window.location.href = 'Delivery.html';
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while signing in. Please try again.');
+                    });
+                });
+            </script>
+            <button class="signup-button" onclick="location.href='employee_signin.html'">Staff Sign In</button>
+            <a href="customer_signup.html">Don't have an account? Sign Up</a>
+        </main>
+        <footer>
+            <img src="../images/Bukhari logo.jpg" alt="Bukhari Small Logo" class="small-logo">
+            <p>Bukhari</p>
+            <p>version 1.0.0</p>
+        </footer>
+    </div>
+</body>
+</html>
