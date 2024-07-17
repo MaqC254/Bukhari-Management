@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #fff;
+}
+/* Styling for the cart page header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+    margin-top: 0px;
+    width: 100%;
+}
+
+header .logo {
+    width: 50px; /* Adjust the logo size as needed */
+}
+
+header .cart-heading {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 24px;
+    margin: 0;
+    
+}
+
+header .header-icons img {
+    width: 24px; /* Adjust the icon size as needed */
+    cursor: pointer;
+    margin-right: 0px;
+}
+
+main {
+    margin-top: 20px;
+    background-color: white;
+}
+
+/* Styling for the cart list container */
+.cart-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+
+/* Styling for the cart items */
+.cart-item {
+    display: flex; /* Flexbox */
+    flex-direction: row; /* Row layout */
+    align-items: center; /* Center align items */
+    border: 1px solid #ddd; /* Border */
+    padding: 15px; /* Padding */
+    margin: 10px 0; /* Margin */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    width: 80%; /* Adjust width as needed */
+    max-width: 800px; /* Max width */
+}
+
+/* Styling for cart item images */
+.cart-item img {
+    width: 100px; /* Set a fixed width */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounded corners for images */
+    margin-right: 20px; /* Margin between image and text */
+}
+
+/* Styling for cart item details */
+.cart-item-details {
+    display: flex; /* Flexbox */
+    flex-direction: column; /* Column layout */
+    align-items: flex-start; /* Align text to the left */
+    flex-grow: 1; /* Take up remaining space */
+}
+
+/* Styling for cart item names */
+.cart-item h2 {
+    font-size: 24px; /* Font size */
+    margin: 0 0 10px 0; /* Margin */
+}
+
+/* Styling for cart item descriptions */
+.cart-item p {
+    font-size: 16px; /* Font size */
+    color: #666; /* Gray color */
+    margin: 5px 0; /* Margin */
+}
+
+/* Footer styling */
+footer {
+    text-align: center;
+    padding: 2px 0;
+    background-color: #f8f8f8;
+    border-top: 1px solid #ddd;
+    margin-bottom: 0px;
+}
+
+footer p {
+    margin: 0;
+    color: #666;
+}
+
+/* deliveryCart.css */
+
+/* Style for the Confirm Order section */
+.confirm-order {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Style for the Confirm Order button */
+#confirm-order-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+#confirm-order-btn:hover {
+    background-color: #45a049;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+}
+
+.cart-item img {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+}
+
+.cart-item-details {
+    flex: 1;
+}
+
+.cart-item-details h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.cart-item-details p {
+    margin: 5px 0;
+}
+
+.cart-item-details button {
+    padding: 10px 20px;
+    margin: 5px 5px 0 0;
+    border: none;
+    background-color: #ff4d4d;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.cart-item-details button:hover {
+    background-color: #ff3333;
+}
+
+/* Styling for the reduce quantity button */
+.cart-item-details .reduce-quantity {
+    background-color: #ffa500;
+}
+
+.cart-item-details .reduce-quantity:hover {
+    background-color: #e69500;
+}
+/* Styling for quantity buttons */
+.quantity-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.quantity-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.quantity-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
