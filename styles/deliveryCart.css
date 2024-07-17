@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #fff;
+}
 /* Styling for the cart page header */
 header {
     display: flex;
@@ -6,10 +12,12 @@ header {
     padding: 10px 20px;
     background-color: #f8f8f8;
     border-bottom: 1px solid #ddd;
+    margin-top: 0px;
+    width: 100%;
 }
 
 header .logo {
-    width: 100px; /* Adjust the logo size as needed */
+    width: 50px; /* Adjust the logo size as needed */
 }
 
 header .cart-heading {
@@ -17,11 +25,18 @@ header .cart-heading {
     text-align: center;
     font-size: 24px;
     margin: 0;
+    
 }
 
 header .header-icons img {
     width: 24px; /* Adjust the icon size as needed */
     cursor: pointer;
+    margin-right: 0px;
+}
+
+main {
+    margin-top: 20px;
+    background-color: white;
 }
 
 /* Styling for the cart list container */
@@ -78,10 +93,10 @@ header .header-icons img {
 /* Footer styling */
 footer {
     text-align: center;
-    padding: 10px 0;
+    padding: 2px 0;
     background-color: #f8f8f8;
     border-top: 1px solid #ddd;
-    margin-top: 20px;
+    margin-bottom: 0px;
 }
 
 footer p {

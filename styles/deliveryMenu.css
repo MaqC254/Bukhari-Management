@@ -1,9 +1,22 @@
-/* Global styles */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f2f2f2;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    /* background-color: #fff; */
+    /* background:
+      linear-gradient(135deg,#0000 18.75%,#ffe4b3 0 31.25%,#0000 0),
+      repeating-linear-gradient(45deg,#f9e6c3 -6.25% 6.25%,#ffffff 0 18.75%);
+    background-size: 60px 60px; */
+    background-image: url('../images/bg3.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
+    
 }
 
 .container {
@@ -14,16 +27,17 @@ body {
 
 /* Header styles */
 header {
-  background-color: #333;
-  color: #fff;
-  padding: 10px 0;
+  /* background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgb(255, 145, 0)); */
+  background-color: #fff;
+  color: #000000;
+  padding: 5px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 1000;
+  position: fixed; /* Make it stick/fixed */
+  top: 0; /* Stay on top */
+  width: 100%; /* Full width */
+  transition: top 0.2s; /* Transition effect when sliding down (and up) */
 }
 
 .logo {
@@ -69,6 +83,7 @@ main {
   max-width: 1200px;
   margin: 20px auto;
   padding: 0 20px;
+  margin-top: 300px;
 }
 
 .meal {
@@ -172,9 +187,10 @@ main {
 footer {
   background-color: #333;
   color: #fff;
+  padding: 1rem;
   text-align: center;
-  padding: 10px 0;
   position: fixed;
   width: 100%;
   bottom: 0;
+  height: 20px;
 }

@@ -1,27 +1,33 @@
 /* menu.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     background-color: #f8f9fa;
+    background-image: url('../images/bg2.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
 }
 
 header {
-    background-color: #333;
+    background-color: #444;
     color: #fff;
     padding: 20px;
     text-align: center;
+    height: 30px;
 }
 
 header h1 {
-    margin: 0;
+    margin-top: 0px;
     font-size: 2.5em;
 }
 
 header p {
-    margin: 0;
+    margin-top: 0px;
     font-size: 1.2em;
 }
 
@@ -101,6 +107,7 @@ nav .nav-button.active {
 .menu-item-name {
     font-size: 1.5em;
     margin: 10px 0;
+    font-weight: bolder;
 }
 
 .menu-item-price {
@@ -130,11 +137,15 @@ nav .nav-button.active {
     height: auto;
 }
 
+.tick-container {
+    width: 300px;
+}
 footer {
     background-color: #333;
     color: #fff;
-    padding: 20px 0;
+    padding: 5px 0;
     text-align: center;
+    font-size: 10px;
 }
 
 .footer-content {
@@ -142,10 +153,11 @@ footer {
     justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
+    font-size: 13px;
 }
 
 .footer-logo img {
-    width: 50px;
+    width: 70px;
     height: auto;
 }
 
@@ -167,10 +179,12 @@ footer {
 }
 
 .footer-social a:hover {
-    color: #aaa;
+    color: orange;
 }
 
 .footer-bottom {
-    margin-top: 20px;
+    margin-bottom: 5px;
     font-size: 0.9em;
+    margin-right: 8px;
+    text-align: right;
 }

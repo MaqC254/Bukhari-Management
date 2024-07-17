@@ -1,9 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #fff;
-    color: #333;
+    color: #000000;
+    background-image: url('../images/bg2.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
 }
 
 header {
@@ -11,12 +17,13 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 20px;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #ddd;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ffffff;
+    height:auto;
 }
 
 header .logo {
-    width: 80px;
+    width: 50px;
     height: auto;
 }
 
@@ -32,9 +39,11 @@ header h1, header h2 {
 }
 
 main {
-    width: 80%;
+    width: 500px;
+    height: max-content;
     margin: 20px auto;
     text-align: center;
+    margin-top: 100px;
 }
 
 .payment-details {
