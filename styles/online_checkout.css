@@ -1,11 +1,17 @@
-/* online_checkout.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
-/* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     margin: 0;
-    padding: 0;
+    /* background-color: #fff; */
+    background-image: url('../images/Wall.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
 }
 
 .header-container {
@@ -32,12 +38,19 @@ body {
 }
 
 .main-container {
-    max-width: 600px;
-    margin: 20px auto;
-    background-color: #fff;
+    text-align: center;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    background-image: url('../images/bg2.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
+    /* filter: blur(8px);
+    -webkit-filter: blur(8px); */
 }
 
 section.checkout-details {

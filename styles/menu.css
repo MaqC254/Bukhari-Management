@@ -6,11 +6,11 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #f8f9fa;
-    background-image: url('../images/bg2.jpg');
+    background-color: #ffff;
+    /* background-image: url('../images/bg2.jpg');
     background-repeat: no-repeat;
     background-attachment: scroll;
-    background-size: cover;
+    background-size: cover; */
 }
 
 header {
@@ -64,11 +64,11 @@ nav .nav-button.active {
     padding: 20px;
 }
 
-.menu-section h2 {
+/* .menu-section h2 {
     text-align: center;
     font-size: 2em;
     margin-bottom: 20px;
-}
+} */
 
 .menu-grid {
     display: grid;
@@ -146,6 +146,8 @@ footer {
     padding: 5px 0;
     text-align: center;
     font-size: 10px;
+    margin-bottom: 0;
+    position: relative;
 }
 
 .footer-content {

@@ -1,9 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #fff;
-    color: #333;
+    color: #000;
+    background-image: url('../images/bg2.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
 }
 
 header {
@@ -12,13 +18,16 @@ header {
 }
 
 header .logo {
-    width: 80px;
+    width: 50px;
     height: auto;
 }
 
 main {
-    width: 80%;
+    width: 500px;
     margin: 0 auto;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: white;
 }
 
 h3 {
@@ -72,9 +81,12 @@ ul li {
 
 footer {
     text-align: center;
-    padding: 20px;
-    background-color: #f8f8f8;
+    padding: 10px;
+    background-color: #c2c2c2;
     border-top: 1px solid #ddd;
+    margin-bottom: 0;
+    height: max-content;
+    font-size: 10px;
 }
 
 footer .footer-logo {

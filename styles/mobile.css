@@ -1,19 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #fff;
+    /* background-color: #fff; */
+    background-image: url('../images/Wall.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
 }
 
 .container {
     text-align: center;
     width: 300px;
     border: 1px solid #ddd;
+    border-radius: 5px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    background-image: url('../images/bg2.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
+    /* filter: blur(8px);
+    -webkit-filter: blur(8px); */
 }
 
 header {
@@ -35,8 +49,8 @@ header {
 }
 
 h1 {
-    font-size: 16px;
-    font-weight: normal;
+    font-size: 20px;
+    font-weight: bolder;
     margin: 0;
     flex-grow: 1;
     margin-left: 10px;
@@ -45,6 +59,7 @@ h1 {
 
 main {
     margin-top: 20px;
+    font-weight: bold;
 }
 
 .payment-method {
