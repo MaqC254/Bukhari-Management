@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bukhari Restaurant Waiting Application</title>
+    <link rel="stylesheet" href="../styles/mobile.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
+            <h1>Bukhari Restaurant Waiting Application</h1>
+            <div class="icon"><!-- Add icon here --></div>
+        </header>
+        <main>
+            <p class="payment-method">Online Payment:</p>
+            <form id="paymentForm" action="orderstate.html" method="GET">
+                <label for="phone-input">Enter Phone number to pay with</label>
+                <input type="text" id="phone-input" name="phone" placeholder="Enter Phone number to pay with" required>
+                <p id="amount"></p>
+                <button type="submit" class="confirm-button">Confirm</button>
+            </form>
+            <div class="payment-received" style="display: none;">
+                <img src="../images/paid.png" alt="Check Icon" class="check-icon">
+                <p>Payment Received!</p>
+            </div>
+            <div class="waiter-image">
+                <img src="../images/waiter.jpeg" alt="Waiter Image">
+            </div>
+        </main>
+        <footer>
+            <p>Bukhari</p>
+            <p>version 1.0.0</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const total = localStorage.getItem('total');
+            document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
+        });
+
+        const paymentForm = document.getElementById('paymentForm');
+
+        paymentForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            // For demonstration purposes, show "Payment Received!" message
+            alert('Payment made successfully');
+            window.location.href = 'orderstate.html';
+        });
+    </script>
+</body>
+</html>

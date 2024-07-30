@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bukhari Restaurant - Employee Sign In</title>
+    <link rel="stylesheet" href="../styles/signin.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../pages/index.html">
+            <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
+            </a>
+            <h1>Employee Sign In</h1>
+        </header>
+        <main>
+            <form id="employee_signin">
+                <label for="work-id">Work ID:</label>
+                <input type="text" id="work-id" placeholder="Enter your work ID" required>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+                
+                <button type="submit" class="confirm-button">Sign In</button>
+            </form>
+            <script>
+                //check DB for matching password and work id
+                document.getElementById("employee_signin").addEventListener("submit", function(event) {
+                    event.preventDefault(); // Prevent the form from submitting the traditional way
+                
+                    // Get all the input elements
+                    const workId = document.getElementById("work-id").value;
+                    const password = document.getElementById("password").value;
+                
+                    // Check if all fields are filled
+                    if (workId && password) {
+                        // Check for matching records in the database
+                        fetch('/employee_signin', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ workId, password }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                localStorage.setItem("workId", workId);
+                                let page;
+                                if (workId[0] === "w") {
+                                    page = "../views/venueMenu.ejs";
+                                } else if (workId[0] === "s") {
+                                    page = "server.html";
+                                } else if (workId[0] === "a") {
+                                    page = "admin.html";
+                                }
+                                window.location.href = `${page}`;
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                        
+                    } else {
+                        alert("Please fill in all fields.");
+                    }
+                });
+                </script>
+            <p>Don't have an account? <br>
+                Contact the administrator</p>
+        </main>
+        <footer>
+            <!-- <img src="../images/Bukhari logo.jpg" alt="Bukhari Small Logo" class="small-logo"> -->
+            <p>Bukhari</p>
+            <p>version 1.0.0</p>
+        </footer>
+    </div>
+</body>
+</html>
