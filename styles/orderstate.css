@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    /* background-color: #fff; */
+    background-image: url('../images/Wall.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
+}
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    /* background-image: url('../images/bg2.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover; */
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+}
+
+main {
+    text-align: center;
+}
+
+.order-status {
+    margin-bottom: 10px;
+    margin-right: 100px;
+}
+
+.chef-icon {
+    width: 100px;
+    height: auto;
+    margin-top: 20px;
+    /* HTML: <div class="loader"></div> */
+}
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 90px;
+    height: 14px;
+    box-shadow: 0 3px 0 #fff;
+    position: relative;
+    clip-path: inset(-40px 0 -5px)
+  }
+  .loader:before {
+    content: "";
+    position: absolute;
+    inset: auto calc(50% - 17px) 0;
+    height: 50px;
+    --g:no-repeat linear-gradient(#FFA500 0 0);
+    background: var(--g),var(--g),var(--g),var(--g);
+    background-size: 16px 14px;
+    animation:
+      l7-1 2s infinite linear,
+      l7-2 2s infinite linear;
+  }
+  @keyframes l7-1 {
+    0%,
+    100%  {background-position: 0 -50px,100% -50px}
+    17.5% {background-position: 0 100%,100% -50px,0 -50px,100% -50px}
+    35%   {background-position: 0 100%,100% 100% ,0 -50px,100% -50px}
+    52.5% {background-position: 0 100%,100% 100% ,0 calc(100% - 16px),100% -50px}
+    70%,
+    98%  {background-position: 0 100%,100% 100% ,0 calc(100% - 16px),100% calc(100% - 16px)}
+  }
+  @keyframes l7-2 {
+    0%,70% {transform:translate(0)}
+    100%  {transform:translate(200%)}
+  }
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
