@@ -39,6 +39,8 @@ main {
 .order-list {
     display: flex;
     flex-wrap: wrap;
+    padding: 20px;
+    flex-direction: column;
     gap: 2rem;
     background-color: #ffff;
     border-radius: 5px;

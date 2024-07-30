@@ -46,13 +46,15 @@
                 }
 
                 items.forEach(item => {
+
+                    if(item.state == 'venue'){
+                        item.state = 'Being Prepared';
+                    }
+                    else{
+                        item.state = 'Ready to serve';
+                    }
+
                     const itemDiv = document.createElement('div');
-                    //foodState;
-                    // if (item.state === 'done') {
-                    //     foodState = 'Ready';
-                    // }else if( item.state === 'venue'){
-                    //     foodState = 'Being prepared'
-                    // }
                     itemDiv.classList.add('order-item');
                     itemDiv.innerHTML = `
                         <img src="${item.image}" alt="${item.name}">

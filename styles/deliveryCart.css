@@ -11,6 +11,10 @@ header {
     align-items: center;
     padding: 10px 20px;
     background-color: #f8f8f8;
+    background-image: url('../images/bg2.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
     border-bottom: 1px solid #ddd;
     margin-top: 0px;
     width: 100%;
@@ -156,13 +160,21 @@ footer p {
 }
 
 .cart-item-details button {
-    padding: 10px 20px;
+    padding: 10px;
     margin: 5px 5px 0 0;
     border: none;
     background-color: #ff4d4d;
     color: white;
     cursor: pointer;
     border-radius: 5px;
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.cart-item .item-buttons {
+    display: flex;
+    gap: 5px;
 }
 
 .cart-item-details button:hover {
@@ -176,6 +188,14 @@ footer p {
 
 .cart-item-details .reduce-quantity:hover {
     background-color: #e69500;
+}
+
+.cart-item-details .increase-quantity {
+    background-color: #4CAF50;
+}
+
+.cart-item-details .increase-quantity:hover {
+    background-color: #45a049;
 }
 /* Styling for quantity buttons */
 .quantity-btn {

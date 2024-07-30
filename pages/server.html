@@ -71,7 +71,7 @@
 
                         // Add phone number or server ID based on state
                         const infoLi = document.createElement('li');
-                        infoLi.textContent = item.state === 'venue' ? `Server ID: ${item.serverId}` : `Phone: ${item.phoneNumber}`;
+                        infoLi.textContent = item.state === 'venue' ? `Server ID: ${item.customerPhone}` : `Phone: ${item.customerPhone}`;
                         ul.appendChild(infoLi);
 
                         orderSection.appendChild(orderHeader);

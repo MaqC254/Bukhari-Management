@@ -57,8 +57,11 @@
                                 <p>${item.description}</p>
                                 <p>Pieces: ${item.quantity}</p>
                                 <p>Price: Tsh ${item.price * item.quantity}</p>
-                                <button class="remove-from-cart" data-index="${index}">Remove</button>
-                                <button class="reduce-quantity" data-index="${index}">Reduce Quantity</button>
+                                <div class="item-buttons">
+                                    <button class="remove-from-cart" data-index="${index}">Remove</button>
+                                    <button class="reduce-quantity" data-index="${index}">&#8722;</button>
+                                    <button class="increase-quantity" data-index="${index}">&#43;</button>
+                                </div>
                             </div>
                         `;
                         cartList.appendChild(itemDiv);
@@ -85,6 +88,14 @@
                             } else {
                                 cart.splice(index, 1);
                             }
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                            renderCart();
+                        });
+                    });
+                    document.querySelectorAll('.increase-quantity').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const index = e.target.getAttribute('data-index');
+                                cart[index].quantity += 1;
                             localStorage.setItem('cart', JSON.stringify(cart));
                             renderCart();
                         });
