@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Meals</title>
+    <link rel="stylesheet" href="../styles/deliveryMenu.css">
+</head>
+<body>
+    <header>
+        <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
+        <h1 class="menu-heading">Menu</h1>
+        <div class="header-icons">
+            <a href="../pages/waiter_orders.html"><img src="../images/orders.png" alt="Cart"></a>
+            <a href="../pages/localCart.html"><img src="../images/icons8-cart-24.png" alt="Cart"></a>
+        </div>
+    </header>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <!-- <div class="tick-container">
+                <svg class="tick-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 16.17l-3.88-3.88L4 13.41 9 18.41l12-12L19.59 5 9 16.17z"/></svg>
+            </div> -->
+            <div class="wrapper"> <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"> <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/> <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+            </div>
+            <p class="message">Item successfully added to cart</p>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+    </div>
+
+    <main>
+        <div class="meal-list">
+            <% meals.forEach(meal => { %>
+                <div class="meal">
+                    <img src="<%= meal.image %>" alt="<%= meal.name %>">
+                    <h2><%= meal.name %></h2>
+                    <p><%= meal.description %></p>
+                    <p>Cost Tsh: <%= meal.price %></p>
+                    <button class="add-to-cart" data-id="<%= meal.id %>" data-name="<%= meal.name %>" data-description="<%= meal.description %>" data-image="<%= meal.image %>" data-price="<%= meal.price %>" onclick="addItemToCart()">Add to Order</button>
+                </div>
+            <% }); %>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bukhari Restaurant</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', () => {
+                    const id = button.getAttribute('data-id');
+                    const name = button.getAttribute('data-name');
+                    const description = button.getAttribute('data-description');
+                    const image = button.getAttribute('data-image');
+                    const price = button.getAttribute('data-price');
+
+                    // Get the current cart from localStorage
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                    // Check if the item is already in the cart
+                    const existingItem = cart.find(item => item.id === id);
+
+                    if (existingItem) {
+                        // If item exists, increment the quantity
+                        existingItem.quantity += 1;
+                    } else {
+                        // If item doesn't exist, add it to the cart with quantity 1
+                        cart.push({ id, name, description, image, quantity: 1, price });
+                    }
+
+                    // Save the updated cart back to localStorage
+                    localStorage.setItem('cart', JSON.stringify(cart));
+
+                    // Optionally show a message or update the cart icon
+                    // alert(`${name} has been added to the cart.`);
+                });
+            });
+        });
+
+        /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
+        var prevScrollpos = window.pageYOffset;
+        window.onscroll = function() {
+        var currentScrollPos = window.pageYOffset;
+        if (prevScrollpos > currentScrollPos) {
+            document.getElementById("navbar").style.top = "0";
+        } else {
+            document.getElementById("navbar").style.top = "-50px";
+        }
+        prevScrollpos = currentScrollPos;
+        } 
+    
+
+        function addItemToCart() {
+        // Your code to add the item to the cart goes here
+
+        // Show the modal
+        var modal = document.getElementById("myModal");
+        modal.style.display = "block";
+    }
+
+    function closeModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "none";
+    }
+
+    // Close the modal when the user clicks anywhere outside of it
+    window.onclick = function(event) {
+        var modal = document.getElementById("myModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    </script>
+</body>
+</html>
