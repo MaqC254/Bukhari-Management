@@ -498,6 +498,13 @@ app.get('/api/reports/monthly/:year/:month', async (req, res) => {
     }
 });
 
+console.log('Starting the app...');
+
+// Ensure that any uncaught exceptions are handled
+process.on('uncaughtException', (err) => {
+  console.error('There was an uncaught error', err);
+});
+
 // Route to fetch order status
 app.get('/orderstatus', async (req, res) => {
     const customerPhone = req.query.phone; // Retrieve phone number from query parameter
@@ -517,3 +524,18 @@ app.get('/orderstatus', async (req, res) => {
       res.status(500).send('Error fetching order status');
     }
   });
+
+  const { initiateSTKPush } = require('./mpesa');
+
+  // Add this route to handle M-Pesa payment request
+  app.post('/mpesa/stkpush', async (req, res) => {
+      const { phoneNumber, amount } = req.body;
+      try {
+          const response = await initiateSTKPush(phoneNumber, amount);
+          res.status(200).json({ success: true, message: 'Payment request sent! Check your phone.', data: response });
+      } catch (error) {
+          res.status(500).json({ success: false, message: 'Error initiating payment', error: error.message });
+      } 
+  });
+  
+  // Existing routes...

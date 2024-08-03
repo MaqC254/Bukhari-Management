@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bukhari Restaurant Waiting Application</title>
     <link rel="stylesheet" href="../styles/mobile.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -46,8 +47,37 @@
         paymentForm.addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
             // For demonstration purposes, show "Payment Received!" message
-            alert('Payment made successfully');
+            alert('Check your phone for payment');
             window.location.href = 'orderstate.html';
+        });
+
+        $(document).ready(function() {
+            $('#paymentForm').on('submit', function(event) {
+                event.preventDefault(); // Prevent the form from submitting the traditional way
+                
+                // Get form data
+                var phoneNumber = $('#phone-input').val();
+                var amount = localStorage.getItem('total');
+
+                // Send data to your server
+                $.ajax({
+                    url: 'http://localhost:3000/mpesa/stkpush', // Your server endpoint
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        phoneNumber: phoneNumber,
+                        amount: amount
+                    }),
+                    success: function(response) {
+                        alert('Payment request sent! Check your phone.');
+                        window.location.href = 'orderstate.html';
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                        alert('An error occurred while initiating payment.');
+                    }
+                });
+            });
         });
     </script>
 </body>
