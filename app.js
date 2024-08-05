@@ -12,6 +12,7 @@ const fs = require('fs');
 const xlsx = require('xlsx');
 //const store = new session.MemoryStore();
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
@@ -525,7 +526,7 @@ app.get('/orderstatus', async (req, res) => {
     }
   });
 
-  const { initiateSTKPush } = require('./mpesa');
+  const { initiateSTKPush } = require('./mpesa/stkpush/mpesa.js');
 
   // Add this route to handle M-Pesa payment request
   app.post('/mpesa/stkpush', async (req, res) => {
