@@ -458,42 +458,39 @@ app.get('/api/most-wanted-item', async (req, res) => {
     }
 });
 
-// Route to generate monthly report in XLSX format
-app.get('/api/reports/monthly/:year/:month', async (req, res) => {
-    const { year, month } = req.params;
-    const startDate = new Date(year, month - 1, 1); // Month is zero-indexed in JavaScript Date, so subtract 1
-    const endDate = new Date(year, month, 0, 23, 59, 59); // Last day of the month
+// Route to generate Sales reports
+app.get('/api/reports/:year/:month/:week?/:day?', async (req, res) => {
+    const { year, month, week, day } = req.params;
+
+    let startDate, endDate;
+
+    if (week) {
+        // Calculate start and end dates for the week
+        const firstDayOfMonth = new Date(year, month - 1, 1);
+        const startOfWeek = firstDayOfMonth.getDate() + (week - 1) * 7;
+        startDate = new Date(year, month - 1, startOfWeek);
+        endDate = new Date(year, month - 1, startOfWeek + 6, 23, 59, 59);
+    } else if (day) {
+        // Specific day
+        startDate = new Date(year, month - 1, day);
+        endDate = new Date(year, month - 1, day, 23, 59, 59);
+    } else {
+        // Entire month
+        startDate = new Date(year, month - 1, 1);
+        endDate = new Date(year, month, 0, 23, 59, 59); // Last day of the month
+    }
 
     try {
-        const monthlyReportData = await Item.find({
+        const reportData = await Item.find({
             createdAt: {
                 $gte: startDate,
                 $lte: endDate
             }
-        });
+        }).select('name quantity price month');
 
-        // Convert JSON data to XLSX format
-        const worksheet = xlsx.utils.json_to_sheet(monthlyReportData);
-        const workbook = xlsx.utils.book_new();
-        xlsx.utils.book_append_sheet(workbook, worksheet, 'Monthly Report');
-        console.log('Monthly Report Data:', monthlyReportData);
-
-        // Save XLSX file to server
-        const filePath = `monthly-report-${year}-${month}.xlsx`;
-        xlsx.writeFile(workbook, filePath);
-
-        // Respond with file download link or status
-        res.download(filePath, (err) => {
-            if (err) {
-                console.error('Error downloading file:', err);
-                res.status(500).send('Error downloading file');
-            } else {
-                // Optionally, delete the file after download
-                fs.unlinkSync(filePath);
-            }
-        });
+        res.json(reportData);
     } catch (err) {
-        console.error('Error generating monthly report:', err);
+        console.error('Error generating report:', err);
         res.status(500).send(err.message);
     }
 });
