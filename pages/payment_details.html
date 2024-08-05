@@ -19,7 +19,7 @@
             <h3>Payment Details</h3>
             <form id="payment_details">
                 <input type="text" id="tableNo" placeholder="Table Number" required>
-                <input type="number" id="amount" placeholder="Amount" required>
+                <p id="amount"></p>
                 <div class="payment-buttons">
                     <button type="button" class="payment-button cash">Cash</button>
                     <button type="button" class="payment-button mobile">Mobile</button>
@@ -29,6 +29,11 @@
     </main>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const total = localStorage.getItem('total');
+            document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
+        });
+
         document.querySelector(".cash").addEventListener("click", function() {
             handlePayment("cash");
         });
@@ -39,7 +44,7 @@
 
         function handlePayment(paymentType) {
             const tableNo = document.querySelector("#tableNo").value;
-            const amount = document.querySelector("#amount").value;
+            // const amount = document.querySelector("#amount").value;
 
             if (tableNo && amount) {
                 if (paymentType === "cash") {
