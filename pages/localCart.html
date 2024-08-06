@@ -22,6 +22,10 @@
         <div class="cart-total">
             <p id="cart-total"></p>
         </div>
+        <div class="table-number">
+            <label for="table-number">Table Number:</label>
+            <input type="text" id="table-number" placeholder="Enter table number">
+        </div>
         <div class="confirm-order">
             <button id="confirm-order-btn">Confirm Order</button>
         </div>
@@ -94,7 +98,7 @@
                     document.querySelectorAll('.increase-quantity').forEach(button => {
                         button.addEventListener('click', (e) => {
                             const index = e.target.getAttribute('data-index');
-                                cart[index].quantity += 1;
+                            cart[index].quantity += 1;
                             localStorage.setItem('cart', JSON.stringify(cart));
                             renderCart();
                         });
@@ -106,13 +110,20 @@
 
             // Function to send cartItems to server and confirm order
             document.getElementById('confirm-order-btn').addEventListener('click', async () => {
+                const tableNumber = document.getElementById('table-number').value;
+
+                if (!tableNumber) {
+                    alert('Please enter a table number.');
+                    return;
+                }
+
                 try {
                     const response = await fetch('http://localhost:3000/api/add-order', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ cartItems: cart, workID: localStorage.getItem('workId') }),
+                        body: JSON.stringify({ cartItems: cart, workID: localStorage.getItem('workId'), tableNumber: tableNumber }),
                     });
 
                     if (!response.ok) {

@@ -18,7 +18,6 @@
         <section class="payment-details">
             <h3>Payment Details</h3>
             <form id="payment_details">
-                <input type="text" id="tableNo" placeholder="Table Number" required>
                 <p id="amount"></p>
                 <div class="payment-buttons">
                     <button type="button" class="payment-button cash">Cash</button>
@@ -30,7 +29,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const total = localStorage.getItem('total');
+            const total = localStorage.getItem('selectedTableTotal');
             document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
         });
 
@@ -43,17 +42,14 @@
         });
 
         function handlePayment(paymentType) {
-            const tableNo = document.querySelector("#tableNo").value;
-            // const amount = document.querySelector("#amount").value;
+            //const tableNo = document.querySelector("#tableNo").value;
+            const amount = localStorage.getItem('selectedTableTotal');
 
-            if (tableNo && amount) {
-                if (paymentType === "cash") {
-                    window.location.href = 'cash.html';
-                } else if (paymentType === "mobile") {
-                    window.location.href = 'mobile.html';
-                }
-            } else {
-                alert("Fill all the cells");
+                
+            if (paymentType === "cash") {
+                window.location.href = 'cash.html';
+            } else if (paymentType === "mobile") {
+                window.location.href = 'mobile.html';
             }
         }
     </script>

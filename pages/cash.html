@@ -14,7 +14,8 @@
             <div class="icon"><!-- Add icon here --></div>
         </header>
         <main>
-            <p class="payment-confirmation">Confirm Cash Payment<br>Of: <span class="amount">Tsh. 10000</span></p>
+            <p class="payment-confirmation">Confirm Cash Payment<br>Of:
+                 <p id="amount"></p>
             <button class="confirm-button">Confirm</button>
             <div class="payment-received">
                 <img src="../images/paid.png" alt="Check Icon" class="check-icon">
@@ -24,6 +25,14 @@
                 <img src="../images/waiter.jpeg" alt="Waiter Image">
             </div>
         </main>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const total = localStorage.getItem('selectedTableTotal');
+                document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
+            });
+            </script>
+
         <footer>
             <img src="../images/Bukhari logo.jpg" alt="Bukhari Small Logo" class="small-logo">
             <p>Bukhari</p>

@@ -17,6 +17,7 @@
             <p class="payment-method">Mobile Payment:</p>
             <label for="phone-input">Enter Phone number to pay with</label>
             <input type="text" id="phone-input" placeholder="Enter Phone number to pay with">
+            <p id="amount">Amount to be paid</p>
             <button class="confirm-button">Confirm</button>
             <div class="payment-received">
                 <img src="../images/paid.png" alt="Check Icon" class="check-icon">
@@ -25,6 +26,12 @@
                 <img src="../images/waiter.jpeg" alt="Waiter Image">
             </div>
         </main>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const total = localStorage.getItem('selectedTableTotal');
+                document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
+            });
+            </script>
         <footer>
             <img src="../images/Bukhari logo.jpg" alt="Bukhari Small Logo" class="small-logo">
             <p>Bukhari</p>

@@ -378,6 +378,7 @@ app.post('/api/add-order', async (req, res) => {
     try {
         const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
         const workID = req.body.workID;
+        const tableNumber = req.body.tableNumber
         //const customerPhone = req.session.user;
         console.log(req.session);
 
@@ -391,6 +392,7 @@ app.post('/api/add-order', async (req, res) => {
             category: item.category, // Assuming each item has a category property
             state: 'venue', // Default state for new items
             customerPhone: workID,
+            tableNumber: tableNumber
         }));
 
         // Insert all items into MongoDB using create() method
