@@ -523,17 +523,45 @@ app.get('/orderstatus', async (req, res) => {
     }
   });
 
-  const { initiateSTKPush } = require('./mpesa/stkpush/mpesa.js');
-
-  // Add this route to handle M-Pesa payment request
-  app.post('/mpesa/stkpush', async (req, res) => {
-      const { phoneNumber, amount } = req.body;
-      try {
-          const response = await initiateSTKPush(phoneNumber, amount);
-          res.status(200).json({ success: true, message: 'Payment request sent! Check your phone.', data: response });
-      } catch (error) {
-          res.status(500).json({ success: false, message: 'Error initiating payment', error: error.message });
-      } 
-  });
   
-  // Existing routes...
+    // Define a schema and model for the payment
+    const paymentSchema = new mongoose.Schema({
+        phoneNumber: String,
+        mpesaCode: String,
+        amount: Number
+    });
+
+    const Payment = mongoose.model('Payment', paymentSchema);
+
+    // Handle payment submission
+    app.post('/submit-payment', async (req, res) => {
+        const { phoneNumber, mpesaCode, amount } = req.body;
+        
+        const payment = new Payment({
+            phoneNumber,
+            mpesaCode,
+            amount
+        });
+
+        try {
+            await payment.save();
+            res.json({ success: true });
+        } catch (error) {
+            res.json({ success: false, error });
+        }
+    });
+//   const { initiateSTKPush } = require('./mpesa/stkpush/mpesa.js');
+// //   const { initiateSTKPush } = require('./mpesa/stkpush/mpesa.js');
+
+//   // Add this route to handle M-Pesa payment request
+//   app.post('/mpesa/stkpush', async (req, res) => {
+//       const { phoneNumber, amount } = req.body;
+//       try {
+//           const response = await initiateSTKPush(phoneNumber, amount);
+//           res.status(200).json({ success: true, message: 'Payment request sent! Check your phone.', data: response });
+//       } catch (error) {
+//           res.status(500).json({ success: false, message: 'Error initiating payment', error: error.message });
+//       } 
+//   });
+  
+//   // Existing routes...

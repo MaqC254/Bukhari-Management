@@ -18,7 +18,11 @@
             <p class="payment-method">Online Payment:</p>
             <form id="paymentForm" action="orderstate.html" method="GET">
                 <label for="phone-input">Enter Phone number to pay with</label>
-                <input type="text" id="phone-input" name="phone" placeholder="Enter Phone number to pay with" required>
+                <input type="text" id="phone-input" name="phone" placeholder="07xxxxxxxx" required>
+
+                <label for="mpesa-code">Enter M-Pesa Transaction Code</label>
+                <input type="text" id="mpesa-code" name="mpesaCode" placeholder="SH674HWX83" required>
+
                 <p id="amount"></p>
                 <button type="submit" class="confirm-button">Confirm</button>
             </form>
@@ -37,18 +41,11 @@
     </div>
 
     <script>
+        // 
+        
         document.addEventListener('DOMContentLoaded', () => {
             const total = localStorage.getItem('total');
             document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
-        });
-
-        const paymentForm = document.getElementById('paymentForm');
-
-        paymentForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
-            // For demonstration purposes, show "Payment Received!" message
-            alert('Check your phone for payment');
-            window.location.href = 'orderstate.html';
         });
 
         $(document).ready(function() {
@@ -57,15 +54,17 @@
                 
                 // Get form data
                 var phoneNumber = $('#phone-input').val();
+                var mpesaCode = $('#mpesa-code').val();
                 var amount = localStorage.getItem('total');
 
                 // Send data to your server
                 $.ajax({
-                    url: 'https://b3f1-41-89-227-171.ngrok-free.app', // Your server endpoint
+                    url: '/submit-payment', // Your server endpoint
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
                         phoneNumber: phoneNumber,
+                        mpesaCode: mpesaCode,
                         amount: amount
                     }),
                     success: function(response) {
@@ -79,6 +78,7 @@
                 });
             });
         });
+
     </script>
 </body>
 </html>

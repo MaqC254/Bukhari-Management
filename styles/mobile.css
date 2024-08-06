@@ -82,6 +82,14 @@ label {
     border-radius: 5px;
 }
 
+#mpesa-code {
+    width: calc(100% - 40px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
 .confirm-button {
     background-color: #FFA500;
     color: white;
@@ -98,6 +106,10 @@ label {
     margin-top: 20px;
     color: orange;
     font-weight: bold;
+}
+
+.confirm-button:hover {
+    background-color: #45a049;
 }
 
 .check-icon {
