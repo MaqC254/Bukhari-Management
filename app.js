@@ -12,7 +12,6 @@ const fs = require('fs');
 const xlsx = require('xlsx');
 //const store = new session.MemoryStore();
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
 const port = 3000;
@@ -378,7 +377,6 @@ app.post('/api/add-order', async (req, res) => {
     try {
         const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
         const workID = req.body.workID;
-        const tableNumber = req.body.tableNumber
         //const customerPhone = req.session.user;
         console.log(req.session);
 
@@ -392,7 +390,6 @@ app.post('/api/add-order', async (req, res) => {
             category: item.category, // Assuming each item has a category property
             state: 'venue', // Default state for new items
             customerPhone: workID,
-            tableNumber: tableNumber
         }));
 
         // Insert all items into MongoDB using create() method
@@ -498,13 +495,6 @@ app.get('/api/reports/:year/:month/:week?/:day?', async (req, res) => {
     }
 });
 
-console.log('Starting the app...');
-
-// Ensure that any uncaught exceptions are handled
-process.on('uncaughtException', (err) => {
-  console.error('There was an uncaught error', err);
-});
-
 // Route to fetch order status
 app.get('/orderstatus', async (req, res) => {
     const customerPhone = req.query.phone; // Retrieve phone number from query parameter
@@ -524,46 +514,3 @@ app.get('/orderstatus', async (req, res) => {
       res.status(500).send('Error fetching order status');
     }
   });
-
-  
-    // Define a schema and model for the payment
-    const paymentSchema = new mongoose.Schema({
-        phoneNumber: String,
-        mpesaCode: String,
-        amount: Number
-    });
-
-    const Payment = mongoose.model('Payment', paymentSchema);
-
-    // Handle payment submission
-    app.post('/submit-payment', async (req, res) => {
-        const { phoneNumber, mpesaCode, amount } = req.body;
-        
-        const payment = new Payment({
-            phoneNumber,
-            mpesaCode,
-            amount
-        });
-
-        try {
-            await payment.save();
-            res.json({ success: true });
-        } catch (error) {
-            res.json({ success: false, error });
-        }
-    });
-//   const { initiateSTKPush } = require('./mpesa/stkpush/mpesa.js');
-// //   const { initiateSTKPush } = require('./mpesa/stkpush/mpesa.js');
-
-//   // Add this route to handle M-Pesa payment request
-//   app.post('/mpesa/stkpush', async (req, res) => {
-//       const { phoneNumber, amount } = req.body;
-//       try {
-//           const response = await initiateSTKPush(phoneNumber, amount);
-//           res.status(200).json({ success: true, message: 'Payment request sent! Check your phone.', data: response });
-//       } catch (error) {
-//           res.status(500).json({ success: false, message: 'Error initiating payment', error: error.message });
-//       } 
-//   });
-  
-//   // Existing routes...
