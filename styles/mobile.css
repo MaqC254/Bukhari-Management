@@ -72,6 +72,8 @@ label {
     display: block;
     margin-bottom: 5px;
     font-size: 14px;
+    text-align: left;
+    margin-left: 20px;
 }
 
 #phone-input {
@@ -82,6 +84,15 @@ label {
     border-radius: 5px;
 }
 
+#location {
+    width: 100px;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
 #mpesa-code {
     width: calc(100% - 40px);
     padding: 10px;
@@ -89,6 +100,38 @@ label {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
+.shipping-fee {
+                background-color: green;
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                font-size: 13px;
+                font-weight: bold;
+                margin-top: 10px;
+                display: inline-block;
+                margin-bottom: 20px;
+
+            }
+            
+            select {
+                padding: 10px;
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            .fee-container {
+                display: flex;
+                align-items: center;
+            }
+
+            .fee-container select {
+                flex: 1;
+            }
+
+            .fee-container .shipping-fee {
+                margin-left: 10px;
+            }
 
 .confirm-button {
     background-color: #FFA500;
