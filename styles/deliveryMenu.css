@@ -251,3 +251,20 @@ footer {
   bottom: 0;
   height: 20px;
 }
+
+/* CSS for the cart counter with glowing shadow */
+.cart-counter {
+  position: absolute;
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #f00; /* Change this to match your theme */
+  border-radius: 50%;
+  padding: 5px 10px;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.8), /* Inner shadow for a more intense glow */
+              0 0 15px rgba(255, 0, 0, 0.5); /* Outer shadow for a softer glow */
+  transition: box-shadow 0.3s ease; /* Smooth transition for the glow effect */
+  top: 0px;
+  right: 0px;
+}

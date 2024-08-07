@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="../styles/deliveryCart.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
 </head>
 <body>
     <header>
@@ -26,7 +28,6 @@
             <button id="confirm-order-btn">Confirm Order</button>
         </div>
     </main>
-
     <!-- <footer>
         <p>&copy; 2024 Bukhari Restaurant</p>
     </footer> -->
@@ -123,9 +124,21 @@
                         throw new Error('Failed to add items to server.');
                     }
 
-                    localStorage.removeItem('cart');
-                    alert('Order confirmed successfully!');
+                    // Trigger confetti animation
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#ff0', '#f0f', '#0ff', '#f00', '#0f0']
+                });
+
+                // Remove cart from local storage
+                localStorage.removeItem('cart');
+
+                // Redirect to the checkout page after the confetti animation
+                setTimeout(() => {
                     window.location.href = 'online_checkout.html';
+                }, 500); // Wait for the confetti to finish before redirecting
 
                 } catch (error) {
                     console.error('Error confirming order:', error);

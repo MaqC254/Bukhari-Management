@@ -217,3 +217,71 @@ footer p {
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+#confirm-order-btn:hover {
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
+  }
+  
+  /* Lightning effect
+  #confirm-order-btn::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 120%;
+    height: 120%;
+    background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.3) 50%, transparent 60%);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    transform: rotate(-30deg);
+    opacity: 0.7;
+    animation: lightning 1.5s infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes lightning {
+    0%, 100% {
+      transform: translateX(-50%) rotate(-30deg);
+      opacity: 0.7;
+    }
+    50% {
+      transform: translateX(0) rotate(-30deg);
+      opacity: 1;
+    }
+  } */
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Confetti effect */
+@keyframes confettiFall {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+#confetti {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+}
+
+.confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: randomColor();
+    opacity: 0.8;
+    border-radius: 50%;
+    animation: confettiFall 1s ease-out forwards;
+}
+
+@keyframes confettiFall {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
