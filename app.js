@@ -6,12 +6,7 @@ const session = require('express-session');
 const ejs = require('ejs');
 const multer = require('multer');
 const mongoDBSession = require('connect-mongodb-session')(session);
-const cookieParser = require("cookie-parser");
-const { Parser } = require('json2csv');
-const fs = require('fs');
-const xlsx = require('xlsx');
-//const store = new session.MemoryStore();
-const cors = require('cors');
+//const cors = require('cors');
 
 const app = express();
 const port = 3000;
@@ -37,11 +32,11 @@ mongoose.connect(dbURI, {})
     });
 
 // Middleware
-app.use(cors());
+//app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');// Set EJS as the view engine
-app.set('views', __dirname + '/views'); // Set EJS as the view engine
+app.set('views', __dirname + '/views'); // Specify the vies directory
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -62,16 +57,13 @@ app.use('/styles', express.static(path.join(__dirname, 'styles')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
 app.use('/pages', express.static(path.join(__dirname, 'pages')));
-//app.use('/views', express.static(path.join(__dirname, 'views')));
 
-// Import Employee model
+// Import models
 const Employee = require('./models/employee.js');
 const Customer = require('./models/customer.js');
 const MenuItem = require('./models/MenuItem.js');
 const Meal = require('./models/meal'); 
 const Item = require('./models/server_items'); 
-
-const { functions } = require('lodash');
 
 // Route to serve the homepage
 app.get('/', (req, res) => {
@@ -79,60 +71,28 @@ app.get('/', (req, res) => {
 });
 
 // Routes to serve various HTML pages
-app.get('/pages/cash.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'cash.html'));
-});
 
-app.get('/pages/customer_signin.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'customer_signin.html'));
-});
+const staticPages = [
+    'cash.html',
+    'customer_signin.html',
+    'customer_signup.html',
+    'Delivery.html',
+    'deliveryCart.html',
+    'employee_signin.html',
+    'employee_signup.html',
+    'mobile.html',
+    'online_checkout.html',
+    'order_details.html',
+    'orderstate.html',
+    'payment_details.html',
+    'server.html',
+    'waiter_orders.html'
+];
 
-app.get('/pages/customer_signup.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'customer_signup.html'));
-});
-
-app.get('/pages/Delivery.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'Delivery.html'));
-});
-
-app.get('/pages/deliveryCart.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'deliveryCart.html'));
-});
-
-app.get('/pages/employee_signin.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'employee_signin.html'));
-});
-
-app.get('/pages/employee_signup.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'employee_signup.html'));
-});
-
-app.get('/pages/mobile.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'mobile.html'));
-});
-
-app.get('/pages/online_checkout.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'online_checkout.html'));
-});
-
-app.get('/pages/order_details.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'order_details.html'));
-});
-
-app.get('/pages/orderstate.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'orderstate.html'));
-});
-
-app.get('/pages/payment_details.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'payment_details.html'));
-});
-
-app.get('/pages/server.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'server.html'));
-});
-
-app.get('/pages/waiter_orders.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'waiter_orders.html'));
+staticPages.forEach(page => {
+    app.get(`/pages/${page}`, (req, res) => {
+        res.sendFile(path.join(__dirname, 'pages', page));
+    });
 });
 
 // Route to serve add-meal.html
@@ -142,7 +102,6 @@ app.get('/add-meal', (req, res) => {
 
 app.get('/views/available.ejs', async (req, res) => {
     const meals = await MenuItem.find();
-    console.log(meals);
     res.render('available',{
         meals: meals
     })  
@@ -150,8 +109,6 @@ app.get('/views/available.ejs', async (req, res) => {
 
 app.get('/views/deliveryMenu.ejs', async (req, res) => {
     const meals = await MenuItem.find();
-    //console.log(meals);
-    console.log(req.session);
     res.render('deliveryMenu',{
         meals: meals
     })  
@@ -159,7 +116,6 @@ app.get('/views/deliveryMenu.ejs', async (req, res) => {
 
 app.get('/views/venueMenu.ejs', async (req, res) => {
     const meals = await MenuItem.find();
-    console.log(meals);
     res.render('venueMenu',{
         meals: meals
     })  
@@ -186,7 +142,6 @@ app.post('/saveData', function(req, res) {
     // Save employee to the database
     newEmployee.save()
         .then(() => {
-            console.log('Employee saved successfully');
             res.redirect('/pages/employee_signin.html'); // Redirect to sign-in page upon successful signup
         })
         .catch(err => {
@@ -243,7 +198,6 @@ app.post('/customer_signin', async (req, res) => {
         res.status(200).json({ success: true, message: 'Sign in successful' });
         req.session.authenticated = true;
         req.session.user = customer.phone;
-        console.log(req.session);
         req.session.save();
 
     } catch (err) {
@@ -348,8 +302,6 @@ app.post('/api/add-items', async (req, res) => {
     try {
         const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
         const phone = req.body.phone;
-        //const customerPhone = req.session.user;
-        console.log(req.session);
 
         // Create an array of items to insert into MongoDB
         const itemsToInsert = cartItems.map(item => ({
@@ -378,8 +330,6 @@ app.post('/api/add-order', async (req, res) => {
         const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
         const workID = req.body.workID;
         const tableNumber = req.body.tableNumber;
-        //const customerPhone = req.session.user;
-        console.log(req.session);
 
         // Create an array of items to insert into MongoDB
         const itemsToInsert = cartItems.map(item => ({
