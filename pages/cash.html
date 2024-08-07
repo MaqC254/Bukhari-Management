@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bukhari Restaurant Waiting Application</title>
+    <title>Bukhari Restaurant - Cash Payment</title>
     <link rel="stylesheet" href="../styles/cash.css">
 </head>
 <body>
@@ -32,9 +32,35 @@
                 document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
             });
 
-            function confirmPayment() {
-                alert("Payment made in cash");
-                window.location.href = '../views/venueMenu.ejs';
+            async function confirmPayment() {
+                const tableNumber = localStorage.getItem('selectedTableNumber');
+
+                if (!tableNumber) {
+                    alert('No table number found. Please try again.');
+                    return;
+                }
+
+                try {
+                    // Fetch items by table number
+                    const itemsResponse = await fetch(`/api/items?tableNumber=${tableNumber}`);
+                    const items = await itemsResponse.json();
+
+                    // Update each item as paid
+                    await Promise.all(items.map(item => 
+                        fetch(`/update-paid/${item._id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                    ));
+
+                    alert('Payment confirmed. Thank you!');
+                    window.location.href = '../views/venueMenu.ejs'; // Redirect to venue menu or another page
+                } catch (error) {
+                    console.error('Error confirming payment:', error);
+                    alert('Failed to confirm payment. Please try again.');
+                }
             }
         </script>
 

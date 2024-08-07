@@ -442,12 +442,19 @@ app.put('/update-item/:id', (req, res) => {
         .catch(err => res.status(400).send(err));
 });
 
+app.put('/update-paid/:id', (req, res) => {
+    const { id } = req.params;
+    Item.findByIdAndUpdate(id, { paid: true }, { new: true })
+        .then(item => res.status(200).json(item))
+        .catch(err => res.status(400).send(err));
+});
+
 // Route to get items by workId on waiter order screen
 app.get('/api/items', async (req, res) => {
     const customerPhone = req.query.customerPhone; // Get customerPhone from query parameters
 
     try {
-        const items = await Item.find({ customerPhone });
+        const items = await Item.find({ customerPhone , paid : false });
         res.status(200).json(items);
     } catch (err) {
         res.status(500).json({ error: 'Server error' });

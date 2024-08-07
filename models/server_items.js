@@ -7,12 +7,13 @@ const itemSchema = new mongoose.Schema({
     image: String,
     quantity: Number,
     price: Number,
-    state: { type: String, default: 'online' }, // Adding the 'state' field with default value 'online'
+    state: { type: String, default: 'online' }, 
     customerPhone: String,
     month: Number,
     tableNumber : { type: Number, default: 0} ,
     createdAt: { type: Date, default: Date.now },
-    month: Number
+    month: Number,
+    paid: { type: Boolean, default: false }
 });
 
 // Middleware to set the month before saving
