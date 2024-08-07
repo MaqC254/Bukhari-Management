@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const mostWantedItem = await mostWantedResponse.json();
         document.getElementById('most-wanted-item').textContent = `${mostWantedItem._id} (ordered ${mostWantedItem.totalOrdered} times)`;
 
-        // Fetch sales figures for the last 3 months (example for a specific month, e.g., July)
-        const salesResponse = await fetch('http://localhost:3000/api/items/7');
+        // Fetch sales figures for the current month (example for a specific month, e.g., July)
+        const salesResponse = await fetch('http://localhost:3000/api/items/8');
         const salesData = await salesResponse.json();
 
         const labels = salesData.map(item => item._id);
