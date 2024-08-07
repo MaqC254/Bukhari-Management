@@ -41,25 +41,26 @@
                 }
 
                 try {
-                    // Fetch items by table number
-                    const itemsResponse = await fetch(`/api/items?tableNumber=${tableNumber}`);
-                    const items = await itemsResponse.json();
+                    const response = await fetch(`/api/items/mark-as-paid/${tableNumber}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
 
-                    // Update each item as paid
-                    await Promise.all(items.map(item => 
-                        fetch(`/update-paid/${item._id}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            }
-                        })
-                    ));
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`Failed to update items: ${errorData.error}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Update response:', data);
 
                     alert('Payment confirmed. Thank you!');
                     window.location.href = '../views/venueMenu.ejs'; // Redirect to venue menu or another page
                 } catch (error) {
                     console.error('Error confirming payment:', error);
-                    alert('Failed to confirm payment. Please try again.');
+                    alert(`Failed to confirm payment: ${error.message}. Please try again.`);
                 }
             }
         </script>
