@@ -14,12 +14,12 @@
             <div class="icon"><!-- Add icon here --></div>
         </header>
         <main>
-            <p class="payment-confirmation">Confirm Cash Payment<br>Of:
-                 <p id="amount"></p>
-            <button class="confirm-button">Confirm</button>
+            <p class="payment-confirmation">Confirm Cash Payment<br>
+                <span id="amount"></span>
+            </p>
+            <button class="confirm-button" onclick="confirmPayment()">Confirm</button>
             <div class="payment-received">
                 <img src="../images/paid.png" alt="Check Icon" class="check-icon">
-                <p>Payment Received!</p>
             </div>
             <div class="waiter-image">
                 <img src="../images/waiter.jpeg" alt="Waiter Image">
@@ -31,7 +31,12 @@
                 const total = localStorage.getItem('selectedTableTotal');
                 document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
             });
-            </script>
+
+            function confirmPayment() {
+                alert("Payment made in cash");
+                window.location.href = '../views/venueMenu.ejs';
+            }
+        </script>
 
         <footer>
             <img src="../images/Bukhari logo.jpg" alt="Bukhari Small Logo" class="small-logo">
