@@ -8,7 +8,6 @@
 </head>
 <body>
     <header>
-        <!-- <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo"> -->
         <h1 class="orders-heading">Pending Orders</h1>
     </header>
 
@@ -33,6 +32,7 @@
             }
 
             try {
+                // Fetch only unpaid items for the customer
                 const response = await fetch(`/api/items?customerPhone=${customerPhone}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch items');
@@ -69,17 +69,12 @@
                     // Add click event listener to each table group
                     tableDiv.addEventListener('click', () => {
                         localStorage.setItem('selectedTableTotal', totalAmount);
+                        localStorage.setItem('selectedTableNumber', tableNumber); // Ensure table number is stored
                         // Redirect to payment_details.html
                         window.location.href = 'payment_details.html';
                     });
 
                     groupedItems[tableNumber].forEach(item => {
-                        if(item.state === 'venue'){
-                            item.state = 'Being Prepared';
-                        } else {
-                            item.state = 'Ready to serve';
-                        }
-
                         const itemDiv = document.createElement('div');
                         itemDiv.classList.add('order-item');
                         itemDiv.innerHTML = `
@@ -90,6 +85,7 @@
                                 <p>Pieces: ${item.quantity}</p>
                                 <p>Price: Tsh ${item.price}</p>
                                 <p>State: ${item.state}</p>
+                                <p>${item.paid}</p>
                             </div>
                         `;
                         tableDiv.appendChild(itemDiv);
