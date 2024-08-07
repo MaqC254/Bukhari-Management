@@ -438,6 +438,31 @@ app.get('/api/items', async (req, res) => {
     }
 });
 
+// Route for changing payment state to true
+app.put('/api/items/mark-as-paid/:tableNumber', async (req, res) => {
+    const { tableNumber } = req.params; // Get tableNumber from URL parameters
+
+    if (!tableNumber) {
+        console.error('Table number is missing in the request');
+        return res.status(400).json({ error: 'Table number is required' });
+    }
+
+    try {
+        // Update items where tableNumber matches and set paid to true
+        const result = await Item.updateMany(
+            { tableNumber: tableNumber, paid: false }, // Filter to find unpaid items for the table
+            { $set: { paid: true } }, // Update operation
+            { new: true } // Return updated documents
+        );
+
+        console.log('Items updated successfully:', result);
+        res.status(200).json({ message: 'Items updated successfully', result });
+    } catch (err) {
+        console.error('Server error while updating items:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // Route to get items by month
 app.get('/api/items/:month', async (req, res) => {
     const month = parseInt(req.params.month, 10);
