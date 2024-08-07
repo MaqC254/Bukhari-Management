@@ -97,7 +97,7 @@
                 var amount = $('#amount').text().replace('Total Amount: Tsh. ', '');
                 // Send data to your server
                 $.ajax({
-                    url: '/submit-payment', // Your server endpoint
+                    url: '/api/payments/submit-sms', // Your server endpoint
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({

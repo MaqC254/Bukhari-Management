@@ -74,6 +74,16 @@
                         infoLi.textContent = item.state === 'venue' ? `Server ID: ${item.customerPhone}` : `Phone: ${item.customerPhone}`;
                         ul.appendChild(infoLi);
 
+                        // Add the upload SMS button
+                        if (item.state === 'venue') {
+                            const smsButton = document.createElement('button');
+                            smsButton.textContent = 'Upload Payment SMS';
+                            smsButton.addEventListener('click', () => {
+                                window.location.href = '/pages/upload-sms.html';
+                            });
+                            orderSection.appendChild(smsButton);
+                        }
+
                         orderSection.appendChild(orderHeader);
                         orderSection.appendChild(ul);
 

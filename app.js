@@ -165,6 +165,29 @@ app.get('/views/venueMenu.ejs', async (req, res) => {
     })  
 });
 
+app.get('/pages/upload-sms.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'upload-sms.html'));
+});
+
+app.post('/api/payments/submit-sms', async (req, res) => {
+    const smsText = req.body.sms;
+
+    // Extract MPesa code from SMS (assuming it's a 6-digit code)
+    const mpesaCodeMatch = smsText.match(/MPESA CODE: (\d{6})/);
+    if (!mpesaCodeMatch) {
+        return res.status(400).send('Invalid SMS format.');
+    }
+    const mpesaCode = mpesaCodeMatch[1];
+
+    // Check for matching transaction in the database
+    const order = await Item.findOne({ 'customerPhone': mpesaCode });
+    if (order) {
+        res.send(`Match found: Order details - ${order.name}, Quantity: ${order.quantity}`);
+    } else {
+        res.send('No matching transaction found.');
+    }
+});
+
 // Endpoint to save form data to MongoDB
 app.post('/saveData', function(req, res) {
     const employeeData = req.body;
@@ -517,3 +540,36 @@ app.get('/orderstatus', async (req, res) => {
       res.status(500).send('Error fetching order status');
     }
   });
+
+  const paymentSchema = new mongoose.Schema({
+    phoneNumber: { type: String, required: true },
+    mpesaCode: { type: String, required: true },
+    location: { type: String, required: true },
+    amount: { type: String, required: true }
+});
+
+const Payment = mongoose.model('Payment', paymentSchema);
+
+module.exports = Payment;
+
+  app.post('/api/payments/submit-sms', async (req, res) => {
+    try {
+        const { phoneNumber, mpesaCode, location, amount } = req.body;
+
+        // Create a new payment document
+        const payment = new Payment({
+            phoneNumber,
+            mpesaCode,
+            location,
+            amount
+        });
+
+        // Save to MongoDB
+        await payment.save();
+
+        res.status(201).send({ message: 'Payment saved successfully' });
+    } catch (error) {
+        console.error('Error saving payment:', error);
+        res.status(500).send({ error: 'Internal server error' });
+    }
+});
