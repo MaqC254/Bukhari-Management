@@ -20,6 +20,20 @@
                 <label for="phone-input">Enter Phone number to pay with</label>
                 <input type="text" id="phone-input" name="phone" placeholder="07xxxxxxxx" required>
 
+                <label for="location">Select Your Location</label>
+                <select id="location" name="location" required>
+                    <option value="" disabled selected>Select a location</option>
+                    <option value="nyeri-town">Nyeri Town</option>
+                    <option value="kiganjo">Kiganjo</option>
+                    <option value="kiangoma">Kiangoma</option>
+                    <option value="mweiga">Mweiga</option>
+                    <option value="karatina">Karatina</option>
+                    <!-- Add more locations as needed -->
+                </select>
+                <span id="shipping-fee" class="shipping-fee"></span>
+
+                <p id="shipping-fee"></p>
+
                 <label for="mpesa-code">Enter M-Pesa Transaction Code</label>
                 <input type="text" id="mpesa-code" name="mpesaCode" placeholder="SH674HWX83" required>
 
@@ -30,9 +44,9 @@
                 <img src="../images/paid.png" alt="Check Icon" class="check-icon">
                 <p>Payment Received!</p>
             </div>
-            <div class="waiter-image">
+            <!-- <div class="waiter-image">
                 <img src="../images/waiter.jpeg" alt="Waiter Image">
-            </div>
+            </div> -->
         </main>
         <footer>
             <p>Bukhari</p>
@@ -42,11 +56,35 @@
 
     <script>
         // 
-        
+        // Shipping fees by location
+        const shippingFees = {
+            'nyeri-town': 1000,
+            'kiganjo': 1500,
+            'kiangoma': 2000,
+            'mweiga': 2500,
+            'karatina': 3000
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             const total = localStorage.getItem('total');
             document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
         });
+
+        $(document).ready(function() {
+            $('#location').on('change', function() {
+                const selectedLocation = $(this).val();
+                const foodAmount = parseInt(localStorage.getItem('total'), 10) || 0;
+                const shippingFee = shippingFees[selectedLocation] || 0;
+                const totalAmount = foodAmount + shippingFee;
+                
+                $('#shipping-fee').text(`Shipping Fee: Tsh. ${shippingFee}`);
+                $('#amount').text(`Total: Tsh. ${totalAmount}`);
+            });
+        });
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     const total = localStorage.getItem('total');
+        //     document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
+        // });
 
         $(document).ready(function() {
             $('#paymentForm').on('submit', function(event) {
@@ -55,8 +93,8 @@
                 // Get form data
                 var phoneNumber = $('#phone-input').val();
                 var mpesaCode = $('#mpesa-code').val();
-                var amount = localStorage.getItem('total');
-
+                var location = $('#location').val();
+                var amount = $('#amount').text().replace('Total Amount: Tsh. ', '');
                 // Send data to your server
                 $.ajax({
                     url: '/submit-payment', // Your server endpoint
