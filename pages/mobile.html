@@ -18,7 +18,7 @@
             <label for="phone-input">Enter Phone number to pay with</label>
             <input type="text" id="phone-input" placeholder="Enter Phone number to pay with">
             <p id="amount">Amount to be paid</p>
-            <button class="confirm-button">Confirm</button>
+            <button class="confirm-button" onclick="confirmPayment()">Confirm</button>
             <div class="payment-received">
                 <img src="../images/paid.png" alt="Check Icon" class="check-icon">
             </div>
@@ -31,7 +31,45 @@
                 const total = localStorage.getItem('selectedTableTotal');
                 document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
             });
-            </script>
+
+            async function confirmPayment() {
+                const tableNumber = localStorage.getItem('selectedTableNumber');
+                const phoneNumber = document.getElementById('phone-input').value;
+
+                if (!tableNumber) {
+                    alert('No table number found. Please try again.');
+                    return;
+                }
+
+                if (!phoneNumber) {
+                    alert('Please enter a phone number.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/api/items/mark-as-paid/${tableNumber}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`Failed to update items: ${errorData.error}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Update response:', data);
+
+                    alert('Payment confirmed. Thank you!');
+                    window.location.href = '../views/venueMenu.ejs'; // Redirect to venue menu or another page
+                } catch (error) {
+                    console.error('Error confirming payment:', error);
+                    alert(`Failed to confirm payment: ${error.message}. Please try again.`);
+                }
+            }
+        </script>
         <footer>
             <img src="../images/Bukhari logo.jpg" alt="Bukhari Small Logo" class="small-logo">
             <p>Bukhari</p>
