@@ -438,7 +438,7 @@ app.get('/api/items', async (req, res) => {
     }
 });
 
-// Route for changing payment state to true
+// Route for changing payment state to true and reducing the quantity available in menu items
 app.put('/api/items/mark-as-paid/:tableNumber', async (req, res) => {
     const { tableNumber } = req.params; // Get tableNumber from URL parameters
 
@@ -448,15 +448,25 @@ app.put('/api/items/mark-as-paid/:tableNumber', async (req, res) => {
     }
 
     try {
-        // Update items where tableNumber matches and set paid to true
-        const result = await Item.updateMany(
-            { tableNumber: tableNumber, paid: false }, // Filter to find unpaid items for the table
-            { $set: { paid: true } }, // Update operation
-            { new: true } // Return updated documents
-        );
+        // Find items where tableNumber matches and paid is false
+        const items = await Item.find({ tableNumber: tableNumber, paid: false });
 
-        console.log('Items updated successfully:', result);
-        res.status(200).json({ message: 'Items updated successfully', result });
+        if (items.length === 0) {
+            return res.status(404).json({ error: 'No unpaid items found for this table' });
+        }
+
+        // Update each item as paid and reduce the quantity available in the menu
+        const updatePromises = items.map(async item => {
+            await Item.findByIdAndUpdate(item._id, { $set: { paid: true } });
+            await MenuItem.findOneAndUpdate(
+                { name: item.name }, // Find MenuItem by name
+                { $inc: { quantity: -item.quantity } } // Decrement the quantity
+            );
+        });
+
+        await Promise.all(updatePromises);
+
+        res.status(200).json({ message: 'Items updated successfully' });
     } catch (err) {
         console.error('Server error while updating items:', err);
         res.status(500).json({ error: 'Server error' });
