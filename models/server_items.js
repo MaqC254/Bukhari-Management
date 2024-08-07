@@ -11,6 +11,8 @@ const itemSchema = new mongoose.Schema({
     customerPhone: String,
     month: Number,
     tableNumber : { type: Number, default: 0} ,
+    createdAt: { type: Date, default: Date.now },
+    month: Number
 });
 
 // Middleware to set the month before saving

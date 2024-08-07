@@ -497,6 +497,7 @@ app.get('/api/reports/:year/:month/:week?/:day?', async (req, res) => {
     }
 });
 
+
 // Route to fetch order status
 app.get('/orderstatus', async (req, res) => {
     const customerPhone = req.query.phone; // Retrieve phone number from query parameter
