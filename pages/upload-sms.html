@@ -31,31 +31,49 @@
     </div>
 
     <script>
-        $(document).ready(function() {
+
+$(document).ready(function() {
             $('#smsForm').on('submit', function(event) {
                 event.preventDefault(); // Prevent the form from submitting traditionally
 
                 // Get form data
-                var mpesaCode = $('#mpesa-code').val();
+                var mpesaCodeEntered = $('#mpesa-code').val();
+                var storedMpesaCode = localStorage.getItem('mpesaCode');
 
-                // Send data to your server
-                $.ajax({
-                    url: '/api/payments/store-request', // Ensure this endpoint matches your server setup
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        mpesaCode: mpesaCode
-                    }),
-                    success: function(response) {
-                        $('#response').html(`<p>${response.message}</p>`).show();
-                    },
-                    error: function(error) {
-                        console.error('Error:', error);
-                        $('#response').html('<p>An error occurred while verifying the SMS.</p>').show();
-                    }
-                });
+                // Compare the codes
+                if (mpesaCodeEntered === storedMpesaCode) {
+                    $('#response').html('<p>Payment Successful!</p>').show();
+                } else {
+                    $('#response').html('<p>Awaiting Confirmation.</p>').show();
+                }
             });
         });
+
+        // $(document).ready(function() {
+        //     $('#smsForm').on('submit', function(event) {
+        //         event.preventDefault(); // Prevent the form from submitting traditionally
+
+        //         // Get form data
+        //         var mpesaCode = $('#mpesa-code').val();
+
+        //         // Send data to your server
+        //         $.ajax({
+        //             url: '/api/payments/submit-smst', // Ensure this endpoint matches your server setup
+        //             type: 'POST',
+        //             contentType: 'application/json',
+        //             data: JSON.stringify({
+        //                 mpesaCode: mpesaCode
+        //             }),
+        //             success: function(response) {
+        //                 $('#response').html(`<p>Success</p>`).show();
+        //             },
+        //             error: function(error) {
+        //                 console.error('Error:', error);
+        //                 $('#response').html('<p>An error occurred while verifying the SMS.</p>').show();
+        //             }
+        //         });
+        //     });
+        // });
     </script>
 </body>
 </html>

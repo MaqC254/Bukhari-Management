@@ -95,25 +95,35 @@
                 var mpesaCode = $('#mpesa-code').val();
                 var location = $('#location').val();
                 var amount = $('#amount').text().replace('Total Amount: Tsh. ', '');
-                // Send data to your server
-                $.ajax({
-                    url: '/api/payments/submit-sms', // Your server endpoint
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        phoneNumber: phoneNumber,
-                        mpesaCode: mpesaCode,
-                        amount: amount
-                    }),
-                    success: function(response) {
-                        alert('Payment request sent! Check your phone.');
-                        window.location.href = 'orderstate.html';
-                    },
-                    error: function(error) {
-                        console.error('Error:', error);
-                        alert('An error occurred while initiating payment.');
-                    }
-                });
+
+                // Store the mpesaCode in localStorage
+                localStorage.setItem('mpesaCode', mpesaCode);
+
+                // Mock payment processing delay
+                alert('Thank you for gifting yourself a delicious treat!');
+
+                // Redirect to order state page
+                window.location.href = 'orderstate.html';
+
+                // // Send data to your server
+                // $.ajax({
+                //     url: '/api/payments/submit-sms', // Your server endpoint
+                //     type: 'POST',
+                //     contentType: 'application/json',
+                //     data: JSON.stringify({
+                //         phoneNumber: phoneNumber,
+                //         mpesaCode: mpesaCode,
+                //         amount: amount
+                //     }),
+                //     success: function(response) {
+                //         alert('Payment request sent! Check your phone.');
+                //         window.location.href = 'orderstate.html';
+                //     },
+                //     error: function(error) {
+                //         console.error('Error:', error);
+                //         alert('An error occurred while initiating payment.');
+                //     }
+                // });
             });
         });
 
