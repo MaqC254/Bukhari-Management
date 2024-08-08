@@ -42,7 +42,7 @@
                     .then(data => {
                         if (data.success) {
                             localStorage.setItem("phone", phone);
-                            window.location.href = 'Delivery.html';
+                            window.location.href = '../views/deliveryMenu.ejs';
                         } else {
                             // alert(data.message);
                             // If the password is wrong

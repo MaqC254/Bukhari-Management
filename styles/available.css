@@ -7,11 +7,68 @@ body {
     background-color: #f4f4f4;
 }
 
+/* Side Menu Styling */
+.side-menu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #ffff;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.side-menu a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #000000;
+    display: block;
+    transition: 0.3s;
+}
+
+.side-menu a:hover {
+    color: #FFA500;
+    font-weight: bolder;
+}
+
+.side-menu .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.open-menu {
+    font-size: 20px;
+    cursor: pointer;
+    color: #fff; /* White text color for better contrast */
+    background-color: #FFA500; /* Orange background */
+    padding: 5px 5px; /* Adding padding for better visual appearance */
+    border-radius: 30px;
+    position: absolute;
+    top: 10px; /* Adjusted to be at the top */
+    left: 10px; /* Adjusted to be at the left */
+    z-index: 100; /* Ensures it stays on top */
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.8); /* Glowing orange shadow */
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
 header {
-    background-color: #333;
-    color: #fff;
-    padding: 1rem;
+    background-color: #fff;
+    color: #0000;
     text-align: center;
+    padding: 10px;
+}
+
+h1 {
+    color: #000000;
+    font-weight: bolder;
+    font-size: 20px;
 }
 
 main {
@@ -26,59 +83,86 @@ main {
 
 .meal {
     background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    transition: transform 0.3s;
 }
 
+.meal:hover {
+    transform: translateY(-10px);
+    box-shadow: 10px 10px 20px #babecc,
+    -10px -10px 20px #ffffff;
+  }
+
 .meal img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
+    width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .meal h2 {
     font-size: 1.5rem;
     margin: 0.5rem 0;
+    margin-top: 10px;
 }
 
 .meal p {
     font-size: 1rem;
     margin: 0.5rem 0;
+    color: #666;
 }
 
 .add-meal-btn {
-    background-color: #28a745;
-    color: white;
-    border: none;
+    font-size: 14px;
+    font-weight: bolder;
+    font-family: 'Montserrat', sans-serif;
+    display: inline-block;
     padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    display: block;
-    margin: 2rem auto;
+    color: #008000; /* Green text color */
+    background-color: #fff; /* White background */
+    border: 2px solid #008000; /* Green border */
     text-align: center;
+    text-decoration: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.add-meal-btn:hover {
+    background-color: #e6ffe6; /* Light green background on hover */
+    color: #005700; /* Darker green text color */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+
+
 footer {
-    background-color: #333;
-    color: #fff;
+    background-color: #ffff;
+    color: #000;
     padding: 1rem;
     text-align: center;
 }
 
 .meal button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bolder;
+    font-size: 15px;
     background-color: #f44336; /* Red color */
     color: white;
     border: none;
     padding: 8px 12px;
     cursor: pointer;
     margin-top: 10px;
-    border-radius: 5px;
+    border-radius: 20px;
 }
 
 .meal button:hover {
-    background-color: #d32f2f; /* Darker red on hover */
+    background-color: #cb0000; /* Darker red on hover */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(232, 1, 1, 0.5); /* Glow effect */
 }

@@ -11,8 +11,9 @@
     <span class="open-menu" onclick="openMenu()">&#9776;</span>
     <div id="mySideMenu" class="side-menu">
         <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
-        <a href="../views/menu.ejs">Menu</a>
         <a href="../pages/index.html">Home</a>
+        <a href="../views/available.ejs">Available Meals</a>
+        <a href="../pages/add-meal.html">Add Meal</a>
         <a href="../pages/customer_signin.html">Log Out</a>
     </div>
     <header>
@@ -70,6 +71,7 @@
                         const ul = document.createElement('ul');
 
                         const li = document.createElement('li');
+                        li.className = 'food-details'; // Apply class for smaller font size
                         li.textContent = `${item.name} `;
                         const spanQuantity = document.createElement('span');
                         spanQuantity.textContent = `x${item.quantity}`;
@@ -83,10 +85,10 @@
                         ul.appendChild(infoLi);
 
                         // Add the upload SMS button
-                        if (item.state === 'venue') {
+                        if (item.state === 'Served' || 'Packed') {
                             const smsButton = document.createElement('button');
                             smsButton.textContent = 'Upload Payment SMS';
-                            smsButton.classList.add('upload-sms-button'); // Apply the CSS class    
+                            smsButton.classList.add('upload-sms-button'); // Apply the CSS class
                             smsButton.addEventListener('click', () => {
                                 window.location.href = '/pages/upload-sms.html';
                             });
