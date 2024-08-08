@@ -1,8 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+
 body {
-    font-family: Montserrat;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+}
+
+.logo {
+    width: 50px;
+    height: auto;
+    margin-left: 0;
 }
 .container {
     width: 80%;
@@ -10,11 +19,11 @@ body {
     overflow: hidden;
 }
 header {
-    background: #35424a;
-    color: #ffffff;
+    background: #ffffff;
+    color: #000;
     padding-top: 30px;
-    min-height: 70px;
-    border-bottom: #e8491d 3px solid;
+    min-height: 50px;
+    border-bottom: #FFA500 3px solid;
 }
 header a {
     color: #ffffff;
@@ -51,6 +60,7 @@ section {
     gap: 20px;
 }
 .card {
+    font-family: 'Montserrat', sans-serif;
     background: #ffffff;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -58,6 +68,7 @@ section {
     transition: transform 0.2s;
     position: relative;
     overflow: hidden;
+    font-size: 20px;
 }
 .card:hover {
     transform: translateY(-5px);
@@ -87,16 +98,20 @@ section {
     border-radius: 4px;
 }
 .card button {
-    background-color: #e8491d;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #FFA500;
     color: #fff;
     padding: 10px;
     border: none;
-    border-radius: 4px;
+    border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-weight: bolder;
+    font: 15px;
 }
 .card button:hover {
-    background-color: #d83b0b;
+    background-color: #FFA500;
+    box-shadow: 0 0 15px #ac7002; /* Glow effect matching the button color */
 }
 .most-wanted-image {
     width: 100%;
@@ -117,3 +132,21 @@ section {
         grid-template-columns: 1fr;
     }
 }
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bolder;
+  }
+
+  .button:hover {
+    background-color: #45a049;
+    box-shadow: 0 0 15px rgba(72, 191, 88, 0.7); /* Green glow effect */
+  }
