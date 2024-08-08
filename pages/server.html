@@ -85,7 +85,7 @@
                         ul.appendChild(infoLi);
 
                         // Add the upload SMS button
-                        if (item.state === 'Served' || 'Packed') {
+                        if (item.state === 'online') {
                             const smsButton = document.createElement('button');
                             smsButton.textContent = 'Upload Payment SMS';
                             smsButton.classList.add('upload-sms-button'); // Apply the CSS class

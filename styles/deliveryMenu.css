@@ -196,11 +196,11 @@ main {
   transition: transform 0.3s;
 }
 
-.meal:hover {
+/* .meal:hover {
   transform: translateY(-10px);
   box-shadow: 10px 10px 20px #babecc,
   -10px -10px 20px #ffffff;
-}
+} */
 
 .meal img {
   width: 100%;
