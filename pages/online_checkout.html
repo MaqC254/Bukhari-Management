@@ -15,6 +15,7 @@
         <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
         <a href="../pages/index.html">Home</a>
         <a href="../views/menu.ejs">Menu</a>
+        <a href="../pages/online_checkout.html">Checkout</a>
         <a href="../pages/orderstate.html">Order State</a>
         <a href="../pages/customer_signin.html">Log Out</a>
     </div>
@@ -108,46 +109,84 @@
         //     document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
         // });
 
-        $(document).ready(function() {
-            $('#paymentForm').on('submit', function(event) {
-                event.preventDefault(); // Prevent the form from submitting the traditional way
+        // $(document).ready(function() {
+        //     $('#paymentForm').on('submit', function(event) {
+        //         event.preventDefault(); // Prevent the form from submitting the traditional way
                 
-                // Get form data
-                var phoneNumber = $('#phone-input').val();
-                var mpesaCode = $('#mpesa-code').val();
-                var location = $('#location').val();
-                var amount = $('#amount').text().replace('Total Amount: Tsh. ', '');
+        //         // Get form data
+        //         var phoneNumber = $('#phone-input').val();
+        //         var mpesaCode = $('#mpesa-code').val();
+        //         var location = $('#location').val();
+        //         var amount = $('#amount').text().replace('Total Amount: Tsh. ', '');
 
-                // Store the mpesaCode in localStorage
-                localStorage.setItem('mpesaCode', mpesaCode);
+        //         // Store the mpesaCode in localStorage
+        //         localStorage.setItem('mpesaCode', mpesaCode);
 
-                // Mock payment processing delay
-                alert('Thank you for gifting yourself a delicious treat!');
+        //         // Mock payment processing delay
+        //         alert('Thank you for gifting yourself a delicious treat!');
 
-                // Redirect to order state page
-                window.location.href = 'orderstate.html';
+        //         // Redirect to order state page
+        //         window.location.href = 'orderstate.html';
 
-                // // Send data to your server
-                // $.ajax({
-                //     url: '/api/payments/submit-sms', // Your server endpoint
-                //     type: 'POST',
-                //     contentType: 'application/json',
-                //     data: JSON.stringify({
-                //         phoneNumber: phoneNumber,
-                //         mpesaCode: mpesaCode,
-                //         amount: amount
-                //     }),
-                //     success: function(response) {
-                //         alert('Payment request sent! Check your phone.');
-                //         window.location.href = 'orderstate.html';
-                //     },
-                //     error: function(error) {
-                //         console.error('Error:', error);
-                //         alert('An error occurred while initiating payment.');
-                //     }
-                // });
-            });
+        //         // // Send data to your server
+        //         // $.ajax({
+        //         //     url: '/api/payments/submit-sms', // Your server endpoint
+        //         //     type: 'POST',
+        //         //     contentType: 'application/json',
+        //         //     data: JSON.stringify({
+        //         //         phoneNumber: phoneNumber,
+        //         //         mpesaCode: mpesaCode,
+        //         //         amount: amount
+        //         //     }),
+        //         //     success: function(response) {
+        //         //         alert('Payment request sent! Check your phone.');
+        //         //         window.location.href = 'orderstate.html';
+        //         //     },
+        //         //     error: function(error) {
+        //         //         console.error('Error:', error);
+        //         //         alert('An error occurred while initiating payment.');
+        //         //     }
+        //         // });
+        //     });
+        // });
+
+        $(document).ready(function() {
+    $('#paymentForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting the traditional way
+        
+        // Get form data
+        var phoneNumber = $('#phone-input').val();
+        var mpesaCode = $('#mpesa-code').val();
+        var location = $('#location').val();
+        var amount = $('#amount').text().replace('Total Amount: Tsh. ', '');
+
+        // Store the mpesaCode in localStorage
+        localStorage.setItem('mpesaCode', mpesaCode);
+
+        // Send data to the verify-payment endpoint
+        $.ajax({
+            url: '/api/verify-payment', // Your server endpoint for verification
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                transactionCode: mpesaCode,
+                amount: amount
+            }),
+            success: function(response) {
+                if (response.status === 'paid') {
+                    alert('Payment confirmed! Thank you for gifting yourself a delicious treat!');
+                    window.location.href = 'orderstate.html'; // Redirect on successful payment
+                } else {
+                    alert('Payment not confirmed. Please check your transaction and try again.');
+                }
+            },
+            error: function(error) {
+                console.error('Error:', error);
+                alert('An error occurred while verifying payment.');
+            }
         });
+    });
+});
 
     </script>
 </body>
