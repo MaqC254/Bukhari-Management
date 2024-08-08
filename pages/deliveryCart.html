@@ -9,8 +9,16 @@
 
 </head>
 <body>
+    <!-- Side Menu -->
+    <span class="open-menu" onclick="openMenu()">&#9776;</span>
+    <div id="mySideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+        <a href="../views/menu.ejs">Menu</a>
+        <a href="../pages/index.html">Home</a>
+        <a href="../pages/customer_signin.html">Log Out</a>
+    </div>
     <header>
-        <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
+        <!-- <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo"> -->
         <h1 class="cart-heading">Your Cart</h1>
         <div class="header-icons">
             <a href="../views/deliveryMenu.ejs"><img src="../images/icons8-home-24.png" alt="Home"></a>
@@ -146,6 +154,17 @@
                 }
             });
         });
+        // Function to open side menu
+        function openMenu() {
+            document.getElementById("mySideMenu").style.width = "200px";
+            document.getElementById("main").style.marginLeft = "200px";
+        }
+
+        // Function to close side menu
+        function closeMenu() {
+            document.getElementById("mySideMenu").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
     </script>
 </body>
 </html>

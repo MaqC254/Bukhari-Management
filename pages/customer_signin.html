@@ -19,9 +19,9 @@
                 <label for="phone">Phone Number:</label>
                 <input type="text" id="phone" placeholder="Enter your phone number" required>
                 
-                <label for="password">Password:</label>
+                <label for="password">Password:</label> <p id="error-message" style="display: none;">Wrong password!!</p> <!-- Hidden initially -->
                 <input type="password" id="password" placeholder="Enter your password" required>
-                
+
                 <button type="submit" class="confirm-button">Sign In</button>
             </form>
             <script>
@@ -44,7 +44,13 @@
                             localStorage.setItem("phone", phone);
                             window.location.href = 'Delivery.html';
                         } else {
-                            alert(data.message);
+                            // alert(data.message);
+                            // If the password is wrong
+                            const passwordInput = document.getElementById("password");
+                            passwordInput.classList.add("error");
+                            const errorMessage = document.getElementById("error-message");
+                            errorMessage.textContent = "Wrong password";
+                            errorMessage.style.display = "block"; // Show the error message
                         }
                     })
                     .catch(error => {
