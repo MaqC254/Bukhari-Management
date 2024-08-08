@@ -136,6 +136,28 @@ input:focus {
     box-shadow: 0 0 15px rgba(255, 165, 0, 0.7);
 }
 
+input[type="text"].error,
+input[type="password"].error {
+    border-color: red; /* Red border when there's an error */
+    animation: blinkGlow 1s infinite;
+}
+
+@keyframes blinkGlow {
+    0%, 100% {
+        box-shadow: 0 0 5px red;
+    }
+    50% {
+        box-shadow: 0 0 20px red;
+    }
+}
+
+#customer_signin p#error-message {
+    margin-top: 5px;
+    font-size: 14px;
+    color: red;
+    font-weight: bolder;
+}
+
 .signup-button {
     background-color: #4CAF50;
     color: white;
