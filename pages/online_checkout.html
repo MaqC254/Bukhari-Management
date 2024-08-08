@@ -33,12 +33,11 @@
                 <label for="location">Select Your Location</label>
                 <select id="location" name="location" required>
                     <option value="" disabled selected>Select a location</option>
-                    <option value="nyeri-town">Nyeri Town</option>
-                    <option value="kiganjo">Kiganjo</option>
-                    <option value="kiangoma">Kiangoma</option>
-                    <option value="mweiga">Mweiga</option>
-                    <option value="karatina">Karatina</option>
-                    <!-- Add more locations as needed -->
+                    <option value="mtaa-wa-tatu">Mtaa wa Tatu</option>
+                    <option value="kiwanja">Kiwanja</option>
+                    <option value="kange">Kange</option>
+                    <option value="pangani">Pangani</option>
+                    <option value="tanga-town">Tanga Town</option>
                 </select>
                 <span id="shipping-fee" class="shipping-fee"></span>
 
@@ -81,11 +80,11 @@
 
         // Shipping fees by location
         const shippingFees = {
-            'nyeri-town': 1000,
-            'kiganjo': 1500,
-            'kiangoma': 2000,
-            'mweiga': 2500,
-            'karatina': 3000
+            'mtaa-wa-tatu': 2000,
+            'kiwanja': 2500,
+            'kange': 3000,
+            'pangani': 3500,
+            'tanga-town': 4000
         };
 
         document.addEventListener('DOMContentLoaded', () => {
