@@ -3,6 +3,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Side Menu -->
+    <span class="open-menu" onclick="openMenu()">&#9776;</span>
+    <div id="mySideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+        <a href="../pages/index.html">Home</a>
+        <a href="../views/available.ejs">Available Meals</a>
+        <a href="../pages/add-meal.html">Add Meal</a>
+        <a href="../pages/customer_signin.html">Log Out</a>
+    </div>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available Meals</title>
@@ -27,8 +36,10 @@
 </head>
 <body>
     <header>
-        <h1>Available Meals</h1>
-        <button class="add-meal-btn" onclick="window.location.href='../pages/add-meal.html'">Add Meal</button>
+        <h1>AVAILABLE MEALS</h1>
+        <button class="add-meal-btn" onclick="window.location.href='../pages/add-meal.html'">Add Meal
+            <span class="plus-symbol">&plus;</span>
+        </button>
     </header>
 
     <main>
@@ -48,5 +59,18 @@
     <footer>
         <p>&copy; 2024 Bukhari Restaurant</p>
     </footer>
+    <script>
+         // Function to open side menu
+         function openMenu() {
+            document.getElementById("mySideMenu").style.width = "200px";
+            document.getElementById("main").style.marginLeft = "200px";
+        }
+
+        // Function to close side menu
+        function closeMenu() {
+            document.getElementById("mySideMenu").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
 </body>
 </html>

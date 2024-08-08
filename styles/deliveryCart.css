@@ -63,7 +63,7 @@ header {
     align-items: center;
     padding: 10px 20px;
     background-color: #f8f8f8;
-    background-image: url('../images/bg2.jpg');
+    /* background-image: url('../images/bg2.jpg'); */
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-size: cover;
@@ -170,18 +170,20 @@ footer p {
 
 /* Style for the Confirm Order button */
 #confirm-order-btn {
+    font-family: 'Montserrat', sans-serif;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 15px;
     background-color: #4CAF50;
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 20px;
     transition: background-color 0.3s ease;
 }
 
 #confirm-order-btn:hover {
     background-color: #45a049;
+    font-weight: bolder;
 }
 
 .cart-item {
