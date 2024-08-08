@@ -32,22 +32,49 @@
 
     <script>
 
+// $(document).ready(function() {
+//             $('#smsForm').on('submit', function(event) {
+//                 event.preventDefault(); // Prevent the form from submitting traditionally
+
+//                 // Get form data
+//                 var mpesaCodeEntered = $('#mpesa-code').val();
+//                 var storedMpesaCode = localStorage.getItem('mpesaCode');
+
+//                 // // Compare the codes
+//                 // if (mpesaCodeEntered === storedMpesaCode) {
+//                 //     $('#response').html('<p>Payment Successful!</p>').show();
+//                 // } else {
+//                 //     $('#response').html('<p>Awaiting Confirmation.</p>').show();
+//                 // }
+//             });
+//         });
+
 $(document).ready(function() {
-            $('#smsForm').on('submit', function(event) {
-                event.preventDefault(); // Prevent the form from submitting traditionally
+    $('#smsForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting traditionally
 
-                // Get form data
-                var mpesaCodeEntered = $('#mpesa-code').val();
-                var storedMpesaCode = localStorage.getItem('mpesaCode');
+        // Get form data
+        var message = $('#mpesa-code').val();
 
-                // Compare the codes
-                if (mpesaCodeEntered === storedMpesaCode) {
-                    $('#response').html('<p>Payment Successful!</p>').show();
-                } else {
-                    $('#response').html('<p>Awaiting Confirmation.</p>').show();
-                }
-            });
+        // AJAX request to upload the SMS
+        $.ajax({
+            url: '/api/upload-sms',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ message: message }),
+            success: function(response) {
+                // Store the transaction code locally if needed
+                localStorage.setItem('message', message);
+
+                $('#response').html('<p>SMS uploaded successfully.</p>').show();
+            },
+            error: function(xhr, status, error) {
+                $('#response').html('<p>Error uploading SMS: ' + error + '</p>').show();
+            }
         });
+    });
+});
+
 
         // $(document).ready(function() {
         //     $('#smsForm').on('submit', function(event) {
