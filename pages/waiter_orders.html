@@ -77,6 +77,7 @@
                     groupedItems[tableNumber].forEach(item => {
                         const itemDiv = document.createElement('div');
                         itemDiv.classList.add('order-item');
+                        const status = item.state === 'venue' ? 'Being Prepared' : 'Ready to Collect';
                         itemDiv.innerHTML = `
                             <img src="${item.image}" alt="${item.name}">
                             <div class="order-item-details">
@@ -84,7 +85,7 @@
                                 <p>${item.description}</p>
                                 <p>Pieces: ${item.quantity}</p>
                                 <p>Price: Tsh ${item.price}</p>
-                                <p>State: ${item.state}</p>
+                                <p>Status: ${status}</p>
                             </div>
                         `;
                         tableDiv.appendChild(itemDiv);
