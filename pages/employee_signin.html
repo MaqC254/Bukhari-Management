@@ -19,7 +19,7 @@
                 <label for="work-id">Work ID:</label>
                 <input type="text" id="work-id" placeholder="Enter your work ID" required>
                 
-                <label for="password">Password:</label>
+                <label for="password">Password:</label> <p id="error-message" style="display: none;">Wrong password!!</p> <!-- Hidden initially -->
                 <input type="password" id="password" placeholder="Enter your password" required>
                 
                 <button type="submit" class="confirm-button">Sign In</button>
@@ -57,7 +57,12 @@
                                 }
                                 window.location.href = `${page}`;
                             } else {
-                                alert(data.message);
+                                // alert(data.message);
+                                const passwordInput = document.getElementById("password");
+                                passwordInput.classList.add("error");
+                                const errorMessage = document.getElementById("error-message");
+                                errorMessage.textContent = "Wrong password";
+                                errorMessage.style.display = "block"; // Show the error message
                             }
                         })
                         .catch((error) => {

@@ -7,7 +7,16 @@
     <link rel="stylesheet" href="../styles/mobile.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+
 <body>
+    <!-- Side Menu -->
+    <span class="open-menu" onclick="openMenu()">&#9776;</span>
+    <div id="mySideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+        <a href="../views/menu.ejs">Menu</a>
+        <a href="../pages/index.html">Home</a>
+        <a href="../pages/customer_signin.html">Log Out</a>
+    </div>
     <div class="container">
         <header>
             <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
@@ -56,6 +65,19 @@
 
     <script>
         // 
+
+        // Function to open side menu
+        function openMenu() {
+            document.getElementById("mySideMenu").style.width = "200px";
+            document.getElementById("main").style.marginLeft = "200px";
+        }
+
+        // Function to close side menu
+        function closeMenu() {
+            document.getElementById("mySideMenu").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+
         // Shipping fees by location
         const shippingFees = {
             'nyeri-town': 1000,

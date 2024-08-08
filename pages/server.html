@@ -7,14 +7,22 @@
     <link rel="stylesheet" href="../styles/server.css">
 </head>
 <body>
+    <!-- Side Menu -->
+    <span class="open-menu" onclick="openMenu()">&#9776;</span>
+    <div id="mySideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+        <a href="../views/menu.ejs">Menu</a>
+        <a href="../pages/index.html">Home</a>
+        <a href="../pages/customer_signin.html">Log Out</a>
+    </div>
     <header>
-        <img src="../images/Bukhari logo.jpg" alt="Bukhari Restaurant Logo" class="logo">
-        <h1>Bukhari Restaurant</h1>
-        <h2>Servers Application</h2>
-        <a href="../views/available.ejs" class="nav-button">Modify Available Meals</a>
+        <!-- <img src="../images/Bukhari logo.jpg" alt="Bukhari Restaurant Logo" class="logo"> -->
+        <h1>BUKHARI RESTAURANT</h1>
+        <!-- <h2>Servers Application</h2> -->
     </header>
-    
+
     <main>
+        <a href="../views/available.ejs" class="nav-button">Modify Available Meals</a>  
         <h3>Orders List</h3>
         <div id="orders-list"></div>
     </main>
@@ -78,6 +86,7 @@
                         if (item.state === 'venue') {
                             const smsButton = document.createElement('button');
                             smsButton.textContent = 'Upload Payment SMS';
+                            smsButton.classList.add('upload-sms-button'); // Apply the CSS class    
                             smsButton.addEventListener('click', () => {
                                 window.location.href = '/pages/upload-sms.html';
                             });
@@ -92,6 +101,19 @@
                 })
                 .catch(error => console.error('Error:', error));
         });
+
+         // Function to open side menu
+         function openMenu() {
+            document.getElementById("mySideMenu").style.width = "200px";
+            document.getElementById("main").style.marginLeft = "200px";
+        }
+
+        // Function to close side menu
+        function closeMenu() {
+            document.getElementById("mySideMenu").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+
     </script>
 </body>
 </html>
