@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Fetch the most wanted item
-        const mostWantedResponse = await fetch('http://localhost:3000/api/most-wanted-item');
+        const mostWantedResponse = await fetch('/api/most-wanted-item');
         const mostWantedItem = await mostWantedResponse.json();
         document.getElementById('most-wanted-item').textContent = `${mostWantedItem._id} (ordered ${mostWantedItem.totalOrdered} times)`;
 
         // Fetch sales figures for the current month (example for a specific month, e.g., July)
-        const salesResponse = await fetch('http://localhost:3000/api/items/8');
+        const salesResponse = await fetch('/api/items/8');
         const salesData = await salesResponse.json();
 
         const labels = salesData.map(item => item._id);
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const month = now.getMonth() + 1; // getMonth() returns 0-indexed month
 
             try {
-                const response = await fetch(`http://localhost:3000/api/reports/monthly/${year}/${month}`);
+                const response = await fetch(`/api/reports/monthly/${year}/${month}`);
                 if (!response.ok) {
                     throw new Error('Failed to download file');
                 }
