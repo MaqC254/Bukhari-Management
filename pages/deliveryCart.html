@@ -6,13 +6,15 @@
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="../styles/deliveryCart.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-
 </head>
 <body>
     <!-- Side Menu -->
-    <span class="open-menu" onclick="openMenu()">&#9776;</span>
+    <span class="open-menu" onclick="openMenu()" aria-label="Open menu">&#9776;</span>
     <div id="mySideMenu" class="side-menu">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+
+        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()" aria-label="Close menu">&times;</a>
+        <a href="../views/menu.ejs">Menu</a>
+
         <a href="../pages/index.html">Home</a>
         <a href="../views/deliveryMenu.ejs">Menu</a>
         <a href="../pages/online_checkout.html">Checkout</a>
@@ -20,11 +22,15 @@
         <a href="../pages/customer_signin.html">Log Out</a>
     </div>
     <header>
-        <!-- <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo"> -->
-        <h1 class="cart-heading">YOUR CART</h1>
+
+        <h1 class="cart-heading">Your Cart</h1>
+        <div class="header-icons">
+            <a href="../views/deliveryMenu.ejs"><img src="../images/icons8-home-24.png" alt="Home"></a>
+        </div>
+
     </header>
 
-    <main>
+    <main id="main">
         <div class="cart-list" id="cart-list">
             <!-- Cart items will be inserted here by JavaScript -->
         </div>
@@ -66,9 +72,9 @@
                                 <p>Pieces: ${item.quantity}</p>
                                 <p>Price: Tsh ${item.price * item.quantity}</p>
                                 <div class="item-buttons">
-                                    <button class="remove-from-cart" data-index="${index}">Remove</button>
-                                    <button class="reduce-quantity" data-index="${index}">&#8722;</button>
-                                    <button class="increase-quantity" data-index="${index}">&#43;</button>
+                                    <button class="remove-from-cart" data-index="${index}" aria-label="Remove from cart">Remove</button>
+                                    <button class="reduce-quantity" data-index="${index}" aria-label="Reduce quantity">&#8722;</button>
+                                    <button class="increase-quantity" data-index="${index}" aria-label="Increase quantity">&#43;</button>
                                 </div>
                             </div>
                         `;
@@ -79,87 +85,44 @@
                     cartTotal.innerHTML = `Total: Tsh ${total}`;
                     localStorage.setItem('total', total);
 
-                    document.querySelectorAll('.remove-from-cart').forEach(button => {
-                        button.addEventListener('click', (e) => {
-                            const index = e.target.getAttribute('data-index');
+                    cartList.addEventListener('click', (e) => {
+                        const index = e.target.getAttribute('data-index');
+                        if (e.target.classList.contains('remove-from-cart')) {
                             cart.splice(index, 1);
-                            localStorage.setItem('cart', JSON.stringify(cart));
-                            renderCart();
-                        });
-                    });
-
-                    document.querySelectorAll('.reduce-quantity').forEach(button => {
-                        button.addEventListener('click', (e) => {
-                            const index = e.target.getAttribute('data-index');
+                        } else if (e.target.classList.contains('reduce-quantity')) {
                             if (cart[index].quantity > 1) {
                                 cart[index].quantity -= 1;
                             } else {
                                 cart.splice(index, 1);
                             }
-                            localStorage.setItem('cart', JSON.stringify(cart));
-                            renderCart();
-                        });
-                    });
-                    document.querySelectorAll('.increase-quantity').forEach(button => {
-                        button.addEventListener('click', (e) => {
-                            const index = e.target.getAttribute('data-index');
-                                cart[index].quantity += 1;
-                            localStorage.setItem('cart', JSON.stringify(cart));
-                            renderCart();
-                        });
+                        } else if (e.target.classList.contains('increase-quantity')) {
+                            cart[index].quantity += 1;
+                        }
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        renderCart();
                     });
                 }
             }
 
             renderCart();
 
-            confirmOrderBtn.addEventListener('click', async () => {
+            confirmOrderBtn.addEventListener('click', () => {
                 if (cart.length === 0) {
                     alert('Cart is empty');
                     return;
                 }
-                try {
-                    const response = await fetch('/api/add-items', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ cartItems: cart, phone: localStorage.getItem('phone')}),
-                    });
 
-                    if (!response.ok) {
-                        throw new Error('Failed to add items to server.');
-                    }
 
-                    // Trigger confetti animation
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 },
-                    colors: ['#ff0', '#f0f', '#0ff', '#f00', '#0f0']
-                });
-
-                // Remove cart from local storage
-                localStorage.removeItem('cart');
-
-                // Redirect to the checkout page after the confetti animation
-                setTimeout(() => {
-                    window.location.href = 'online_checkout.html';
-                }, 500); // Wait for the confetti to finish before redirecting
-
-                } catch (error) {
-                    console.error('Error confirming order:', error);
-                    alert('Failed to confirm order. Please try again.');
-                }
+                // Redirect to customer_signin.html
+                window.location.href = '../pages/customer_signin.html';
             });
         });
-        // Function to open side menu
+
         function openMenu() {
             document.getElementById("mySideMenu").style.width = "200px";
             document.getElementById("main").style.marginLeft = "200px";
         }
 
-        // Function to close side menu
         function closeMenu() {
             document.getElementById("mySideMenu").style.width = "0";
             document.getElementById("main").style.marginLeft = "0";

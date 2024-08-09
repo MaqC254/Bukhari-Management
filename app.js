@@ -6,11 +6,18 @@ const session = require('express-session');
 const ejs = require('ejs');
 const multer = require('multer');
 const mongoDBSession = require('connect-mongodb-session')(session);
+
+const axios = require('axios');
+
 const SMS = require("./models/sms.js");
+
 //const cors = require('cors');
 
 const app = express();
 const port = 3000;
+
+const PAYPAL_CLIENT_ID = 'AUXbJ1MpXAA28xCuZbw_n-BkB6aAksDIXAES6RN_SYjE5Pp1GNwdcbpRVy9EJP6tgd2KFV80ir7_B58z';
+const PAYPAL_CLIENT_SECRET = 'EPA7dro8F7FD04Er5aZGZ9y5JpnWHL_luzYmOToZtY9VNT0OMqGv_CIwRcU2skag7PDqDwQyHjI0KNOH';
 
 // MongoDB URI string
 const dbURI = 'mongodb+srv://max:h9H9mi5Gbp1IsH2t@nodejsdb.oxlzabu.mongodb.net/?retryWrites=true&w=majority&appName=NodejsDB';
@@ -568,6 +575,44 @@ module.exports = Payment;
     }
 });
 
+
+
+// Endpoint to handle payment confirmation
+app.post('/api/confirm-payment', async (req, res) => {
+    const { orderID, payerID, cartItems, phone } = req.body;
+
+    try {
+        // Get an access token from PayPal
+        const tokenResponse = await axios.post('https://api-m.sandbox.paypal.com/v1/oauth2/token', 'grant_type=client_credentials', {
+            headers: {
+                'Authorization': `Basic ${Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString('base64')}`,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const accessToken = tokenResponse.data.access_token;
+
+        // Capture the payment
+        const captureResponse = await axios.post(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}/capture`, {}, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // Save order details to the database (for demo, we will just log it)
+        console.log('Payment Details:', captureResponse.data);
+
+        // Replace with actual database operation
+        // Example: saveOrderToDatabase(captureResponse.data, cartItems, phone);
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error processing payment:', error);
+        res.status(500).json({ success: false, message: 'Payment processing failed' });
+    }
+});
+
 app.post("/api/upload-sms", async (req, res) => {
     try {
         const { message } = req.body;
@@ -629,3 +674,4 @@ app.post("/api/verify-payment", async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+

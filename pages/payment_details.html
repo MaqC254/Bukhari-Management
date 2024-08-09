@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bukhari Restaurant - Waiting Application</title>
+    <title>Bukhari Restaurant - Payment Details</title>
     <link rel="stylesheet" href="../styles/payment_details.css">
+    <script src="https://www.paypal.com/sdk/js?client-id=AUXbJ1MpXAA28xCuZbw_n-BkB6aAksDIXAES6RN_SYjE5Pp1GNwdcbpRVy9EJP6tgd2KFV80ir7_B58z"></script>
 </head>
 <body>
     <header>
         <img src="../images/Bukhari logo.jpg" alt="Bukhari Restaurant Logo" class="logo">
         <h1>Bukhari Restaurant</h1>
-        <h2>Waiting Application</h2>
+        <h2>Payment Details</h2>
         <img src="../images/icons8-home-24.png" alt="Home Icon" class="home-icon">
     </header>
     
     <main>
         <section class="payment-details">
             <h3>Payment Details</h3>
-            <form id="payment_details">
-                <p id="amount"></p>
-                <div class="payment-buttons">
-                    <button type="button" class="payment-button cash">Cash</button>
-                    <button type="button" class="payment-button mobile">Mobile</button>
-                </div>
-            </form>
+            <p id="amount"></p>
+            <div class="payment-buttons">
+                <button type="button" class="payment-button cash">Cash</button>
+                <button type="button" class="payment-button mobile">PayPal</button>
+            </div>
+            <div id="paypal-button-container" style="display: none;"></div>
         </section>
     </main>
 
@@ -31,27 +31,90 @@
         document.addEventListener('DOMContentLoaded', () => {
             const total = localStorage.getItem('selectedTableTotal');
             document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
-        });
 
-        document.querySelector(".cash").addEventListener("click", function() {
-            handlePayment("cash");
-        });
+            document.querySelector(".cash").addEventListener("click", function() {
+                handlePayment("cash");
+            });
 
-        document.querySelector(".mobile").addEventListener("click", function() {
-            handlePayment("mobile");
-        });
+            document.querySelector(".mobile").addEventListener("click", function() {
+                handlePayment("mobile");
+            });
 
-        function handlePayment(paymentType) {
-            //const tableNo = document.querySelector("#tableNo").value;
-            const amount = localStorage.getItem('selectedTableTotal');
-
-                
-            if (paymentType === "cash") {
-                window.location.href = 'cash.html';
-            } else if (paymentType === "mobile") {
-                window.location.href = 'mobile.html';
+            async function handlePayment(paymentType) {
+                if (paymentType === "cash") {
+                    window.location.href = 'cash.html';
+                } else if (paymentType === "mobile") {
+                    document.getElementById('paypal-button-container').style.display = 'block';
+                    await initializePayPal(total);
+                }
             }
-        }
+
+            function initializePayPal(amount) {
+                return new Promise((resolve, reject) => {
+                    paypal.Buttons({
+                        createOrder: function(data, actions) {
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        value: amount // Amount to be paid
+                                    },
+                                    description: 'Order from Bukhari Restaurant'
+                                }]
+                            });
+                        },
+                        onApprove: function(data, actions) {
+                            return actions.order.capture().then(async function(details) {
+                                console.log('Payment Successful:', details);
+
+                                try {
+                                    await confirmPayment();
+                                    resolve(); // Resolve the promise after confirming payment
+                                } catch (error) {
+                                    reject(error); // Reject the promise if confirmPayment fails
+                                }
+                            });
+                        },
+                        onError: function(err) {
+                            console.error('PayPal Error:', err);
+                            alert('An error occurred with PayPal. Please try again.');
+                            reject(err); // Reject the promise if PayPal errors occur
+                        }
+                    }).render('#paypal-button-container');
+                });
+            }
+
+            async function confirmPayment() {
+                const tableNumber = localStorage.getItem('selectedTableNumber');
+
+                if (!tableNumber) {
+                    alert('No table number found. Please try again.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/api/items/mark-as-paid/${tableNumber}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`Failed to update items: ${errorData.error}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Update response:', data);
+
+                    alert('Payment confirmed. Thank you!');
+                    window.location.href = '../views/venueMenu.ejs'; // Redirect to venue menu or another page
+                } catch (error) {
+                    console.error('Error confirming payment:', error);
+                    alert(`Failed to confirm payment: ${error.message}. Please try again.`);
+                }
+            }
+        });
     </script>
 </body>
 </html>
