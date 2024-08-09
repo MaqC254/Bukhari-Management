@@ -11,8 +11,9 @@
     <span class="open-menu" onclick="openMenu()">&#9776;</span>
     <div id="mySideMenu" class="side-menu">
         <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
-        <a href="../views/menu.ejs">Menu</a>
         <a href="../pages/index.html">Home</a>
+        <a href="../views/available.ejs">Available Meals</a>
+        <a href="../pages/add-meal.html">Add Meal</a>
         <a href="../pages/customer_signin.html">Log Out</a>
     </div>
     <header>
@@ -49,6 +50,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const ordersList = document.getElementById('orders-list').getElementsByTagName('tbody')[0];
+
 
                     // Group items by phone number
                     const groupedItems = data.reduce((acc, item) => {
@@ -98,6 +100,7 @@
                                         }
                                     })
                                     .catch(error => console.error('Error:', error));
+
                             });
                             actionCell.appendChild(button);
                         }

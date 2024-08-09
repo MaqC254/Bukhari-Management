@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="../styles/deliveryMenu.css">
 </head>
 <body>
+    <!-- Side Menu -->
+    <span class="open-menu" onclick="openMenu()">&#9776;</span>
+    <div id="mySideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+        <a href="../pages/index.html">Home</a>
+        <a href="../pages/deliveryCart.html">My Cart</a>
+        <a href="../pages/orderstate.html">Order State</a>
+        <a href="../pages/customer_signin.html">Log Out</a>
+    </div>
     <header id="navbar">
         <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
         <h1 class="menu-heading">Menu</h1>
@@ -45,9 +54,9 @@
         </div>
     </main>
 
-    <footer>
+    <!-- <footer>
         <p>&copy; 2024 Bukhari Restaurant</p>
-    </footer>
+    </footer> -->
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -122,6 +131,17 @@
                 }
             }
         });
+        // Function to open side menu
+        function openMenu() {
+            document.getElementById("mySideMenu").style.width = "200px";
+            document.getElementById("main").style.marginLeft = "200px";
+        }
+
+        // Function to close side menu
+        function closeMenu() {
+            document.getElementById("mySideMenu").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
     </script>
 </body>
 </html>

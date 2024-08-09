@@ -43,6 +43,7 @@
                     .then(data => {
                         if (data.success) {
                             localStorage.setItem("phone", phone);
+
                             // Store the cart items to the server
                             const cart = JSON.parse(localStorage.getItem('cart')) || [];
                             return fetch('http://localhost:3000/api/add-items', {
@@ -52,6 +53,8 @@
                                 },
                                 body: JSON.stringify({ cartItems: cart, phone }),
                             });
+
+                            window.location.href = '../views/deliveryMenu.ejs';
                         } else {
                             const passwordInput = document.getElementById("password");
                             passwordInput.classList.add("error");

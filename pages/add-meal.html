@@ -7,8 +7,17 @@
     <link rel="stylesheet" href="../styles/add-meal.css">
 </head>
 <body>
+    <!-- Side Menu -->
+    <span class="open-menu" onclick="openMenu()">&#9776;</span>
+    <div id="mySideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+        <a href="../pages/index.html">Home</a>
+        <a href="../views/available.ejs">Available Meals</a>
+        <a href="../pages/add-meal.html">Add Meal</a>
+        <a href="../pages/customer_signin.html">Log Out</a>
+    </div>
     <header>
-        <h1>Add a New Meal</h1>
+        <h1>ADD A NEW MEAL</h1>
     </header>
 
     <main>
@@ -44,5 +53,18 @@
     <!-- <footer>
         <p>&copy; 2024 Bukhari Restaurant</p>
     </footer> -->
+    <script>
+         // Function to open side menu
+         function openMenu() {
+            document.getElementById("mySideMenu").style.width = "200px";
+            document.getElementById("main").style.marginLeft = "200px";
+        }
+
+        // Function to close side menu
+        function closeMenu() {
+            document.getElementById("mySideMenu").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
 </body>
 </html>

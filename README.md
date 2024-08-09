@@ -10,9 +10,9 @@ Features
 
 In-Location Dining
 Order Management: Simplifies the process of taking and managing orders.
-Billing: Generates bills for customers, including support for multiple payment methods.
+Billing: Generates bills for customers, including support for M-Pesa
 Takeaway
-Order Placement: Enables customers to place takeaway orders.
+Order Placement: Enables customers to place orders.
 
 Online Ordering
 Menu Browsing: Allows customers to browse the restaurant's menu online.
@@ -31,20 +31,17 @@ Clone the Repository:
 `git clone https://github.com/MaqC254/bukhari-restaurant-management-system.git`
 
 Navigate to the Project Directory:
-
+`cd <Your cloned repository location>`
 
 Install Dependencies:
-
-
-Set Up the Database:
+`npm install`
 
 
 Start the Application:
+`nodemon app` or `node app.js`
 
+Open your browser and navigate to `localhost:3000`
 
-
-Usage
-Once the application is set up and running, you can access it through a web browser. The management panel can be accessed by users with appropriate administrative privileges.
 
 Contributing
 We welcome contributions to enhance the functionality of the Bukhari Restaurant Management System. If you have suggestions for improvements or would like to report bugs, please open an issue or submit a pull request.
@@ -53,4 +50,4 @@ License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 Contact
-For any inquiries or support, please contact the project maintainer at maxwellm751@gmail.com.
+For any inquiries or support, please contact the project maintainer at mwangi.maxwell21@students.dkut.ac.ke

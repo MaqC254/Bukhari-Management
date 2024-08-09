@@ -6,7 +6,10 @@ const session = require('express-session');
 const ejs = require('ejs');
 const multer = require('multer');
 const mongoDBSession = require('connect-mongodb-session')(session);
+
 const axios = require('axios');
+
+const SMS = require("./models/sms.js");
 
 //const cors = require('cors');
 
@@ -609,3 +612,66 @@ app.post('/api/confirm-payment', async (req, res) => {
         res.status(500).json({ success: false, message: 'Payment processing failed' });
     }
 });
+
+app.post("/api/upload-sms", async (req, res) => {
+    try {
+        const { message } = req.body;
+
+        // Regular expression to match the transaction code, amount, phone number, and user name
+        const regex = /([A-Z0-9]{10}) Confirmed\.You have received Ksh([\d,]+)\.00 from ([A-Z\s]+) (\d{10})/i;
+        const match = message.match(regex);
+
+        if (match) {
+            const transactionCode = match[1];
+            const amount = parseFloat(match[2].replace(/,/g, ''));
+            const userName = match[3].trim();
+            const phoneNumber = match[4];
+            
+            // Create a new SMS document
+            const sms = new SMS({
+                transactionCode,
+                amount,
+                phoneNumber,
+                userName,
+                date: new Date()
+            });
+
+            // Save the document to the database
+            await sms.save();
+
+            res.status(201).json({ message: 'SMS data stored successfully' });
+        } else {
+            res.status(400).json({ message: 'Invalid SMS format' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Endpoint to verify payment status
+app.post("/api/verify-payment", async (req, res) => {
+    try {
+        let { transactionCode, amount } = req.body;
+
+        amount = amount.split(" ")[2];
+
+        // Find the SMS record by transaction code
+        const smsRecord = await SMS.findOne({ transactionCode });
+
+        if (!smsRecord) {
+            return res.status(404).json({ message: 'Transaction not found' });
+        }
+
+        // Compare the amounts
+        if (smsRecord.amount === parseFloat(amount)) {
+            return res.status(200).json({ status: 'paid' });
+        } else {
+            return res.status(200).json({ status: 'unpaid' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+

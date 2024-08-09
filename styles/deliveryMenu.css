@@ -19,6 +19,57 @@ body {
     
 }
 
+.side-menu {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #ffff;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.side-menu a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #000000;
+  display: block;
+  transition: 0.3s;
+}
+
+.side-menu a:hover {
+  color: #FFA500;
+  font-weight: bolder;
+}
+
+.side-menu .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.open-menu {
+  font-size: 20px;
+  cursor: pointer;
+  color: #fff; /* White text color for better contrast */
+  background-color: #FFA500; /* Orange background */
+  padding: 5px 5px; /* Adding padding for better visual appearance */
+  border-radius: 30px;
+  position: absolute;
+  top: 10px; /* Adjusted to be at the top */
+  left: 10px; /* Adjusted to be at the left */
+  z-index: 100; /* Ensures it stays on top */
+  box-shadow: 0 0 15px rgba(255, 165, 0, 0.8); /* Glowing orange shadow */
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -132,7 +183,7 @@ main {
   max-width: 1200px;
   margin: 20px auto;
   padding: 0 20px;
-  margin-top: 30px;
+  margin-top: 300px;
 }
 
 .meal {
@@ -145,11 +196,11 @@ main {
   transition: transform 0.3s;
 }
 
-.meal:hover {
+/* .meal:hover {
   transform: translateY(-10px);
   box-shadow: 10px 10px 20px #babecc,
   -10px -10px 20px #ffffff;
-}
+} */
 
 .meal img {
   width: 100%;
@@ -169,13 +220,20 @@ main {
 }
 
 .meal button.add-to-cart {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: lighter;
   margin-top: 10px;
   padding: 10px 20px;
   background-color: #4CAF50;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   cursor: pointer;
+}
+
+.meal button.add-to-cart:hover {
+  font-weight: bolder;
+  box-shadow: 0 0 10px #00b706; /* Glow effect with white color */
 }
 
 .meal button.add-to-cart:disabled {
