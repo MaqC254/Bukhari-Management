@@ -62,8 +62,8 @@
                     const data = await response.json();
                     console.log('Update response:', data);
 
-                    alert('Payment confirmed. Thank you!');
-                    window.location.href = '../views/venueMenu.ejs'; // Redirect to venue menu or another page
+                    // alert('Payment confirmed. Thank you!');
+                    window.location.href = '../pages/upload-sms.html'; // Redirect to venue menu or another page
                 } catch (error) {
                     console.error('Error confirming payment:', error);
                     alert(`Failed to confirm payment: ${error.message}. Please try again.`);
