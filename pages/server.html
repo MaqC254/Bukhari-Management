@@ -16,15 +16,25 @@
         <a href="../pages/customer_signin.html">Log Out</a>
     </div>
     <header>
-        <!-- <img src="../images/Bukhari logo.jpg" alt="Bukhari Restaurant Logo" class="logo"> -->
         <h1>BUKHARI RESTAURANT</h1>
-        <!-- <h2>Servers Application</h2> -->
     </header>
 
     <main>
         <a href="../views/available.ejs" class="nav-button">Modify Available Meals</a>  
         <h3>Orders List</h3>
-        <div id="orders-list"></div>
+        <table id="orders-list">
+            <thead>
+                <tr>
+                    <th>Waiter no/Phone Number</th>
+                    <th>Items</th>
+                    <th>State</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Order rows will be dynamically added here -->
+            </tbody>
+        </table>
     </main>
 
     <footer>
@@ -38,82 +48,78 @@
             fetch('/get-items')
                 .then(response => response.json())
                 .then(data => {
-                    const ordersList = document.getElementById('orders-list');
-                    data.forEach(item => {
-                        const orderSection = document.createElement('section');
-                        orderSection.className = 'order';
+                    const ordersList = document.getElementById('orders-list').getElementsByTagName('tbody')[0];
 
-                        const orderHeader = document.createElement('div');
-                        orderHeader.className = 'order-header';
-
-                        const span = document.createElement('span');
-                        span.textContent = item.name;
-
-                        const button = document.createElement('button');
-                        button.className = `status ${item.state === 'venue' ? 'served' : 'packed'}`;
-                        button.textContent = item.state === 'venue' ? 'Served' : 'Packed';
-
-                        button.addEventListener('click', () => {
-                            fetch(`/update-item/${item._id}`, { method: 'PUT' })
-                                .then(response => response.json())
-                                .then(updatedItem => {
-                                    if (updatedItem.state === 'done') {
-                                        orderSection.remove();
-                                    }
-                                })
-                                .catch(error => console.error('Error:', error));
-                        });
-
-                        orderHeader.appendChild(span);
-                        orderHeader.appendChild(button);
-
-                        const ul = document.createElement('ul');
-
-                        const li = document.createElement('li');
-                        li.textContent = `${item.name} `;
-                        const spanQuantity = document.createElement('span');
-                        spanQuantity.textContent = `x${item.quantity}`;
-
-                        li.appendChild(spanQuantity);
-                        ul.appendChild(li);
-
-                        // Add phone number or server ID based on state
-                        const infoLi = document.createElement('li');
-                        infoLi.textContent = item.state === 'venue' ? `Server ID: ${item.customerPhone}` : `Phone: ${item.customerPhone}`;
-                        ul.appendChild(infoLi);
-
-                        // Add the upload SMS button
-                        if (item.state === 'venue') {
-                            const smsButton = document.createElement('button');
-                            smsButton.textContent = 'Upload Payment SMS';
-                            smsButton.classList.add('upload-sms-button'); // Apply the CSS class    
-                            smsButton.addEventListener('click', () => {
-                                window.location.href = '/pages/upload-sms.html';
-                            });
-                            orderSection.appendChild(smsButton);
+                    // Group items by phone number
+                    const groupedItems = data.reduce((acc, item) => {
+                        if (!acc[item.customerPhone]) {
+                            acc[item.customerPhone] = [];
                         }
+                        acc[item.customerPhone].push(item);
+                        return acc;
+                    }, {});
 
-                        orderSection.appendChild(orderHeader);
-                        orderSection.appendChild(ul);
+                    // Populate table rows
+                    Object.entries(groupedItems).forEach(([phone, items]) => {
+                        const row = document.createElement('tr');
 
-                        ordersList.appendChild(orderSection);
+                        // Waiter no/Phone Number
+                        const phoneCell = document.createElement('td');
+                        phoneCell.textContent = phone;
+                        row.appendChild(phoneCell);
+
+                        // Items
+                        const itemsCell = document.createElement('td');
+                        const itemCounts = items.reduce((acc, item) => {
+                            acc[item.name] = (acc[item.name] || 0) + item.quantity;
+                            return acc;
+                        }, {});
+                        itemsCell.innerHTML = Object.entries(itemCounts).map(([name, quantity]) => `${name} x${quantity}`).join('<br>');
+                        row.appendChild(itemsCell);
+
+                        // State
+                        const stateCell = document.createElement('td');
+                        const states = [...new Set(items.map(item => item.state))];
+                        stateCell.textContent = states.length === 1 ? (states[0] === 'venue' ? 'Order received' : 'Order already prepared') : 'Mixed States';
+                        row.appendChild(stateCell);
+
+                        // Action
+                        const actionCell = document.createElement('td');
+                        if (items.some(item => item.state === 'venue')) {
+                            const button = document.createElement('button');
+                            button.textContent = 'Click here if meal is ready to serve';
+                            button.className = 'status served';
+                            button.addEventListener('click', () => {
+                                fetch(`/update-item/${items[0]._id}`, { method: 'PUT' })
+                                    .then(response => response.json())
+                                    .then(updatedItem => {
+                                        if (updatedItem.state === 'done') {
+                                            row.remove();
+                                        }
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                            });
+                            actionCell.appendChild(button);
+                        }
+                        row.appendChild(actionCell);
+
+                        ordersList.appendChild(row);
                     });
                 })
                 .catch(error => console.error('Error:', error));
         });
 
-         // Function to open side menu
-         function openMenu() {
+        // Function to open side menu
+        function openMenu() {
             document.getElementById("mySideMenu").style.width = "200px";
-            document.getElementById("main").style.marginLeft = "200px";
+            document.body.style.marginLeft = "200px";
         }
 
         // Function to close side menu
         function closeMenu() {
             document.getElementById("mySideMenu").style.width = "0";
-            document.getElementById("main").style.marginLeft = "0";
+            document.body.style.marginLeft = "0";
         }
-
     </script>
 </body>
 </html>

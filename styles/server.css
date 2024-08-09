@@ -10,6 +10,7 @@ body {
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-size: cover;
+    overflow: hidden; /* Prevent scrolling due to fixed side menu */
 }
 
 /* Side Menu Styling */
@@ -65,8 +66,7 @@ body {
 
 header {
     text-align: center;
-    padding: 5px;
-    margin-top: 0;
+    padding: 10px;
     background-color: #fff;
 }
 
@@ -76,16 +76,19 @@ header .logo {
 }
 
 main {
-    width: 500px;
-    margin: 0 auto;
-    border-radius: 5px;
+    margin: 0;
+    padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: white;
+    overflow-y: auto;
+    height: calc(100vh - 80px); /* Adjust height to fit the screen */
 }
+
 h1 {
     text-align: center;
     font-size: 20px;
 }
+
 h2 {
     text-align: center;
     color:#000;
@@ -109,7 +112,7 @@ h3 {
     font-size: 16px;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 459px;
+    width: 100%;
     font-weight: bold;
 }
 
@@ -117,8 +120,7 @@ h3 {
     background-color: #ff8c00; /* Darker orange */
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
-}   
-
+}
 
 .upload-sms-button {
     font-family: 'Montserrat', sans-serif;
@@ -134,71 +136,61 @@ h3 {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-size: 13px;
-    font-weight: bold;
+    font-size: 16px;
 }
 
-.upload-sms-button:hover {
-    background-color: #e6ffe6; /* Light green background on hover */
-    color: #005700; /* Darker green text color */
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
 }
-.order {
+
+th, td {
+    padding: 12px;
     border: 1px solid #ddd;
-    margin: 20px 0;
-    padding: 10px;
-    border-radius: 5px;
+    text-align: left;
 }
 
-.order-header {
-    display: flex;
-    justify-content: space-between;
-    background-color: #f8f8f8;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    border-radius: 5px 5px 0 0;
+thead {
+    background-color: #f4f4f4;
 }
 
-.status {
-    background-color: #e67e22;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
+thead th {
+    font-weight: bold;
+    color: #333;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #eaeaea;
+}
+
+button.status.served {
+    background-color: #4CAF50; /* Green */
+    color: white;
     border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
     cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
-.status.served {
-    background-color: #28a745; /* Green for served */
-}
-
-.status.packed {
-    background-color: #e67e22; /* Orange for packed */
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-ul li {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
+button.status.served:hover {
+    background-color: #45a049; /* Darker green */
 }
 
 footer {
     text-align: center;
     padding: 10px;
-    background-color: #c2c2c2;
-    border-top: 1px solid #ddd;
-    margin-bottom: 0;
-    height: max-content;
-    font-size: 10px;
-}
-
-footer .footer-logo {
-    width: 50px;
-    height: auto;
+    background-color: #fff;
+    margin-top: 20px;
 }

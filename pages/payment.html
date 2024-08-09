@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <script src="https://www.paypal.com/sdk/js?client-id=AUXbJ1MpXAA28xCuZbw_n-BkB6aAksDIXAES6RN_SYjE5Pp1GNwdcbpRVy9EJP6tgd2KFV80ir7_B58z"></script>
+</head>
+<body>
+    <h1>Complete Your Payment</h1>
+    <div id="paypal-button-container"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const total = localStorage.getItem('total');
+            const phone = localStorage.getItem('phone');
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: total // Amount to be paid
+                            },
+                            description: 'Order from Bukhari Restaurant'
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+
+                        return fetch('http://localhost:3000/api/confirm-payment', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                orderID: data.orderID,
+                                payerID: data.payerID,
+                                cartItems: cart,
+                                phone: phone,
+                                paid: true // Set the value of paid to true
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Redirect to the order status page
+                            window.location.href = '../pages/orderstate.html'; 
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred. Please try again.');
+                        });
+                    });
+                },
+                onError: function(err) {
+                    console.error('PayPal Error:', err);
+                    alert('An error occurred with PayPal. Please try again.');
+                }
+            }).render('#paypal-button-container');
+        });
+    </script>
+</body>
+</html>
