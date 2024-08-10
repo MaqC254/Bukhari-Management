@@ -48,27 +48,28 @@
 
                         if (signinData.success) {
                             localStorage.setItem("phone", phone);
+                            
+                            window.location.href = "../pages/location.html";
+                            // // Store the cart items to the server
+                            // const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                            // const cartResponse = await fetch('http://localhost:3000/api/add-items', {
+                            //     method: 'POST',
+                            //     headers: {
+                            //         'Content-Type': 'application/json',
+                            //     },
+                            //     body: JSON.stringify({ cartItems: cart, phone }),
+                            // });
 
-                            // Store the cart items to the server
-                            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                            const cartResponse = await fetch('http://localhost:3000/api/add-items', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({ cartItems: cart, phone }),
-                            });
-
-                            if (cartResponse.ok) {
-                                const order = await cartResponse.json();
-                                localStorage.removeItem('cart');
+                            // if (cartResponse.ok) {
+                            //     const order = await cartResponse.json();
+                            //     localStorage.removeItem('cart');
                                 
-                                const orderId = order.orderId
-                                // Redirect to the next page
-                                window.location.href = `../pages/payment.html?id=${orderId}`;
-                            } else {
-                                throw new Error('Failed to store cart items');
-                            }
+                            //     const orderId = order.orderId
+                            //     // Redirect to the next page
+                            //     window.location.href = `../pages/payment.html?id=${orderId}`;
+                            // } else {
+                            //     throw new Error('Failed to store cart items');
+                            // }
                         } else {
                             // Show error message if login fails
                             const passwordInput = document.getElementById("password");

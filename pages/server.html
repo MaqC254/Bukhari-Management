@@ -342,6 +342,7 @@
                         if (data.success) {
                             alert('Delivery confirmed!');
                             popup.style.display = 'none'; // Hide popup
+                            window.location.reload();
                         } else {
                             alert('Failed to confirm delivery.');
                         }

@@ -336,6 +336,7 @@ app.post('/api/add-items', async (req, res) => {
     try {
         const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
         const phone = req.body.phone;
+        const location = req.body.location;
 
         const orderId = uuidv4();
 
@@ -349,7 +350,8 @@ app.post('/api/add-items', async (req, res) => {
             category: item.category, // Assuming each item has a category property
             state: 'online', // Default state for new items
             customerPhone: phone,
-            orderId: orderId
+            orderId: orderId,
+            location: location
         }));
 
         // Insert all items into MongoDB using create() method
@@ -544,7 +546,8 @@ app.get('/orderstatus', async (req, res) => {
       const items = await Item.find({ orderId });
       const allDone = items.every(item => item.state === 'done');
       const order = await Delivery.findOne({orderId});
-      const deliveryStatus = order.status;
+
+      const deliveryStatus = order !== null? order.status : false;
 
       const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -553,7 +556,10 @@ app.get('/orderstatus', async (req, res) => {
         res.status(200).json({
             totalPrice: totalPrice,
             order: items,
-            status: deliveryStatus === true? "delivered":  allDone === true? "ready": "online"
+            status: deliveryStatus === true? "delivered":  allDone === true? "ready": "online",
+            ETA: order !== null? order.ETA:  "60",
+            code: order !== null? order.code: "####",
+            delivery: order
         });
     //     res.send('Being Delivered');
     //   } else {
@@ -741,22 +747,24 @@ app.post('/create-delivery', async (req, res) => {
         return res.status(400).json({ error: 'orderId and driver are required' });
     }
 
+    const item = await Item.findOne({orderId: orderId});
+
     try {
         // Create a new delivery instance
         const newDelivery = new Delivery({
             orderId,
             driver,
-            status: false // Default status to false (not delivered yet)
+            status: false, // Default status to false (not delivered yet)
+            location: item.location,
+            phone: item.location
         });
 
         // Save the new delivery record
         await newDelivery.save();
 
-        await Item.findByIdAndUpdate(id, { state: 'done' }, { new: true })
-        .then(item => res.status(200).json(item))
-        .catch(err => res.status(400).send(err));
+        await Item.updateMany({orderId: orderId}, { state: 'done' }, { new: true });
 
-        return res.status(201).json({ success: true, message: 'Delivery created successfully', delivery: newDelivery });
+        res.status(201).json({ success: true, message: 'Delivery created successfully', delivery: newDelivery });
     } catch (error) {
         console.error('Error creating delivery:', error);
         res.status(500).json({ error: 'Internal Server Error' });

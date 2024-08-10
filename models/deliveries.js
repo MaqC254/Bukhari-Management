@@ -14,7 +14,9 @@ const Delivery = mongoose.model("Delivery", new mongoose.Schema({
     ETA: {
         type: Number,
         default: () => Math.floor(5 + Math.random() * 56)
-    }
+    }, 
+    location: String,
+    phone: String
 }));
 
 module.exports = Delivery;
