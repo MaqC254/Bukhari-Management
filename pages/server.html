@@ -262,7 +262,7 @@
                         button.className = 'status served';
                         button.addEventListener('click', () => {
                             if (items[0].state === 'online') {
-                                showDriverPopup(items[0].orderId);
+                                showDriverPopup(items[0].orderId, items[0]._id);
                             } else {
                                 // Update the state of all items in the group to 'done'
                                 Promise.all(items.map(item => 
@@ -298,7 +298,7 @@
         }
 
         // Function to show the driver selection popup
-        function showDriverPopup(orderId) {
+        function showDriverPopup(orderId, itemId) {
             const popup = document.getElementById('driver-popup');
             const driverDropdown = document.getElementById('driver-dropdown');
             driverDropdown.innerHTML = ''; // Clear existing driver options
@@ -332,6 +332,7 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
+                            id: itemId,
                             orderId,
                             driver: selectedDriverPhone,
                         })

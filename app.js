@@ -543,6 +543,8 @@ app.get('/orderstatus', async (req, res) => {
       // Check if all items for this phone number are 'done'
       const items = await Item.find({ orderId });
       const allDone = items.every(item => item.state === 'done');
+      const order = await Delivery.findOne({orderId});
+      const deliveryStatus = order.status;
 
       const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -551,7 +553,7 @@ app.get('/orderstatus', async (req, res) => {
         res.status(200).json({
             totalPrice: totalPrice,
             order: items,
-            status: allDone === true? "ready": "online"
+            status: deliveryStatus === true? "delivered":  allDone === true? "ready": "online"
         });
     //     res.send('Being Delivered');
     //   } else {
@@ -733,7 +735,7 @@ app.put('/update-delivery/:orderId', async (req, res) => {
 
 // Route to create a new delivery
 app.post('/create-delivery', async (req, res) => {
-    const { orderId, driver } = req.body; // Extract orderId and driver from request body
+    const { id, orderId, driver } = req.body; // Extract orderId and driver from request body
 
     if (!orderId || !driver) {
         return res.status(400).json({ error: 'orderId and driver are required' });
@@ -750,7 +752,11 @@ app.post('/create-delivery', async (req, res) => {
         // Save the new delivery record
         await newDelivery.save();
 
-        res.status(201).json({ success: true, message: 'Delivery created successfully', delivery: newDelivery });
+        await Item.findByIdAndUpdate(id, { state: 'done' }, { new: true })
+        .then(item => res.status(200).json(item))
+        .catch(err => res.status(400).send(err));
+
+        return res.status(201).json({ success: true, message: 'Delivery created successfully', delivery: newDelivery });
     } catch (error) {
         console.error('Error creating delivery:', error);
         res.status(500).json({ error: 'Internal Server Error' });
