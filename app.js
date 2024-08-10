@@ -6,6 +6,8 @@ const session = require('express-session');
 const ejs = require('ejs');
 const multer = require('multer');
 const mongoDBSession = require('connect-mongodb-session')(session);
+const { v4: uuidv4 } = require('uuid'); // Import UUID v4
+
 
 const axios = require('axios');
 
@@ -334,6 +336,8 @@ app.post('/api/add-items', async (req, res) => {
         const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
         const phone = req.body.phone;
 
+        const orderId = uuidv4();
+
         // Create an array of items to insert into MongoDB
         const itemsToInsert = cartItems.map(item => ({
             name: item.name,
@@ -344,12 +348,13 @@ app.post('/api/add-items', async (req, res) => {
             category: item.category, // Assuming each item has a category property
             state: 'online', // Default state for new items
             customerPhone: phone,
+            orderId: orderId
         }));
 
         // Insert all items into MongoDB using create() method
         const createdItems = await Item.create(itemsToInsert);
 
-        res.status(201).json(createdItems); // Respond with created items in JSON format
+        res.status(201).json({"orderId": createdItems[0].orderId}); // Respond with created items in JSON format
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' }); // Handle server errors
@@ -362,7 +367,10 @@ app.post('/api/add-order', async (req, res) => {
         const workID = req.body.workID;
         const tableNumber = req.body.tableNumber;
 
-        // Create an array of items to insert into MongoDB
+        // Generate a UUID for this cart
+        const orderId = uuidv4();
+
+        // Create an array of items to insert into MongoDB with the same UUID
         const itemsToInsert = cartItems.map(item => ({
             name: item.name,
             description: item.description,
@@ -372,8 +380,11 @@ app.post('/api/add-order', async (req, res) => {
             category: item.category, // Assuming each item has a category property
             state: 'venue', // Default state for new items
             customerPhone: workID,
-            tableNumber: tableNumber
+            tableNumber: tableNumber,
+            orderId: orderId // Assign the same UUID to each item
         }));
+
+        console.log(itemsToInsert);
 
         // Insert all items into MongoDB using create() method
         const createdItems = await Item.create(itemsToInsert);
@@ -524,18 +535,27 @@ app.get('/api/reports/:year/:month/:week?/:day?', async (req, res) => {
 
 // Route to fetch order status
 app.get('/orderstatus', async (req, res) => {
-    const customerPhone = req.query.phone; // Retrieve phone number from query parameter
+    // const customerPhone = req.query.phone; // Retrieve phone number from query parameter
+    const orderId = req.query.id;
   
     try {
       // Check if all items for this phone number are 'done'
-      const items = await Item.find({ customerPhone });
+      const items = await Item.find({ orderId });
       const allDone = items.every(item => item.state === 'done');
+
+      const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
   
-      if (allDone) {
-        res.send('Being Delivered');
-      } else {
-        res.send('Being Prepared');
-      }
+    //   if (allDone) {
+        res.status(200).json({
+            totalPrice: totalPrice,
+            order: items,
+            status: allDone === true? "ready": "online"
+        });
+    //     res.send('Being Delivered');
+    //   } else {
+    //     res.send('Being Prepared');
+    //   }
     } catch (err) {
       console.error(err);
       res.status(500).send('Error fetching order status');

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bukhari Restaurant - Customer Sign In</title>
     <link rel="stylesheet" href="../styles/signin.css">
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -18,35 +20,38 @@
             <form id="customer_signin">
                 <label for="phone">Phone Number:</label>
                 <input type="text" id="phone" placeholder="Enter your phone number" required>
-                
-                <label for="password">Password:</label> 
+
+                <label for="password">Password:</label>
                 <p id="error-message" style="display: none;">Wrong password!!</p> <!-- Hidden initially -->
                 <input type="password" id="password" placeholder="Enter your password" required>
 
                 <button type="submit" class="confirm-button">Sign In</button>
             </form>
             <script>
-                document.getElementById("customer_signin").addEventListener("submit", function(event) {
+                document.getElementById("customer_signin").addEventListener("submit", async function (event) {
                     event.preventDefault(); // Prevent the form from submitting the traditional way
 
                     const phone = document.getElementById("phone").value;
                     const password = document.getElementById("password").value;
 
-                    fetch('/customer_signin', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ phone, password })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
+                    try {
+                        // Sign in the customer
+                        const signinResponse = await fetch('/customer_signin', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ phone, password })
+                        });
+
+                        const signinData = await signinResponse.json();
+
+                        if (signinData.success) {
                             localStorage.setItem("phone", phone);
 
                             // Store the cart items to the server
                             const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                            return fetch('http://localhost:3000/api/add-items', {
+                            const cartResponse = await fetch('http://localhost:3000/api/add-items', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -54,26 +59,31 @@
                                 body: JSON.stringify({ cartItems: cart, phone }),
                             });
 
-                            window.location.href = '../views/deliveryMenu.ejs';
+                            if (cartResponse.ok) {
+                                const order = await cartResponse.json();
+                                localStorage.removeItem('cart');
+                                
+                                const orderId = order.orderId
+                                // Redirect to the next page
+                                window.location.href = `../pages/payment.html?id=${orderId}`;
+                            } else {
+                                throw new Error('Failed to store cart items');
+                            }
                         } else {
+                            // Show error message if login fails
                             const passwordInput = document.getElementById("password");
                             passwordInput.classList.add("error");
                             const errorMessage = document.getElementById("error-message");
                             errorMessage.textContent = "Wrong password";
                             errorMessage.style.display = "block"; // Show the error message
                         }
-                    })
-                    .then(response => response.json())
-                    .then(() => {
-                        localStorage.removeItem('cart');
-                        window.location.href = '../pages/payment.html';
-                    })
-                    .catch(error => {
+                    } catch (error) {
                         console.error('Error:', error);
                         alert('An error occurred while signing in. Please try again.');
-                    });
+                    }
                 });
             </script>
+
             <a href="customer_signup.html">Don't have an account? Sign Up</a>
         </main>
         <footer>
@@ -82,4 +92,5 @@
         </footer>
     </div>
 </body>
+
 </html>

@@ -13,6 +13,9 @@
         <div id="paypal-button-container"></div>
     </div>
     <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        // Return the value of the parameter
+        const orderId = urlParams.get("id");
         document.addEventListener('DOMContentLoaded', () => {
             const total = localStorage.getItem('total');
             const phone = localStorage.getItem('phone');
@@ -53,7 +56,7 @@
                             alert("Payment made successfully")
                             // Redirect to the order status page
                             setTimeout(() => {
-                            window.location.href = '../pages/orderState.html';
+                            window.location.href = `../pages/orderState.html?id=${orderId}`;
                         }, 3000);
                         })
                         .catch(error => {

@@ -1,27 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bukhari Restaurant - Order Status</title>
     <link rel="stylesheet" href="../styles/orderstate.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 150px;
+        }
+
+        .order-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .order-info div {
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .order-info div:not(:last-child) {
+            border-right: 1px solid #ddd;
+        }
+
+        .order-status {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .order-status h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .order-status p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .progress-step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .progress-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: #ddd;
+            top: 50%;
+            left: 50%;
+            z-index: -1;
+            transform: translateX(-50%);
+        }
+
+        .progress-step .icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-bottom: 10px;
+            background-color: #ddd;
+            border-radius: 50%;
+        }
+
+        .progress-step.active .icon {
+            background-color: #28a745;
+        }
+
+        .progress-step.completed .icon {
+            background-color: #28a745;
+        }
+
+        .progress-step p {
+            font-size: 14px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .order-details-card {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-details-card h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .order-details-card p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .delivery-details {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f7f5;
+            border: 1px solid #28a745;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .delivery-details p {
+            font-size: 16px;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .completion-code {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            color: #d9534f;
+        }
+    </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
         </header>
-        <main>
-            <section class="order-status">
-                <h2>Order Status</h2>
-                <p id="status">Loading...</p>
-            </section>
-            <div class="loader"></div>
-        </main>
+
+        <div class="order-info">
+            <div>ORDER PLACED<br><p id="the-day-placed"></p></div>
+            <div>TOTAL<br>
+                <p id="the-total"></p>
+            </div>
+            <div>SHIP TO<br>Emily Morgan</div>
+            <div id="the-order-id">ORDER #</div>
+        </div>
+
+        <section class="order-status">
+            <h2>Order Status: <span id="status">Being Prepared</span></h2>
+            <p id="estimated-delivery-date">Estimated Time of Arrival: 20 Minutes</p>
+        </section>
+
+        <div class="progress-container">
+            <div class="progress-step completed" id="step-placed">
+                <div class="icon"></div>
+                <p>Order Placed</p>
+            </div>
+            <div class="progress-step" id="step-prepared">
+                <div class="icon"></div>
+                <p>Being Prepared</p>
+            </div>
+            <div class="progress-step" id="step-ready">
+                <div class="icon"></div>
+                <p>Ready</p>
+            </div>
+            <div class="progress-step" id="step-delivered">
+                <div class="icon"></div>
+                <p>Delivered</p>
+            </div>
+        </div>
+
+        <div class="order-details-card">
+            <h3>Order Details</h3>
+            <div id="order-items"></div> <!-- Placeholder for order items -->
+        </div>
+
+        <div class="delivery-details" id="delivery-details">
+            <h3>Delivery Details</h3>
+            <p>Delivery Person: John Doe</p>
+            <p>Contact: +1234567890</p>
+            <p>Vehicle: Red Motorcycle</p>
+            <p class="completion-code">Delivery Code: <span id="completion-code">ABC123</span></p>
+        </div>
     </div>
 
     <script>
+        // Function to format the date as "August 10, 2024, 10:09am"
+        function formatDate(date) {
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            };
+
+            // Format the date and time separately
+            const dateString = date.toLocaleDateString('en-US', options);
+            const timeString = date.toLocaleTimeString('en-US', timeOptions);
+
+            // Combine date and time
+            return `${dateString}, ${timeString.toLowerCase()}`;
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        // Return the value of the parameter
+        const orderId = urlParams.get("id");
         // Function to retrieve phone number from localStorage
+        document.getElementById("the-order-id").textContent = `ORDER #${orderId.split("-")[0]}`;
         function getPhoneNumber() {
             return localStorage.getItem('phone');
         }
@@ -30,23 +246,73 @@
         async function fetchOrderStatus() {
             try {
                 const phone = getPhoneNumber();
-                const response = await fetch(`/orderstatus?phone=${phone}`);
+                const response = await fetch(`/orderstatus?id=${orderId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch order status');
                 }
-                const status = await response.text();
-                document.getElementById('status').textContent = status;
+
+                const order = await response.json();
+                const items = order.order;
+
+
+                // add date ordered
+                const date = formatDate(new Date(items[0].createdAt));
+                console.log(order);
+                // Simulated status response for demonstration
+                const status = { status: order.status, deliveryCode: "ABC123" };
+                
+                document.getElementById("the-day-placed").textContent = date;
+                document.getElementById('status').textContent = status.status.charAt(0).toUpperCase() + status.status.slice(1);
+                document.getElementById("the-total").textContent = `\$ ${order.totalPrice}`;
+
+
+                // Get the container where items will be displayed
+                const orderItemsContainer = document.getElementById('order-items');
+
+                // Clear any existing content
+                orderItemsContainer.innerHTML = '';
+
+                // Create and append new content
+                items.forEach((item, index) => {
+                    const itemElement = document.createElement('p');
+                    itemElement.textContent = `Item ${index + 1}: ${item.name} - ${item.quantity}x`;
+                    orderItemsContainer.appendChild(itemElement);
+                });
+
+                // Reset progress steps
+                const progressSteps = document.querySelectorAll('.progress-step');
+                progressSteps.forEach(step => step.classList.remove('active', 'completed'));
+
+                // Handle the status and update the UI
+                if (status.status === "online") {
+                    document.getElementById('step-placed').classList.add('completed');
+                    document.getElementById('step-prepared').classList.add('completed');
+                    document.getElementById('delivery-details').style.display = 'none';
+                } else if (status.status === "ready") {
+                    document.getElementById('step-placed').classList.add('completed');
+                    document.getElementById('step-prepared').classList.add('completed');
+                    document.getElementById('step-ready').classList.add('active');
+                    document.getElementById('delivery-details').style.display = 'block';
+                    document.getElementById('completion-code').textContent = status.deliveryCode;
+                } else if (status.status === "delivered") {
+                    document.getElementById('step-placed').classList.add('completed');
+                    document.getElementById('step-prepared').classList.add('completed');
+                    document.getElementById('step-ready').classList.add('completed');
+                    document.getElementById('step-delivered').classList.add('active');
+                    document.getElementById('delivery-details').style.display = 'block';
+                }
             } catch (error) {
                 console.error('Error fetching order status:', error);
                 document.getElementById('status').textContent = 'Error fetching status';
             }
         }
 
-        // Call fetchOrderStatus when page loads and refresh every 10 seconds
+        // Call fetchOrderStatus when page loads and refresh every 8 seconds
         document.addEventListener('DOMContentLoaded', () => {
             fetchOrderStatus(); // Initial call to populate status immediately
             setInterval(fetchOrderStatus, 8000);
         });
     </script>
 </body>
+
 </html>
