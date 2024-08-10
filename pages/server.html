@@ -11,10 +11,9 @@
     <span class="open-menu" onclick="openMenu()">&#9776;</span>
     <div id="mySideMenu" class="side-menu">
         <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
-        <a href="../pages/index.html">Home</a>
         <a href="../views/available.ejs">Available Meals</a>
         <a href="../pages/add-meal.html">Add Meal</a>
-        <a href="../pages/customer_signin.html">Log Out</a>
+        <a href="../pages/employee_signin.html">Log Out</a>
     </div>
     <header>
         <h1>BUKHARI RESTAURANT</h1>
@@ -46,71 +45,68 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            fetch('/get-items')
-                .then(response => response.json())
-                .then(data => {
-                    const ordersList = document.getElementById('orders-list').getElementsByTagName('tbody')[0];
+    fetch('/get-items')
+        .then(response => response.json())
+        .then(data => {
+            const ordersList = document.getElementById('orders-list').getElementsByTagName('tbody')[0];
 
+            // Group items by phone number
+            const groupedItems = data.reduce((acc, item) => {
+                if (!acc[item.customerPhone]) {
+                    acc[item.customerPhone] = [];
+                }
+                acc[item.customerPhone].push(item);
+                return acc;
+            }, {});
 
-                    // Group items by phone number
-                    const groupedItems = data.reduce((acc, item) => {
-                        if (!acc[item.customerPhone]) {
-                            acc[item.customerPhone] = [];
-                        }
-                        acc[item.customerPhone].push(item);
-                        return acc;
-                    }, {});
+            // Populate table rows
+            Object.entries(groupedItems).forEach(([phone, items]) => {
+                const row = document.createElement('tr');
 
-                    // Populate table rows
-                    Object.entries(groupedItems).forEach(([phone, items]) => {
-                        const row = document.createElement('tr');
+                // Waiter no/Phone Number
+                const phoneCell = document.createElement('td');
+                phoneCell.textContent = phone;
+                row.appendChild(phoneCell);
 
-                        // Waiter no/Phone Number
-                        const phoneCell = document.createElement('td');
-                        phoneCell.textContent = phone;
-                        row.appendChild(phoneCell);
+                // Items
+                const itemsCell = document.createElement('td');
+                const itemCounts = items.reduce((acc, item) => {
+                    acc[item.name] = (acc[item.name] || 0) + item.quantity;
+                    return acc;
+                }, {});
+                itemsCell.innerHTML = Object.entries(itemCounts).map(([name, quantity]) => `${name} x${quantity}`).join('<br>');
+                row.appendChild(itemsCell);
 
-                        // Items
-                        const itemsCell = document.createElement('td');
-                        const itemCounts = items.reduce((acc, item) => {
-                            acc[item.name] = (acc[item.name] || 0) + item.quantity;
-                            return acc;
-                        }, {});
-                        itemsCell.innerHTML = Object.entries(itemCounts).map(([name, quantity]) => `${name} x${quantity}`).join('<br>');
-                        row.appendChild(itemsCell);
+                // State
+                const stateCell = document.createElement('td');
+                stateCell.textContent = 'Order received';
+                row.appendChild(stateCell);
 
-                        // State
-                        const stateCell = document.createElement('td');
-                        const states = [...new Set(items.map(item => item.state))];
-                        stateCell.textContent = states.length === 1 ? (states[0] === 'venue' ? 'Order received' : 'Order already prepared') : 'Mixed States';
-                        row.appendChild(stateCell);
+                // Action
+                const actionCell = document.createElement('td');
+                const button = document.createElement('button');
+                button.textContent = 'Click here if meal is ready to serve';
+                button.className = 'status served';
+                button.addEventListener('click', () => {
+                    // Update the state of all items in the group to 'done'
+                    Promise.all(items.map(item => 
+                        fetch(`/update-item/${item._id}`, { method: 'PUT' })
+                            .then(response => response.json())
+                    ))
+                    .then(() => {
+                        // Remove the row after updating all items
+                        row.remove();
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+                actionCell.appendChild(button);
+                row.appendChild(actionCell);
 
-                        // Action
-                        const actionCell = document.createElement('td');
-                        if (items.some(item => item.state === 'venue')) {
-                            const button = document.createElement('button');
-                            button.textContent = 'Click here if meal is ready to serve';
-                            button.className = 'status served';
-                            button.addEventListener('click', () => {
-                                fetch(`/update-item/${items[0]._id}`, { method: 'PUT' })
-                                    .then(response => response.json())
-                                    .then(updatedItem => {
-                                        if (updatedItem.state === 'done') {
-                                            row.remove();
-                                        }
-                                    })
-                                    .catch(error => console.error('Error:', error));
-
-                            });
-                            actionCell.appendChild(button);
-                        }
-                        row.appendChild(actionCell);
-
-                        ordersList.appendChild(row);
-                    });
-                })
-                .catch(error => console.error('Error:', error));
-        });
+                ordersList.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+});
 
         // Function to open side menu
         function openMenu() {

@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment</title>
+    <link rel="stylesheet" href="../styles/payment.css">
     <script src="https://www.paypal.com/sdk/js?client-id=AUXbJ1MpXAA28xCuZbw_n-BkB6aAksDIXAES6RN_SYjE5Pp1GNwdcbpRVy9EJP6tgd2KFV80ir7_B58z"></script>
 </head>
 <body>
-    <h1>Complete Your Payment</h1>
-    <div id="paypal-button-container"></div>
+    <div class="payment-container">
+        <h1>Complete Your Payment</h1>
+        <div id="paypal-button-container"></div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const total = localStorage.getItem('total');
             const phone = localStorage.getItem('phone');
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            // Generate the cart description
+            const cartDescription = cart.map(item => `${item.name} (${item.quantity} pcs)`).join(', ');
 
             paypal.Buttons({
                 createOrder: function(data, actions) {
@@ -22,7 +28,7 @@
                             amount: {
                                 value: total // Amount to be paid
                             },
-                            description: 'Order from Bukhari Restaurant'
+                            description: `Order from Bukhari Restaurant: ${cartDescription}`
                         }]
                     });
                 },
@@ -44,8 +50,11 @@
                         })
                         .then(response => response.json())
                         .then(data => {
+                            alert("Payment made successfully")
                             // Redirect to the order status page
-                            window.location.href = '../pages/orderstate.html'; 
+                            setTimeout(() => {
+                            window.location.href = '../pages/orderState.html';
+                        }, 3000);
                         })
                         .catch(error => {
                             console.error('Error:', error);

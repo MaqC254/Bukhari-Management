@@ -59,7 +59,7 @@
                                 <h2>${item.name}</h2>
                                 <p>${item.description}</p>
                                 <p>Pieces: ${item.quantity}</p>
-                                <p>Price: Tsh ${item.price * item.quantity}</p>
+                                <p>Price: USD ${(item.price * item.quantity).toFixed(1)}</p>
                                 <div class="item-buttons">
                                     <button class="remove-from-cart" data-index="${index}">Remove</button>
                                     <button class="reduce-quantity" data-index="${index}">&#8722;</button>
@@ -71,7 +71,7 @@
                         total += item.price * item.quantity;
                     });
 
-                    cartTotal.innerHTML = `Total: Tsh ${total}`;
+                    cartTotal.innerHTML = `Total: USD ${total.toFixed(1)}`;
 
                     document.querySelectorAll('.remove-from-cart').forEach(button => {
                         button.addEventListener('click', (e) => {
