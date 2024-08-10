@@ -136,22 +136,34 @@
             <h3>Enter Confirmation Code</h3>
             <input type="text" id="confirmation-code" placeholder="Confirmation Code">
             <button id="confirm-button">Confirm</button>
+            <p id="confirmation-message"></p>
         </div>
     </div>
 
     <script>
-        // Dummy data for pending orders
-        const orders = [
-            { orderId: 'aa55923f-0021-4f49-871e-cff1cf8589c7', phone: '0707670977', location: "Nyeri, Mweiga" },
-            { orderId: 'bb663d42-d80d4-f1bb41e02-99b7a4e4d9', phone: '0707670988', location: "Nyeri, Mweiga" }
-        ];
+        // Replace with your actual driver ID
+        const driverId = localStorage.getItem("workId");
+
+        // Function to fetch deliveries from the server
+        async function fetchDeliveries() {
+            try {
+                const response = await fetch(`/deliveries/${driverId}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const deliveries = await response.json();
+
+                // Render the fetched deliveries
+                renderOrders(deliveries);
+            } catch (error) {
+                console.error('Error fetching deliveries:', error);
+            }
+        }
 
         // Function to render orders
-        function renderOrders() {
+        function renderOrders(deliveries) {
             const ordersContainer = document.getElementById('orders');
             ordersContainer.innerHTML = ''; // Clear existing orders
 
-            orders.forEach(order => {
+            deliveries.forEach(order => {
                 const orderCard = document.createElement('div');
                 orderCard.className = 'order-card';
 
@@ -171,10 +183,36 @@
             const popup = document.getElementById('popup');
             popup.style.display = 'flex';
 
-            document.getElementById('confirm-button').onclick = () => {
+            document.getElementById('confirm-button').onclick = async () => {
                 const confirmationCode = document.getElementById('confirmation-code').value;
-                console.log(`Order ID: ${orderId}, Confirmation Code: ${confirmationCode}`);
-                // Add your logic to handle the confirmation code here
+                const confirmationMessage = document.getElementById('confirmation-message');
+
+                try {
+                    const response = await fetch(`/update-delivery/${orderId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            driver: driverId, // Pass the driver ID or other relevant data
+                            code: confirmationCode
+                        })
+                    });
+
+                    const result = await response.json();
+                    confirmationMessage.textContent = result.message;
+
+                    if (response.ok && result.success) {
+                        // Optionally refresh the orders list or remove the delivered order
+                        fetchDeliveries(); // Refresh the list
+                    }
+                    alert(result.message)
+                    window.location.reload();
+                } catch (error) {
+                    console.error('Error updating delivery:', error);
+                    confirmationMessage.textContent = 'An error occurred. Please try again.';
+                }
+
                 popup.style.display = 'none'; // Hide popup after confirmation
             };
         }
@@ -190,7 +228,7 @@
         }
 
         // Initialize orders on page load
-        document.addEventListener('DOMContentLoaded', renderOrders);
+        document.addEventListener('DOMContentLoaded', fetchDeliveries);
     </script>
 </body>
 

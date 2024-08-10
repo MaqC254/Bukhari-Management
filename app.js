@@ -715,20 +715,16 @@ app.put('/update-delivery/:orderId', async (req, res) => {
     try {
         // Find the delivery record by orderId
         const delivery = await Delivery.findOne({ orderId });
-
         if (!delivery) {
             return res.status(404).json({ error: 'Delivery not found' });
         }
 
-        // Update delivery details
-        delivery.driver = driver;
-        delivery.code = code;
-        delivery.status = true; // Mark as delivered
+        delivery.status = code == delivery.code; // Mark as delivered
 
         // Save updated delivery record
         await delivery.save();
 
-        res.json({ success: true, message: 'Delivery updated successfully' });
+        res.json({ success: true, message: delivery.status === true? 'Delivery completed.' : "Invalid code."});
     } catch (error) {
         console.error('Error updating delivery:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -758,5 +754,24 @@ app.post('/create-delivery', async (req, res) => {
     } catch (error) {
         console.error('Error creating delivery:', error);
         res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Route to get deliveries for a specific driver
+app.get('/deliveries/:driverId', async (req, res) => {
+    try {
+        const driverId = req.params.driverId;
+
+        // Query the deliveries collection for the specified driver
+        const deliveries = await Delivery.find({ driver: driverId, status: false });
+
+        if (deliveries.length === 0) {
+            return res.status(404).json({ message: 'No deliveries found for this driver.' });
+        }
+
+        res.json(deliveries);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'An error occurred while retrieving deliveries.' });
     }
 });
