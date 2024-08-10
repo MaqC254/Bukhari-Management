@@ -6,6 +6,8 @@ const session = require('express-session');
 const ejs = require('ejs');
 const multer = require('multer');
 const mongoDBSession = require('connect-mongodb-session')(session);
+const { v4: uuidv4 } = require('uuid'); // Import UUID v4
+
 
 const axios = require('axios');
 
@@ -334,6 +336,8 @@ app.post('/api/add-items', async (req, res) => {
         const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
         const phone = req.body.phone;
 
+        const orderId = uuidv4();
+
         // Create an array of items to insert into MongoDB
         const itemsToInsert = cartItems.map(item => ({
             name: item.name,
@@ -344,6 +348,7 @@ app.post('/api/add-items', async (req, res) => {
             category: item.category, // Assuming each item has a category property
             state: 'online', // Default state for new items
             customerPhone: phone,
+            orderId: orderId
         }));
 
         // Insert all items into MongoDB using create() method
@@ -362,7 +367,10 @@ app.post('/api/add-order', async (req, res) => {
         const workID = req.body.workID;
         const tableNumber = req.body.tableNumber;
 
-        // Create an array of items to insert into MongoDB
+        // Generate a UUID for this cart
+        const orderId = uuidv4();
+
+        // Create an array of items to insert into MongoDB with the same UUID
         const itemsToInsert = cartItems.map(item => ({
             name: item.name,
             description: item.description,
@@ -372,8 +380,11 @@ app.post('/api/add-order', async (req, res) => {
             category: item.category, // Assuming each item has a category property
             state: 'venue', // Default state for new items
             customerPhone: workID,
-            tableNumber: tableNumber
+            tableNumber: tableNumber,
+            orderId: orderId // Assign the same UUID to each item
         }));
+
+        console.log(itemsToInsert);
 
         // Insert all items into MongoDB using create() method
         const createdItems = await Item.create(itemsToInsert);

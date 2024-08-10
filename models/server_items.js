@@ -7,17 +7,17 @@ const itemSchema = new mongoose.Schema({
     image: String,
     quantity: Number,
     price: Number,
-    state: { type: String, default: 'online' }, 
+    state: { type: String, default: 'online' },
     customerPhone: String,
     month: Number,
-    tableNumber : { type: Number, default: 0} ,
+    tableNumber: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now },
-    month: Number,
-    paid: { type: Boolean, default: false }
+    paid: { type: Boolean, default: false },
+    orderId: { type: String } // Add UUID field
 });
 
 // Middleware to set the month before saving
-itemSchema.pre('save', function(next) {
+itemSchema.pre('save', function (next) {
     const now = new Date();
     this.month = now.getMonth() + 1; // getMonth() returns 0-indexed month
     next();
