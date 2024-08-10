@@ -308,8 +308,9 @@
                 .then(response => response.json())
                 .then(drivers => {
                     drivers.forEach(driver => {
+                        console.log(driver);
                         const option = document.createElement('option');
-                        option.value = driver.workId;
+                        option.value = driver.workID;
                         option.textContent = `${driver.name} (${driver.phone})`;
                         driverDropdown.appendChild(option);
                     });
@@ -325,7 +326,7 @@
             document.getElementById('confirm-driver-button').onclick = () => {
                 const selectedDriverPhone = driverDropdown.value;
                 if (selectedDriverPhone) {
-                    fetch('/update-delivery', {
+                    fetch('/create-delivery', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

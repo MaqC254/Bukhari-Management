@@ -7,6 +7,7 @@ const ejs = require('ejs');
 const multer = require('multer');
 const mongoDBSession = require('connect-mongodb-session')(session);
 const { v4: uuidv4 } = require('uuid'); // Import UUID v4
+const Delivery = require("./models/deliveries.js");
 
 
 const axios = require('axios');
@@ -702,6 +703,60 @@ app.get('/get-drivers', async (req, res) => {
         res.json(drivers);
     } catch (error) {
         console.error('Error fetching drivers:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Route to update a delivery
+app.put('/update-delivery/:orderId', async (req, res) => {
+    const { orderId } = req.params;
+    const { driver, code } = req.body; // Extract driver and code from request body
+
+    try {
+        // Find the delivery record by orderId
+        const delivery = await Delivery.findOne({ orderId });
+
+        if (!delivery) {
+            return res.status(404).json({ error: 'Delivery not found' });
+        }
+
+        // Update delivery details
+        delivery.driver = driver;
+        delivery.code = code;
+        delivery.status = true; // Mark as delivered
+
+        // Save updated delivery record
+        await delivery.save();
+
+        res.json({ success: true, message: 'Delivery updated successfully' });
+    } catch (error) {
+        console.error('Error updating delivery:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Route to create a new delivery
+app.post('/create-delivery', async (req, res) => {
+    const { orderId, driver } = req.body; // Extract orderId and driver from request body
+
+    if (!orderId || !driver) {
+        return res.status(400).json({ error: 'orderId and driver are required' });
+    }
+
+    try {
+        // Create a new delivery instance
+        const newDelivery = new Delivery({
+            orderId,
+            driver,
+            status: false // Default status to false (not delivered yet)
+        });
+
+        // Save the new delivery record
+        await newDelivery.save();
+
+        res.status(201).json({ success: true, message: 'Delivery created successfully', delivery: newDelivery });
+    } catch (error) {
+        console.error('Error creating delivery:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });

@@ -10,6 +10,10 @@ const Delivery = mongoose.model("Delivery", new mongoose.Schema({
     status: {
         type: Boolean,
         default: false
+    },
+    ETA: {
+        type: Number,
+        default: () => Math.floor(5 + Math.random() * 56)
     }
 }));
 
