@@ -1,8 +1,197 @@
-order, customer phone, location
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Driver Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
 
-code is generated to customer when driver is assigned. complete order by matching codes
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
 
-on delivery click Click here to delivery
--verify codes
-update customer ui and remove the complete delivery
+        .order-card {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-card h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+
+        .order-card p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .order-card button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .order-card button:hover {
+            background-color: #218838;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            position: relative;
+        }
+
+        .popup-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .popup-content button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup-content button:hover {
+            background-color: #0056b3;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ddd;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 25px;
+            text-align: center;
+            color: #333;
+        }
+
+        .close-button:hover {
+            background: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Pending Orders</h1>
+        <div id="orders">
+            <!-- Order cards will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Popup for confirmation code -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <button class="close-button" onclick="closePopup()">×</button>
+            <h3>Enter Confirmation Code</h3>
+            <input type="text" id="confirmation-code" placeholder="Confirmation Code">
+            <button id="confirm-button">Confirm</button>
+        </div>
+    </div>
+
+    <script>
+        // Dummy data for pending orders
+        const orders = [
+            { orderId: 'aa55923f-0021-4f49-871e-cff1cf8589c7', phone: '0707670977', location: "Nyeri, Mweiga" },
+            { orderId: 'bb663d42-d80d4-f1bb41e02-99b7a4e4d9', phone: '0707670988', location: "Nyeri, Mweiga" }
+        ];
+
+        // Function to render orders
+        function renderOrders() {
+            const ordersContainer = document.getElementById('orders');
+            ordersContainer.innerHTML = ''; // Clear existing orders
+
+            orders.forEach(order => {
+                const orderCard = document.createElement('div');
+                orderCard.className = 'order-card';
+
+                orderCard.innerHTML = `
+                    <h3>Order ID: ${order.orderId.split("-")[0]}</h3>
+                    <p>Phone: ${order.phone}</p>
+                    <p>Location: ${order.location}</p>
+                    <button onclick="markAsDelivered('${order.orderId}')">Mark as Delivered</button>
+                `;
+
+                ordersContainer.appendChild(orderCard);
+            });
+        }
+
+        // Function to show the popup
+        function showPopup(orderId) {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'flex';
+
+            document.getElementById('confirm-button').onclick = () => {
+                const confirmationCode = document.getElementById('confirmation-code').value;
+                console.log(`Order ID: ${orderId}, Confirmation Code: ${confirmationCode}`);
+                // Add your logic to handle the confirmation code here
+                popup.style.display = 'none'; // Hide popup after confirmation
+            };
+        }
+
+        // Function to close the popup
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        // Function to mark order as delivered
+        function markAsDelivered(orderId) {
+            showPopup(orderId);
+        }
+
+        // Initialize orders on page load
+        document.addEventListener('DOMContentLoaded', renderOrders);
+    </script>
+</body>
+
+</html>
