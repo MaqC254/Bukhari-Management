@@ -162,9 +162,22 @@ input:focus {
 }
 
 .cart-total {
-    font-weight: bolder;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: right;
+    margin: 20px;
+    width: 80%;
+    max-width: 800px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-top: 2px solid #ddd;
+    padding-top: 15px;
 }
 
+#cart-total-container {
+    margin-top: 20px;
+}
 /* Footer styling */
 footer {
     text-align: center;

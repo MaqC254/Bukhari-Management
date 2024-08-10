@@ -13,13 +13,7 @@
     <div id="mySideMenu" class="side-menu">
 
         <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()" aria-label="Close menu">&times;</a>
-        <a href="../views/menu.ejs">Menu</a>
-
-        <a href="../pages/index.html">Home</a>
         <a href="../views/deliveryMenu.ejs">Menu</a>
-        <a href="../pages/online_checkout.html">Checkout</a>
-        <a href="../pages/orderstate.html">Order State</a>
-        <a href="../pages/customer_signin.html">Log Out</a>
     </div>
     <header>
 
@@ -34,7 +28,7 @@
         <div class="cart-list" id="cart-list">
             <!-- Cart items will be inserted here by JavaScript -->
         </div>
-        <div class="cart-total">
+        <div class="cart-total" id="cart-total-container">
             <p id="cart-total"></p>
         </div>
         <div class="confirm-order">
@@ -47,86 +41,89 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-            const cartList = document.getElementById('cart-list');
-            const cartTotal = document.getElementById('cart-total');
-            const confirmOrderBtn = document.getElementById('confirm-order-btn');
+    const cartList = document.getElementById('cart-list');
+    const cartTotal = document.getElementById('cart-total');
+    const confirmOrderBtn = document.getElementById('confirm-order-btn');
 
-            function renderCart() {
-                cartList.innerHTML = '';
-                let total = 0;
+    function renderCart() {
+        cartList.innerHTML = '';
+        let total = 0;
 
-                if (cart.length === 0) {
-                    cartList.innerHTML = '<p>Your cart is empty.</p>';
-                    cartTotal.innerHTML = '';
-                } else {
-                    cart.forEach((item, index) => {
-                        const itemDiv = document.createElement('div');
-                        itemDiv.classList.add('cart-item');
-                        itemDiv.innerHTML = `
-                            <img src="${item.image}" alt="${item.name}">
-                            <div class="cart-item-details">
-                                <h2>${item.name}</h2>
-                                <p>${item.description}</p>
-                                <p>Pieces: ${item.quantity}</p>
-                                <p>Price: Tsh ${item.price * item.quantity}</p>
-                                <div class="item-buttons">
-                                    <button class="remove-from-cart" data-index="${index}" aria-label="Remove from cart">Remove</button>
-                                    <button class="reduce-quantity" data-index="${index}" aria-label="Reduce quantity">&#8722;</button>
-                                    <button class="increase-quantity" data-index="${index}" aria-label="Increase quantity">&#43;</button>
-                                </div>
-                            </div>
-                        `;
-                        cartList.appendChild(itemDiv);
-                        total += item.price * item.quantity;
-                    });
-
-                    cartTotal.innerHTML = `Total: Tsh ${total}`;
-                    localStorage.setItem('total', total);
-
-                    cartList.addEventListener('click', (e) => {
-                        const index = e.target.getAttribute('data-index');
-                        if (e.target.classList.contains('remove-from-cart')) {
-                            cart.splice(index, 1);
-                        } else if (e.target.classList.contains('reduce-quantity')) {
-                            if (cart[index].quantity > 1) {
-                                cart[index].quantity -= 1;
-                            } else {
-                                cart.splice(index, 1);
-                            }
-                        } else if (e.target.classList.contains('increase-quantity')) {
-                            cart[index].quantity += 1;
-                        }
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                        renderCart();
-                    });
-                }
-            }
-
-            renderCart();
-
-            confirmOrderBtn.addEventListener('click', () => {
-                if (cart.length === 0) {
-                    alert('Cart is empty');
-                    return;
-                }
-
-
-                // Redirect to customer_signin.html
-                window.location.href = '../pages/customer_signin.html';
+        if (cart.length === 0) {
+            cartList.innerHTML = '<p>Your cart is empty.</p>';
+            cartTotal.innerHTML = '';
+        } else {
+            cart.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('cart-item');
+                itemDiv.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="cart-item-details">
+                        <h2>${item.name}</h2>
+                        <p>${item.description}</p>
+                        <p>Pieces: ${item.quantity}</p>
+                        <p>Price: USD ${(item.price * item.quantity).toFixed(1)}</p>
+                        <div class="item-buttons">
+                            <button class="remove-from-cart" data-index="${index}" aria-label="Remove from cart">Remove</button>
+                            <button class="reduce-quantity" data-index="${index}" aria-label="Reduce quantity">&#8722;</button>
+                            <button class="increase-quantity" data-index="${index}" aria-label="Increase quantity">&#43;</button>
+                        </div>
+                    </div>
+                `;
+                cartList.appendChild(itemDiv);
+                total += item.price * item.quantity;
             });
-        });
 
-        function openMenu() {
-            document.getElementById("mySideMenu").style.width = "200px";
-            document.getElementById("main").style.marginLeft = "200px";
+            cartTotal.innerHTML = `Total: USD ${total.toFixed(1)}`;
+            localStorage.setItem('total', total.toFixed(1));
+        }
+    }
+
+    // Add event listener to cartList once
+    cartList.addEventListener('click', (e) => {
+        const index = e.target.getAttribute('data-index');
+        if (index !== null) { // Ensure index is not null
+            if (e.target.classList.contains('remove-from-cart')) {
+                cart.splice(index, 1);
+            } else if (e.target.classList.contains('reduce-quantity')) {
+                if (cart[index].quantity > 1) {
+                    cart[index].quantity -= 1;
+                } else {
+                    cart.splice(index, 1);
+                }
+            } else if (e.target.classList.contains('increase-quantity')) {
+                cart[index].quantity += 1;
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+        }
+    });
+
+    renderCart();
+
+    confirmOrderBtn.addEventListener('click', () => {
+        if (cart.length === 0) {
+            alert('Cart is empty');
+            return;
         }
 
-        function closeMenu() {
-            document.getElementById("mySideMenu").style.width = "0";
-            document.getElementById("main").style.marginLeft = "0";
-        }
+        // Redirect to customer_signin.html
+        window.location.href = '../pages/customer_signin.html';
+    });
+});
+
+function openMenu() {
+    document.getElementById("mySideMenu").style.width = "200px";
+    document.getElementById("main").style.marginLeft = "200px";
+}
+
+function closeMenu() {
+    document.getElementById("mySideMenu").style.width = "0";
+    document.getElementById("main").style.marginLeft = "0";
+}
+
     </script>
 </body>
 </html>

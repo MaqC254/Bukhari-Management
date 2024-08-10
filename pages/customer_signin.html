@@ -65,6 +65,7 @@
                     })
                     .then(response => response.json())
                     .then(() => {
+                        localStorage.removeItem('cart');
                         window.location.href = '../pages/payment.html';
                     })
                     .catch(error => {
@@ -73,7 +74,6 @@
                     });
                 });
             </script>
-            <button class="signup-button" onclick="location.href='employee_signin.html'">Staff Sign In</button>
             <a href="customer_signup.html">Don't have an account? Sign Up</a>
         </main>
         <footer>
