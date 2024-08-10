@@ -694,3 +694,14 @@ app.post("/api/verify-payment", async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+// Route to get drivers whose workId starts with 'd'
+app.get('/get-drivers', async (req, res) => {
+    try {
+        const drivers = await Employee.find({ workID: /^d/ }).exec();
+        res.json(drivers);
+    } catch (error) {
+        console.error('Error fetching drivers:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
