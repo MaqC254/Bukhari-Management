@@ -173,7 +173,7 @@ app.post('/saveData', function(req, res) {
     // Save employee to the database
     newEmployee.save()
         .then(() => {
-            res.redirect('/pages/employee_signin.html'); // Redirect to sign-in page upon successful signup
+            res.redirect('/pages/admin.html'); 
         })
         .catch(err => {
             console.error('Error saving employee:', err);
@@ -674,4 +674,3 @@ app.post("/api/verify-payment", async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
-

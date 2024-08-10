@@ -7,6 +7,70 @@
     <link rel="stylesheet" href="../styles/admin.css">
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">   
+    <style>
+    /* Modal Styles */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1000; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.5); /* Black with 50% opacity */
+        padding-top: 60px;
+    }
+    
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto; /* Centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 50%; /* Adjusted width */
+        max-width: 600px; /* Maximum width for larger screens */
+        opacity: 1; /* Ensure opacity for content */
+        overflow: hidden; /* Hide any overflowing content */
+    }
+    
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    
+    .modal-buttons {
+        display: flex;
+        flex-direction: column; /* Stack buttons vertically */
+        align-items: center; /* Center buttons horizontally */
+    }
+    
+    .modal-buttons button {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin: 10px 0; /* Margin top and bottom */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #007BFF;
+        color: white;
+        width: 80%; /* Adjusted width */
+        max-width: 300px; /* Maximum width for buttons */
+    }
+    
+    .modal-buttons button:hover {
+        background-color: #0056b3;
+    }
+    
+    </style>
 </head>
 <body>
     <header>
@@ -35,19 +99,52 @@
 
             <div class="card">
                 <button id="generateMonthlyReportBtn" onclick="window.location.href='../pages/generateReport.html';">Generate Monthly Report</button>
-                <a href="employee_signup.html" class="button">Add Employee Account</a>
+                <button id="manageEmployeesBtn">Manage Employees</button>
                 <p id="report-status"></p>
             </div>
 
-            <!-- <div class="card">
-                <h2><a href="employee_signup.html">Add Employee Account</a></h2>
-                <p id="employee-status"></p>
-            </div> -->
-            
+            <!-- Modal for managing employees -->
+            <div id="employeeModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Select an Action</h2>
+                    <div class="modal-buttons">
+                        <button onclick="window.location.href='../pages/employee_signup.html';">Add New Employee</button>
+                        <button onclick="window.location.href='../pages/view-edit-employees.html';">Edit and Delete existing employees</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../scripts/admin.js"></script>
+    <script>
+        // Get modal element
+        var modal = document.getElementById("employeeModal");
+
+        // Get button that opens the modal
+        var btn = document.getElementById("manageEmployeesBtn");
+
+        // Get <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal 
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>
