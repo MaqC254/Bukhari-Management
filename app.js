@@ -354,7 +354,7 @@ app.post('/api/add-items', async (req, res) => {
         // Insert all items into MongoDB using create() method
         const createdItems = await Item.create(itemsToInsert);
 
-        res.status(201).json(createdItems); // Respond with created items in JSON format
+        res.status(201).json({"orderId": createdItems[0].orderId}); // Respond with created items in JSON format
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' }); // Handle server errors
@@ -535,18 +535,27 @@ app.get('/api/reports/:year/:month/:week?/:day?', async (req, res) => {
 
 // Route to fetch order status
 app.get('/orderstatus', async (req, res) => {
-    const customerPhone = req.query.phone; // Retrieve phone number from query parameter
+    // const customerPhone = req.query.phone; // Retrieve phone number from query parameter
+    const orderId = req.query.id;
   
     try {
       // Check if all items for this phone number are 'done'
-      const items = await Item.find({ customerPhone });
+      const items = await Item.find({ orderId });
       const allDone = items.every(item => item.state === 'done');
+
+      const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
   
-      if (allDone) {
-        res.send('Being Delivered');
-      } else {
-        res.send('Being Prepared');
-      }
+    //   if (allDone) {
+        res.status(200).json({
+            totalPrice: totalPrice,
+            order: items,
+            status: allDone === true? "ready": "online"
+        });
+    //     res.send('Being Delivered');
+    //   } else {
+    //     res.send('Being Prepared');
+    //   }
     } catch (err) {
       console.error(err);
       res.status(500).send('Error fetching order status');
