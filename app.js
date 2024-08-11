@@ -8,13 +8,8 @@ const multer = require('multer');
 const mongoDBSession = require('connect-mongodb-session')(session);
 const { v4: uuidv4 } = require('uuid'); // Import UUID v4
 const Delivery = require("./models/deliveries.js");
-
-
 const axios = require('axios');
-
 const SMS = require("./models/sms.js");
-
-//const cors = require('cors');
 
 const app = express();
 const port = 3000;
@@ -43,7 +38,6 @@ mongoose.connect(dbURI, {})
     });
 
 // Middleware
-//app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');// Set EJS as the view engine
@@ -59,9 +53,13 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: false, store: store, cookie: { secure: false } }));
-
-
+app.use(session({ secret: 'secret',
+     resave: false, 
+     saveUninitialized: false, 
+     store: store, 
+     cookie: { 
+        secure: false 
+    } }));
 
 // Serve static files from main directories
 app.use('/styles', express.static(path.join(__dirname, 'styles')));
@@ -82,7 +80,6 @@ app.get('/', (req, res) => {
 });
 
 // Routes to serve various HTML pages
-
 const staticPages = [
     'cash.html',
     'customer_signin.html',
@@ -130,29 +127,6 @@ app.get('/views/venueMenu.ejs', async (req, res) => {
     res.render('venueMenu',{
         meals: meals
     })  
-});
-
-app.get('/pages/upload-sms.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'upload-sms.html'));
-});
-
-app.post('/api/payments/submit-sms', async (req, res) => {
-    const smsText = req.body.sms;
-
-    // Extract MPesa code from SMS (assuming it's a 6-digit code)
-    const mpesaCodeMatch = smsText.match(/MPESA CODE: (\d{6})/);
-    if (!mpesaCodeMatch) {
-        return res.status(400).send('Invalid SMS format.');
-    }
-    const mpesaCode = mpesaCodeMatch[1];
-
-    // Check for matching transaction in the database
-    const order = await Item.findOne({ 'customerPhone': mpesaCode });
-    if (order) {
-        res.send(`Match found: Order details - ${order.name}, Quantity: ${order.quantity}`);
-    } else {
-        res.send('No matching transaction found.');
-    }
 });
 
 // Endpoint to save form data to MongoDB
@@ -550,9 +524,6 @@ app.get('/orderstatus', async (req, res) => {
       const deliveryStatus = order !== null? order.status : false;
 
       const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-  
-    //   if (allDone) {
         res.status(200).json({
             totalPrice: totalPrice,
             order: items,
@@ -561,50 +532,11 @@ app.get('/orderstatus', async (req, res) => {
             code: order !== null? order.code: "####",
             delivery: order
         });
-    //     res.send('Being Delivered');
-    //   } else {
-    //     res.send('Being Prepared');
-    //   }
     } catch (err) {
       console.error(err);
       res.status(500).send('Error fetching order status');
     }
   });
-
-  const paymentSchema = new mongoose.Schema({
-    phoneNumber: { type: String, required: true },
-    mpesaCode: { type: String, required: true },
-    location: { type: String, required: true },
-    amount: { type: String, required: true }
-});
-
-const Payment = mongoose.model('Payment', paymentSchema);
-
-module.exports = Payment;
-
-  app.post('/api/payments/submit-sms', async (req, res) => {
-    try {
-        const { phoneNumber, mpesaCode, location, amount } = req.body;
-
-        // Create a new payment document
-        const payment = new Payment({
-            phoneNumber,
-            mpesaCode,
-            location,
-            amount
-        });
-
-        // Save to MongoDB
-        await payment.save();
-
-        res.status(201).send({ message: 'Payment saved successfully' });
-    } catch (error) {
-        console.error('Error saving payment:', error);
-        res.status(500).send({ error: 'Internal server error' });
-    }
-});
-
-
 
 // Endpoint to handle payment confirmation
 app.post('/api/confirm-payment', async (req, res) => {
@@ -639,68 +571,6 @@ app.post('/api/confirm-payment', async (req, res) => {
     } catch (error) {
         console.error('Error processing payment:', error);
         res.status(500).json({ success: false, message: 'Payment processing failed' });
-    }
-});
-
-app.post("/api/upload-sms", async (req, res) => {
-    try {
-        const { message } = req.body;
-
-        // Regular expression to match the transaction code, amount, phone number, and user name
-        const regex = /([A-Z0-9]{10}) Confirmed\.You have received Ksh([\d,]+)\.00 from ([A-Z\s]+) (\d{10})/i;
-        const match = message.match(regex);
-
-        if (match) {
-            const transactionCode = match[1];
-            const amount = parseFloat(match[2].replace(/,/g, ''));
-            const userName = match[3].trim();
-            const phoneNumber = match[4];
-            
-            // Create a new SMS document
-            const sms = new SMS({
-                transactionCode,
-                amount,
-                phoneNumber,
-                userName,
-                date: new Date()
-            });
-
-            // Save the document to the database
-            await sms.save();
-
-            res.status(201).json({ message: 'SMS data stored successfully' });
-        } else {
-            res.status(400).json({ message: 'Invalid SMS format' });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-});
-
-// Endpoint to verify payment status
-app.post("/api/verify-payment", async (req, res) => {
-    try {
-        let { transactionCode, amount } = req.body;
-
-        amount = amount.split(" ")[2];
-
-        // Find the SMS record by transaction code
-        const smsRecord = await SMS.findOne({ transactionCode });
-
-        if (!smsRecord) {
-            return res.status(404).json({ message: 'Transaction not found' });
-        }
-
-        // Compare the amounts
-        if (smsRecord.amount === parseFloat(amount)) {
-            return res.status(200).json({ status: 'paid' });
-        } else {
-            return res.status(200).json({ status: 'unpaid' });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
     }
 });
 
@@ -869,7 +739,7 @@ app.delete('/employees/:id', async (req, res) => {
         } else {
             res.status(404).json({ message: 'Employee not found' });
         }
-    } catch (error) {
+    } catch (error) {a
         console.error('Error deleting employee:', error);
         res.status(500).json({ message: 'Server error' });
     }
