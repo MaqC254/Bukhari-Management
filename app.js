@@ -9,7 +9,6 @@ const mongoDBSession = require('connect-mongodb-session')(session);
 const { v4: uuidv4 } = require('uuid'); // Import UUID v4
 const Delivery = require("./models/deliveries.js");
 const axios = require('axios');
-const SMS = require("./models/sms.js");
 
 const app = express();
 const port = 3000;
