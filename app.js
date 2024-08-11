@@ -7,6 +7,7 @@ const ejs = require('ejs');
 const multer = require('multer');
 const mongoDBSession = require('connect-mongodb-session')(session);
 const { v4: uuidv4 } = require('uuid'); // Import UUID v4
+const Delivery = require("./models/deliveries.js");
 
 
 const axios = require('axios');
@@ -335,6 +336,7 @@ app.post('/api/add-items', async (req, res) => {
     try {
         const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
         const phone = req.body.phone;
+        const location = req.body.location;
 
         const orderId = uuidv4();
 
@@ -348,7 +350,8 @@ app.post('/api/add-items', async (req, res) => {
             category: item.category, // Assuming each item has a category property
             state: 'online', // Default state for new items
             customerPhone: phone,
-            orderId: orderId
+            orderId: orderId,
+            location: location
         }));
 
         // Insert all items into MongoDB using create() method
@@ -542,6 +545,9 @@ app.get('/orderstatus', async (req, res) => {
       // Check if all items for this phone number are 'done'
       const items = await Item.find({ orderId });
       const allDone = items.every(item => item.state === 'done');
+      const order = await Delivery.findOne({orderId});
+
+      const deliveryStatus = order !== null? order.status : false;
 
       const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -550,7 +556,10 @@ app.get('/orderstatus', async (req, res) => {
         res.status(200).json({
             totalPrice: totalPrice,
             order: items,
-            status: allDone === true? "ready": "online"
+            status: deliveryStatus === true? "delivered":  allDone === true? "ready": "online",
+            ETA: order !== null? order.ETA:  "60",
+            code: order !== null? order.code: "####",
+            delivery: order
         });
     //     res.send('Being Delivered');
     //   } else {
@@ -692,5 +701,113 @@ app.post("/api/verify-payment", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Route to get drivers whose workId starts with 'd'
+app.get('/get-drivers', async (req, res) => {
+    try {
+        const drivers = await Employee.find({ workID: /^d/ }).exec();
+        res.json(drivers);
+    } catch (error) {
+        console.error('Error fetching drivers:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Route to update a delivery
+app.put('/update-delivery/:orderId', async (req, res) => {
+    const { orderId } = req.params;
+    const { driver, code } = req.body; // Extract driver and code from request body
+
+    try {
+        // Find the delivery record by orderId
+        const delivery = await Delivery.findOne({ orderId });
+        if (!delivery) {
+            return res.status(404).json({ error: 'Delivery not found' });
+        }
+
+        delivery.status = code == delivery.code; // Mark as delivered
+
+        // Save updated delivery record
+        await delivery.save();
+
+        res.json({ success: true, message: delivery.status === true? 'Delivery completed.' : "Invalid code."});
+    } catch (error) {
+        console.error('Error updating delivery:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Route to create a new delivery
+app.post('/create-delivery', async (req, res) => {
+    const { id, orderId, driver } = req.body; // Extract orderId and driver from request body
+
+    if (!orderId || !driver) {
+        return res.status(400).json({ error: 'orderId and driver are required' });
+    }
+
+    const item = await Item.findOne({orderId: orderId});
+
+    try {
+        // Create a new delivery instance
+        const newDelivery = new Delivery({
+            orderId,
+            driver,
+            status: false, // Default status to false (not delivered yet)
+            location: item.location,
+            phone: item.customerPhone
+        });
+
+        // Save the new delivery record
+        await newDelivery.save();
+
+        await Item.updateMany({orderId: orderId}, { state: 'done' }, { new: true });
+
+        res.status(201).json({ success: true, message: 'Delivery created successfully', delivery: newDelivery });
+    } catch (error) {
+        console.error('Error creating delivery:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Route to get deliveries for a specific driver
+app.get('/deliveries/:driverId', async (req, res) => {
+    try {
+        const driverId = req.params.driverId;
+
+        // Query the deliveries collection for the specified driver
+        const deliveries = await Delivery.find({ driver: driverId, status: false });
+
+        if (deliveries.length === 0) {
+            return res.status(404).json({ message: 'No deliveries found for this driver.' });
+        }
+
+        res.json(deliveries);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'An error occurred while retrieving deliveries.' });
+    }
+});
+
+//Route to update meal details in server page
+app.put('/update-meal/:id', upload.single('image'), async (req, res) => {
+    const mealId = req.params.id;
+    const { name, description, quantity, price } = req.body;
+    const image = req.file ? `/images/${req.file.filename}` : '';
+
+    try {
+        const updateFields = { name, description, quantity, price };
+        if (image) updateFields.image = image;
+
+        const updatedMeal = await MenuItem.findByIdAndUpdate(mealId, updateFields, { new: true });
+        if (updatedMeal) {
+            res.status(200).json(updatedMeal);
+        } else {
+            res.status(404).send('Meal not found');
+        }
+    } catch (error) {
+        console.error('Error updating meal:', error);
+        res.status(500).send('Error updating meal');
     }
 });

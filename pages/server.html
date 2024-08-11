@@ -5,6 +5,166 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bukhari Restaurant - Servers Application</title>
     <link rel="stylesheet" href="../styles/server.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .order-card {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-card h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+
+        .order-card p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .order-card button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .order-card button:hover {
+            background-color: #218838;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .popup-content select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .popup-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .popup-content button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup-content button:hover {
+            background-color: #0056b3;
+        }
+
+        .popup-content .close {
+            background-color: #dc3545;
+        }
+
+        .popup-content .close:hover {
+            background-color: #c82333;
+        }
+
+        .side-menu {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            z-index: 1;
+        }
+
+        .side-menu a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .side-menu a:hover {
+            color: #f1f1f1;
+        }
+
+        .side-menu .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .open-menu {
+            font-size: 30px;
+            cursor: pointer;
+            margin: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
     <!-- Side Menu -->
@@ -15,6 +175,7 @@
         <a href="../pages/add-meal.html">Add Meal</a>
         <a href="../pages/employee_signin.html">Log Out</a>
     </div>
+
     <header>
         <h1>BUKHARI RESTAURANT</h1>
     </header>
@@ -43,70 +204,86 @@
         version 1.0.0</p>
     </footer>
 
+    <!-- Popup for selecting a driver -->
+    <div id="driver-popup" class="popup">
+        <div class="popup-content">
+            <h3>Select a Driver</h3>
+            <select id="driver-dropdown">
+                <!-- Driver options will be dynamically inserted here -->
+            </select>
+            <button id="confirm-driver-button">Confirm</button>
+            <button id="close-driver-popup" class="close">Close</button>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-    fetch('/get-items')
-        .then(response => response.json())
-        .then(data => {
-            const ordersList = document.getElementById('orders-list').getElementsByTagName('tbody')[0];
+            fetch('/get-items')
+                .then(response => response.json())
+                .then(data => {
+                    const ordersList = document.getElementById('orders-list').getElementsByTagName('tbody')[0];
 
-            // Group items by phone number
-            const groupedItems = data.reduce((acc, item) => {
-                if (!acc[item.customerPhone]) {
-                    acc[item.customerPhone] = [];
-                }
-                acc[item.customerPhone].push(item);
-                return acc;
-            }, {});
+                    // Group items by phone number
+                    const groupedItems = data.reduce((acc, item) => {
+                        if (!acc[item.customerPhone]) {
+                            acc[item.customerPhone] = [];
+                        }
+                        acc[item.customerPhone].push(item);
+                        return acc;
+                    }, {});
 
-            // Populate table rows
-            Object.entries(groupedItems).forEach(([phone, items]) => {
-                const row = document.createElement('tr');
+                    // Populate table rows
+                    Object.entries(groupedItems).forEach(([phone, items]) => {
+                        const row = document.createElement('tr');
 
-                // Waiter no/Phone Number
-                const phoneCell = document.createElement('td');
-                phoneCell.textContent = phone;
-                row.appendChild(phoneCell);
+                        // Waiter no/Phone Number
+                        const phoneCell = document.createElement('td');
+                        phoneCell.textContent = phone;
+                        row.appendChild(phoneCell);
 
-                // Items
-                const itemsCell = document.createElement('td');
-                const itemCounts = items.reduce((acc, item) => {
-                    acc[item.name] = (acc[item.name] || 0) + item.quantity;
-                    return acc;
-                }, {});
-                itemsCell.innerHTML = Object.entries(itemCounts).map(([name, quantity]) => `${name} x${quantity}`).join('<br>');
-                row.appendChild(itemsCell);
+                        // Items
+                        const itemsCell = document.createElement('td');
+                        const itemCounts = items.reduce((acc, item) => {
+                            acc[item.name] = (acc[item.name] || 0) + item.quantity;
+                            return acc;
+                        }, {});
+                        itemsCell.innerHTML = Object.entries(itemCounts).map(([name, quantity]) => `${name} x${quantity}`).join('<br>');
+                        row.appendChild(itemsCell);
 
-                // State
-                const stateCell = document.createElement('td');
-                stateCell.textContent = 'Order received';
-                row.appendChild(stateCell);
+                        // State
+                        const stateCell = document.createElement('td');
+                        stateCell.textContent = items[0].state === 'online' ? 'Online' : 'Order received';
+                        row.appendChild(stateCell);
 
-                // Action
-                const actionCell = document.createElement('td');
-                const button = document.createElement('button');
-                button.textContent = 'Click here if meal is ready to serve';
-                button.className = 'status served';
-                button.addEventListener('click', () => {
-                    // Update the state of all items in the group to 'done'
-                    Promise.all(items.map(item => 
-                        fetch(`/update-item/${item._id}`, { method: 'PUT' })
-                            .then(response => response.json())
-                    ))
-                    .then(() => {
-                        // Remove the row after updating all items
-                        row.remove();
-                    })
-                    .catch(error => console.error('Error:', error));
-                });
-                actionCell.appendChild(button);
-                row.appendChild(actionCell);
+                        // Action
+                        const actionCell = document.createElement('td');
+                        const button = document.createElement('button');
+                        button.textContent = 'Click here if meal is ready to serve';
+                        button.className = 'status served';
+                        button.addEventListener('click', () => {
+                            if (items[0].state === 'online') {
+                                showDriverPopup(items[0].orderId, items[0]._id);
+                            } else {
+                                // Update the state of all items in the group to 'done'
+                                Promise.all(items.map(item => 
+                                    fetch(`/update-item/${item._id}`, { method: 'PUT' })
+                                        .then(response => response.json())
+                                ))
+                                .then(() => {
+                                    // Remove the row after updating all items
+                                    row.remove();
+                                })
+                                .catch(error => console.error('Error:', error));
+                            }
+                        });
+                        actionCell.appendChild(button);
+                        row.appendChild(actionCell);
 
-                ordersList.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-});
+                        ordersList.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        });
 
         // Function to open side menu
         function openMenu() {
@@ -118,6 +295,63 @@
         function closeMenu() {
             document.getElementById("mySideMenu").style.width = "0";
             document.body.style.marginLeft = "0";
+        }
+
+        // Function to show the driver selection popup
+        function showDriverPopup(orderId, itemId) {
+            const popup = document.getElementById('driver-popup');
+            const driverDropdown = document.getElementById('driver-dropdown');
+            driverDropdown.innerHTML = ''; // Clear existing driver options
+
+            // Fetch drivers whose workId starts with 'd'
+            fetch('/get-drivers?workIdPrefix=d')
+                .then(response => response.json())
+                .then(drivers => {
+                    drivers.forEach(driver => {
+                        console.log(driver);
+                        const option = document.createElement('option');
+                        option.value = driver.workID;
+                        option.textContent = `${driver.name} (${driver.phone})`;
+                        driverDropdown.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching drivers:', error));
+
+            popup.style.display = 'flex';
+
+            document.getElementById('close-driver-popup').onclick = () => {
+                popup.style.display = 'none'; // Hide popup
+            };
+
+            document.getElementById('confirm-driver-button').onclick = () => {
+                const selectedDriverPhone = driverDropdown.value;
+                if (selectedDriverPhone) {
+                    fetch('/create-delivery', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id: itemId,
+                            orderId,
+                            driver: selectedDriverPhone,
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Delivery confirmed!');
+                            popup.style.display = 'none'; // Hide popup
+                            window.location.reload();
+                        } else {
+                            alert('Failed to confirm delivery.');
+                        }
+                    })
+                    .catch(error => console.error('Error confirming delivery:', error));
+                } else {
+                    alert('Please select a driver.');
+                }
+            };
         }
     </script>
 </body>

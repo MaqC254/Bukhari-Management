@@ -165,17 +165,21 @@
         </header>
 
         <div class="order-info">
-            <div>ORDER PLACED<br><p id="the-day-placed"></p></div>
+            <div>ORDER PLACED<br>
+                <p id="the-day-placed"></p>
+            </div>
             <div>TOTAL<br>
                 <p id="the-total"></p>
             </div>
-            <div>SHIP TO<br>Emily Morgan</div>
+            <div>SHIP TO<br>
+                <p id="ship-to"></p>
+            </div>
             <div id="the-order-id">ORDER #</div>
         </div>
 
         <section class="order-status">
             <h2>Order Status: <span id="status">Being Prepared</span></h2>
-            <p id="estimated-delivery-date">Estimated Time of Arrival: 20 Minutes</p>
+            <p id="estimated-delivery-date"></p>
         </section>
 
         <div class="progress-container">
@@ -204,11 +208,13 @@
 
         <div class="delivery-details" id="delivery-details">
             <h3>Delivery Details</h3>
-            <p>Delivery Person: John Doe</p>
-            <p>Contact: +1234567890</p>
-            <p>Vehicle: Red Motorcycle</p>
-            <p class="completion-code">Delivery Code: <span id="completion-code">ABC123</span></p>
+            <!-- <p>Delivery Person: <span id="delivery-person"></span></p> -->
+            <!-- <p>Contact: <span id="contact"></span></p> -->
+            <p>Location: <span id="location"></span></p>
+            <p>Estimated Time of Arrival (ETA): <span id="eta"></span></p>
+            <p class="completion-code">Delivery Code: <span id="completion-code"></span></p>
         </div>
+
     </div>
 
     <script>
@@ -254,18 +260,35 @@
                 const order = await response.json();
                 const items = order.order;
 
+                const deliveryData = order.delivery === null ? {
+                    "_id": "",
+                    "status": "",
+                    "orderId": "",
+                    "driver": "",
+                    "location": "",
+                    "phone": "",
+                    "code": 0,
+                    "ETA": 0,
+                    "__v": 0
+                } : order.delivery;
+
 
                 // add date ordered
                 const date = formatDate(new Date(items[0].createdAt));
-                console.log(order);
                 // Simulated status response for demonstration
-                const status = { status: order.status, deliveryCode: "ABC123" };
-                
+                const status = { status: order.status, deliveryCode: order.code };
+
                 document.getElementById("the-day-placed").textContent = date;
                 document.getElementById('status').textContent = status.status.charAt(0).toUpperCase() + status.status.slice(1);
                 document.getElementById("the-total").textContent = `\$ ${order.totalPrice}`;
+                document.getElementById("ship-to").textContent = items[0].location;
+                document.getElementById("estimated-delivery-date").textContent = deliveryData.status === true? "Delivered":`Estimated Time of Arrival: ${order.ETA} Minutes`;
 
-
+                // document.getElementById('delivery-person').textContent = deliveryData.driver;
+                // document.getElementById('contact').textContent = deliveryData.phone;
+                document.getElementById('location').textContent = deliveryData.location;
+                document.getElementById('completion-code').textContent = deliveryData.code;
+                document.getElementById('eta').textContent = deliveryData.status === true? "Delivered": `${deliveryData.ETA} minutes`;
                 // Get the container where items will be displayed
                 const orderItemsContainer = document.getElementById('order-items');
 

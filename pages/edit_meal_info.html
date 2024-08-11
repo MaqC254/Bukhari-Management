@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Meal Info</title>
+    <link rel="stylesheet" href="../styles/edit_meal_info.css">
+</head>
+<body>
+    <header>
+        <h1>Edit Meal Information</h1>
+    </header>
+
+    <main>
+        <form id="editMealForm" enctype="multipart/form-data">
+            <input type="hidden" id="mealId">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="description">Description:</label>
+            <textarea id="description" name="description"></textarea>
+            
+            <label for="image">Image:</label>
+            <input type="file" id="image" name="image">
+            
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" required>
+            
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" step="0.01" required>
+            
+            <button type="submit">Update Meal</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bukhari Restaurant</p>
+    </footer>
+    <script src="../scripts/edit_meal_info.js"></script>
+</body>
+</html>

@@ -13,7 +13,8 @@ const itemSchema = new mongoose.Schema({
     tableNumber: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now },
     paid: { type: Boolean, default: false },
-    orderId: { type: String } // Add UUID field
+    orderId: { type: String }, // Add UUID field
+    location: String,
 });
 
 // Middleware to set the month before saving
