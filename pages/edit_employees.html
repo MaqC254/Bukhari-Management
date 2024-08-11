@@ -1,3 +1,95 @@
-On this page you should display all employees with a button for editing their information.
-When the button is clicked lead to edit_employee_details where the form should be autofilled
-with the exiting information. Edit desired items and update the database respectively
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees</title>
+    <link rel="stylesheet" href="../styles/edit_employee_details.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/employees')
+                .then(response => response.json())
+                .then(data => {
+                    const employees = data;
+                    const sortedEmployees = employees.sort((a, b) => a.workID.localeCompare(b.workID));
+                    const categories = {
+                        waiters: [],
+                        servers: [],
+                        administrators: [],
+                        drivers: []
+                    };
+
+                    sortedEmployees.forEach(employee => {
+                        if (employee.workID.startsWith('w')) {
+                            categories.waiters.push(employee);
+                        } else if (employee.workID.startsWith('s')) {
+                            categories.servers.push(employee);
+                        } else if (employee.workID.startsWith('a')) {
+                            categories.administrators.push(employee);
+                        } else if (employee.workID.startsWith('d')) {
+                            categories.drivers.push(employee);
+                        }
+                    });
+
+                    const container = document.getElementById('employeeContainer');
+                    Object.keys(categories).forEach(category => {
+                        if (categories[category].length) {
+                            const section = document.createElement('section');
+                            section.innerHTML = `<h2>${capitalizeFirstLetter(category)}</h2>`;
+                            categories[category].forEach(employee => {
+                                const div = document.createElement('div');
+                                div.innerHTML = `
+                                    <p>Name: ${employee.name}</p>
+                                    <p>Phone: ${employee.phone}</p>
+                                    <p>Work ID: ${employee.workID}</p>
+                                    <p>Role: ${employee.role}</p>
+                                    <button onclick="editEmployee('${employee._id}')">Edit</button>
+                                    <button onclick="deleteEmployee('${employee._id}')">Delete Employee</button>
+                                `;
+                                section.appendChild(div);
+                            });
+                            container.appendChild(section);
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching employees:', error));
+        });
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function editEmployee(id) {
+            window.location.href = `../pages/edit_employee_details.html?id=${id}`;
+        }
+
+        function deleteEmployee(id) {
+            fetch(`/employees/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Refresh the page after deletion
+                    window.location.reload();
+                } else {
+                    console.error('Error deleting employee');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Employees</h1>
+    </header>
+
+    <main>
+        <div id="employeeContainer"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bukhari Restaurant</p>
+    </footer>
+</body>
+</html>
