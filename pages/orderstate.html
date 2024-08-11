@@ -211,7 +211,7 @@
             <!-- <p>Delivery Person: <span id="delivery-person"></span></p> -->
             <!-- <p>Contact: <span id="contact"></span></p> -->
             <p>Location: <span id="location"></span></p>
-            <p>Estimated Time of Arrival (ETA): <span id="eta"></span> minutes</p>
+            <p>Estimated Time of Arrival (ETA): <span id="eta"></span></p>
             <p class="completion-code">Delivery Code: <span id="completion-code"></span></p>
         </div>
 
@@ -262,6 +262,7 @@
 
                 const deliveryData = order.delivery === null ? {
                     "_id": "",
+                    "status": "",
                     "orderId": "",
                     "driver": "",
                     "location": "",
@@ -281,13 +282,13 @@
                 document.getElementById('status').textContent = status.status.charAt(0).toUpperCase() + status.status.slice(1);
                 document.getElementById("the-total").textContent = `\$ ${order.totalPrice}`;
                 document.getElementById("ship-to").textContent = items[0].location;
-                document.getElementById("estimated-delivery-date").textContent = `Estimated Time of Arrival: ${order.ETA} Minutes`;
+                document.getElementById("estimated-delivery-date").textContent = deliveryData.status === true? "Delivered":`Estimated Time of Arrival: ${order.ETA} Minutes`;
 
                 // document.getElementById('delivery-person').textContent = deliveryData.driver;
                 // document.getElementById('contact').textContent = deliveryData.phone;
                 document.getElementById('location').textContent = deliveryData.location;
                 document.getElementById('completion-code').textContent = deliveryData.code;
-                document.getElementById('eta').textContent = deliveryData.ETA;
+                document.getElementById('eta').textContent = deliveryData.status === true? "Delivered": `${deliveryData.ETA} minutes`;
                 // Get the container where items will be displayed
                 const orderItemsContainer = document.getElementById('order-items');
 

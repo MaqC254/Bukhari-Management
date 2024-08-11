@@ -756,7 +756,7 @@ app.post('/create-delivery', async (req, res) => {
             driver,
             status: false, // Default status to false (not delivered yet)
             location: item.location,
-            phone: item.location
+            phone: item.customerPhone
         });
 
         // Save the new delivery record
@@ -787,5 +787,27 @@ app.get('/deliveries/:driverId', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'An error occurred while retrieving deliveries.' });
+    }
+});
+
+//Route to update meal details in server page
+app.put('/update-meal/:id', upload.single('image'), async (req, res) => {
+    const mealId = req.params.id;
+    const { name, description, quantity, price } = req.body;
+    const image = req.file ? `/images/${req.file.filename}` : '';
+
+    try {
+        const updateFields = { name, description, quantity, price };
+        if (image) updateFields.image = image;
+
+        const updatedMeal = await MenuItem.findByIdAndUpdate(mealId, updateFields, { new: true });
+        if (updatedMeal) {
+            res.status(200).json(updatedMeal);
+        } else {
+            res.status(404).send('Meal not found');
+        }
+    } catch (error) {
+        console.error('Error updating meal:', error);
+        res.status(500).send('Error updating meal');
     }
 });
