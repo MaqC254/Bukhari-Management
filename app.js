@@ -811,3 +811,66 @@ app.put('/update-meal/:id', upload.single('image'), async (req, res) => {
         res.status(500).send('Error updating meal');
     }
 });
+
+// Route to get all employees
+app.get('/employees', async (req, res) => {
+    try {
+        const employees = await Employee.find().sort({ workID: 1 }); // Sort by workID
+        res.json(employees);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Route to get a specific employee by ID
+app.get('/employee/:id', async (req, res) => {
+    try {
+        const employee = await Employee.findById(req.params.id);
+        if (employee) {
+            res.json(employee);
+        } else {
+            res.status(404).json({ message: 'Employee not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Route to update a specific employee by ID
+app.put('/update-employee/:id', async (req, res) => {
+    try {
+        const { name, phone, workID, role } = req.body;
+        const employee = await Employee.findById(req.params.id);
+
+        if (employee) {
+            employee.name = name || employee.name;
+            employee.phone = phone || employee.phone;
+            employee.workID = workID || employee.workID;
+            employee.role = role || employee.role;
+
+            await employee.save();
+            res.status(200).json({ message: 'Employee updated successfully' });
+        } else {
+            res.status(404).json({ message: 'Employee not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Route to delete an employee
+app.delete('/employees/:id', async (req, res) => {
+    const employeeId = req.params.id;
+    
+    try {
+        const result = await Employee.findByIdAndDelete(employeeId);
+        if (result) {
+            res.status(200).json({ message: 'Employee deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Employee not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting employee:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
