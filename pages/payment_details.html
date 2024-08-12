@@ -30,7 +30,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const total = localStorage.getItem('selectedTableTotal');
-            document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
+            document.getElementById('amount').textContent = `Amount: USD. ${total}`;
 
             document.querySelector(".cash").addEventListener("click", function() {
                 handlePayment("cash");
