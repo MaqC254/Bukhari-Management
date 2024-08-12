@@ -36,16 +36,16 @@ body {
 
 h1 {
     margin-bottom: 30px;
-    font-size: 28px;
+    font-size: 20px;
     font-weight: 600;
-    color: #333;
+    color: black;
 }
 
 select,
 input {
-    width: 100%;
+    width: 400px;
     padding: 12px;
-    font-size: 16px;
+    font-size: 14px;
     border: 1px solid #ddd;
     border-radius: 5px;
     margin-bottom: 20px;
@@ -59,7 +59,7 @@ input:focus {
 }
 
 button {
-    width: 100%;
+    width: 400px;
     padding: 12px;
     font-size: 18px;
     background-color: #28a745;
@@ -72,6 +72,7 @@ button {
 
 button:hover {
     background-color: #218838;
+    font-weight: bolder;
 }
 
 .location-output {

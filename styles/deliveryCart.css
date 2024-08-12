@@ -150,13 +150,13 @@ input:focus {
 
 /* Styling for cart item names */
 .cart-item h2 {
-    font-size: 24px; /* Font size */
+    font-size: 20px; /* Font size */
     margin: 0 0 10px 0; /* Margin */
 }
 
 /* Styling for cart item descriptions */
 .cart-item p {
-    font-size: 16px; /* Font size */
+    font-size: 14px; /* Font size */
     color: #666; /* Gray color */
     margin: 5px 0; /* Margin */
 }
@@ -164,15 +164,17 @@ input:focus {
 .cart-total {
     font-size: 20px;
     font-weight: bold;
-    text-align: right;
-    margin: 20px;
+    text-align: center;
+    /* margin: 275px; */
+    margin-left: 275px;
     width: 80%;
     max-width: 800px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     border-top: 2px solid #ddd;
     padding-top: 15px;
+    flex-direction: column;  /* Stack content vertically if necessary */
 }
 
 #cart-total-container {
