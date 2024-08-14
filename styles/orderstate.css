@@ -234,14 +234,17 @@ header {
     margin-bottom: 10px;
     background-color: #ddd;
     border-radius: 50%;
+    transition: box-shadow 0.3s ease; /* Smooth transition for the glow effect */
 }
 
 .progress-step.active .icon {
-    background-color: #28a745;
+    background-color: #FFA500; /* Orange background for active step */
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.8); /* Orange glow */
 }
 
 .progress-step.completed .icon {
-    background-color: #28a745;
+    background-color: #28a745; /* Bright green background for completed step */
+    box-shadow: 0 0 15px rgba(40, 167, 69, 0.8); /* Bright green glow */
 }
 
 .progress-step p {

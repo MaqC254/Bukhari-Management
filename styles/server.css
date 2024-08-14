@@ -101,6 +101,7 @@ h3 {
 }
 
 .nav-button {
+    max-width: 200px;
     display: inline-block;
     padding: 10px 20px;
     color: #fff;
@@ -112,6 +113,7 @@ h3 {
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
+    margin-left: 550px;
     font-weight: bold;
 }
 
@@ -171,6 +173,7 @@ tbody tr:hover {
 }
 
 button.status.served {
+    font-family: 'Montserrat', sans-serif;
     background-color: #4CAF50; /* Green */
     color: white;
     border: none;
@@ -181,12 +184,13 @@ button.status.served {
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 20px;
     transition: background-color 0.3s ease;
 }
 
 button.status.served:hover {
     background-color: #45a049; /* Darker green */
+    box-shadow: 0 0 15px 5px rgba(67, 160, 71, 0.6); /* Glowing green shadow */
 }
 
 footer {
