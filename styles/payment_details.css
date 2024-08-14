@@ -88,7 +88,8 @@ main {
     display: flex;
     justify-content: space-around;
     width: 80%;
-    margin: 20px 0;
+    margin-right: 50px;
+    align-items: center;
 }
 
 .payment-button {

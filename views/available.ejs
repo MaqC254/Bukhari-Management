@@ -28,10 +28,12 @@
                     <img src="<%= meal.image %>" alt="<%= meal.name %>">
                     <h2><%= meal.name %></h2>
                     <p><%= meal.description %></p>
-                    <p>Quantity: <%= meal.quantity %></p>
-                    <p>Price: <%= meal.price %></p>
-                    <button class="edit-btn" onclick="editMealInfo('<%= meal._id %>')">Edit Meal Info</button>
-                    <button class="delete-btn" onclick="deleteMeal('<%= meal._id %>')">Delete</button>
+                    <p>Quantity: <%= meal.quantity %>
+                    Price: <%= meal.price %></p>
+                    <div class="meal-buttons">
+                        <button class="edit-btn" onclick="editMealInfo('<%= meal._id %>')">Edit Meal Info</button>
+                        <button class="delete-btn" onclick="deleteMeal('<%= meal._id %>')">Delete</button>
+                    </div>
                 </div>
             <% }); %>
         </div>

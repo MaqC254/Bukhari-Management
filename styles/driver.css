@@ -13,6 +13,8 @@
             background-repeat: no-repeat;
             background-attachment: scroll;
             background-size: cover;
+            height: 100vh;
+            overflow: hidden; /* Prevents the entire page from scrolling */
         }
 
         .container {
@@ -23,14 +25,16 @@
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            height: 90vh; /* Set a height for the container */
+            overflow-y: auto; /* Enables vertical scrolling within the container */
         }
 
 
         .order-card {
-            background-color: #fff;
+            background-color: #e6ffe6; /* Pale green background */
             padding: 15px;
             margin-bottom: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #32cd32; /* Bright green border */
             border-radius: 8px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
@@ -58,7 +62,8 @@
         }
 
         .order-card button:hover {
-            background-color: #45a049;
+            color: #45a049;
+            background-color: #ffffff;
             box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
         }
 
