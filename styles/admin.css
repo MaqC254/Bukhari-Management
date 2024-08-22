@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
+* {
+    font-family: 'Montserrat', sans-serif;
+}
 
 body {
     font-family: 'Montserrat', sans-serif;
@@ -150,3 +153,68 @@ section {
     background-color: #45a049;
     box-shadow: 0 0 15px rgba(72, 191, 88, 0.7); /* Green glow effect */
   }
+
+  /* Modal Styles */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Black with 50% opacity */
+    padding-top: 60px;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; /* Centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px; /* Adjusted width */
+    max-width: 600px; /* Maximum width for larger screens */
+    opacity: 1; /* Ensure opacity for content */
+    overflow: hidden; /* Hide any overflowing content */
+    border-radius: 5px;
+    justify-content: center;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-buttons {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center buttons horizontally */
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    font-size: 14px;
+    margin: 10px 0; /* Margin top and bottom */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #28a745;
+    color: white;
+    width: 80%; /* Adjusted width */
+    max-width: 300px; /* Maximum width for buttons */
+}
+
+.modal-buttons button:hover {
+    background-color: #218838;
+}
