@@ -10,9 +10,8 @@
 <body>
     <header>
         <img src="../images/Bukhari logo.jpg" alt="Bukhari Restaurant Logo" class="logo">
-        <h1>Bukhari Restaurant</h1>
+        <h1>BUKHARI RESTAURANT</h1>
         <h2>Payment Details</h2>
-        <img src="../images/icons8-home-24.png" alt="Home Icon" class="home-icon">
     </header>
     
     <main>
@@ -21,7 +20,7 @@
             <p id="amount"></p>
             <div class="payment-buttons">
                 <button type="button" class="payment-button cash">Cash</button>
-                <button type="button" class="payment-button mobile">PayPal</button>
+                
             </div>
             <div id="paypal-button-container" style="display: none;"></div>
         </section>
@@ -30,7 +29,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const total = localStorage.getItem('selectedTableTotal');
-            document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
+            document.getElementById('amount').textContent = `Amount: USD. ${total}`;
 
             document.querySelector(".cash").addEventListener("click", function() {
                 handlePayment("cash");

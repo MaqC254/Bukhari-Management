@@ -1,19 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
     background-color: #fff;
+    background-image: url('../images/Wall.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
 }
 
 .container {
     text-align: center;
     width: 300px;
+    background-color: #ffff;
     border: 1px solid #ddd;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
 }
 
 header {
@@ -36,7 +48,7 @@ header {
 
 h1 {
     font-size: 16px;
-    font-weight: normal;
+    font-weight: bolder;
     margin: 0;
     flex-grow: 1;
     margin-left: 10px;
@@ -62,9 +74,14 @@ main {
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
+}
+
+.confirm-button:hover {
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+    font-weight: bolder;
 }
 
 .waiter-image {
