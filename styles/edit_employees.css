@@ -1,21 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+* {
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f8f9fa;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure content is centered vertically */
+    text-align: center; /* Center text horizontally */
 }
 
 header {
-    background-color: #f4f4f4;
-    padding: 10px;
-    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    color: #333;
+    width: 100%;
 }
 
 h1 {
     margin: 0;
+    font-size: 2em;
 }
 
 main {
     padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .employee-section {
@@ -28,27 +47,65 @@ main {
 }
 
 .employee {
+    background-color: #fff;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    margin-bottom: 10px;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    text-align: center; /* Center text within employee cards */
 }
 
-.edit-btn {
-    background-color: #007bff;
+.employee:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.employee p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.employee h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #007bff;
+}
+
+button {
+    background-color: #28a745;
     color: #fff;
     border: none;
-    padding: 5px 10px;
+    padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 14px;
+    margin-right: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 10px auto; /* Center buttons horizontally */
 }
 
-.edit-btn:hover {
-    background-color: #0056b3;
+button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+button.delete-btn {
+    background-color: #dc3545;
+}
+
+button.delete-btn:hover {
+    background-color: #c82333;
 }
 
 footer {
-    background-color: #f4f4f4;
+    background-color: #343a40;
+    color: #fff;
     padding: 10px;
     text-align: center;
+    width: 100%;
+    margin-top: 20px;
+    font-size: 14px;
+    position: relative;
+    bottom: 0;
 }

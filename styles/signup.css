@@ -22,10 +22,10 @@ body {
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: white;
-    background-image: url('../images/bg2.jpg');
+    /* background-image: url('../images/bg2.jpg');
     background-repeat: no-repeat;
     background-attachment: scroll;
-    background-size: cover;
+    background-size: cover; */
     /* filter: blur(8px);
     -webkit-filter: blur(8px); */
 }
