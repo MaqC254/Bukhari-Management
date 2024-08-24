@@ -378,3 +378,44 @@ footer p {
     0% { transform: translateY(-100%); }
     100% { transform: translateY(100%); }
 }
+/* Styling for the table-number container */
+.table-number {
+    margin: 20px 0;
+    text-align: center; /* Center the select box horizontally */
+}
+
+/* Styling for the select element */
+#table-number {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    width: 200px; /* Adjust width as needed */
+    max-width: 100%; /* Ensure it doesn't overflow the container */
+}
+
+/* Styling for the select element when focused */
+#table-number:focus {
+    border-color: #FFA500; /* Orange border on focus */
+    outline: none;
+    background-color: #f9f9f9; /* Slight background change on focus */
+}
+
+/* Optional: Add a custom arrow (cross-browser compatible) */
+#table-number::-ms-expand {
+    display: none; /* Hides default dropdown arrow in Internet Explorer */
+}
+
+/* Custom dropdown arrow */
+#table-number {
+    appearance: none; /* Remove default dropdown arrow */
+    -webkit-appearance: none; /* For Safari */
+    -moz-appearance: none; /* For Firefox */
+    background: url('path/to/your-custom-arrow.svg') no-repeat right center;
+    background-size: 20px;
+}

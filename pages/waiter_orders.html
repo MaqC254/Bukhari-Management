@@ -64,7 +64,7 @@
                         totalAmount += item.price * item.quantity;
                     });
 
-                    tableDiv.innerHTML = `<h2>Table Number: ${tableNumber} - Total: USD ${totalAmount}</h2>`;
+                    tableDiv.innerHTML = `<h2>Table ${tableNumber} - Total: USD ${totalAmount}</h2>`;
 
                     // Add click event listener to each table group
                     tableDiv.addEventListener('click', () => {
@@ -84,7 +84,7 @@
                                 <h2>${item.name}</h2>
                                 <p>${item.description}</p>
                                 <p>Pieces: ${item.quantity}</p>
-                                <p>Price: Tsh ${item.price}</p>
+                                <p>Price: USD ${item.price}</p>
                                 <p>Status: ${status}</p>
                             </div>
                         `;

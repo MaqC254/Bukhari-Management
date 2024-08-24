@@ -25,7 +25,13 @@
                 <input type="text" id="work-id" name="work-id" placeholder="Enter your work ID" required> <!-- Corrected name attribute -->
                 
                 <label for="role">Role:</label>
-                <input type="text" id="role" name="role" placeholder="Enter your role" required>
+                    <select id="role" name="role" required>
+                        <option value="" disabled selected>Select a role</option>
+                        <option value="waiter">Waiter</option>
+                        <option value="chef">Chef</option>
+                        <option value="driver">Driver</option>
+                    </select>
+
                 
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
