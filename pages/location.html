@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <h1>Select Your Location in Tanzania</h1>
-        <select id="location-select">
+        <select id="region-select" onchange="updateDistricts()" required>
             <option value="" disabled selected>Select a region</option>
             <option value="Dar es Salaam">Dar es Salaam</option>
             <option value="Arusha">Arusha</option>
@@ -25,44 +25,295 @@
             <option value="Mtwara">Mtwara</option>
             <!-- Add more regions as needed -->
         </select>
-        <input type="text" id="area-input" placeholder="Enter area within the region">
+
+        <select id="district-select" onchange="updateStreets()" required>
+            <option value="" disabled selected>Select a district/city</option>
+        </select>
+
+        <select id="street-select" onchange="updateEstates()" required>
+            <option value="" disabled selected>Select a street</option>
+        </select>
+
+        <select id="estate-select" required>
+            <option value="" disabled selected>Select an estate</option>
+        </select>
+
+        <!-- <input type="text" id="area-input" placeholder="Enter area within the region"> -->
         <button onclick="submitLocation()">Submit Location</button>
 
         <div id="location-output" class="location-output"></div>
     </div>
 
     <script>
+
+        const locationData = {
+            "Dar es Salaam": {
+                "Ilala": ["Kariakoo", "Upanga", "Mtaa wa Uhuru", "Kivukoni", "Gerezani"],
+                "Kinondoni": ["Masaki", "Oysterbay", "Mtaa wa Kenyatta", "Sinza", "Mwenge"],
+                "Temeke": ["Mbagala", "Chang'ombe", "Mtaa wa Mandela", "Kigamboni", "Miburani"]
+            },
+            "Arusha": {
+                "Arusha City": ["Sakina", "Njiro", "Mtaa wa Sokoine", "Olasiti", "Selian"],
+                "Meru": ["Usa River", "Leganga", "Mtaa wa Mandela", "Tengeru", "Nkoaranga"]
+            },
+            "Dodoma": {
+                "Dodoma City": ["Chadulu", "Kikuyu", "Mtaa wa Sokoine", "Mlimwa", "Nzunguni"],
+                "Chamwino": ["Mlazo", "Msisi", "Mtaa wa Uhuru", "Mwagange", "Kongwa"]
+            },
+            "Mwanza": {
+                "Mwanza City": ["Nyamagana", "Ilemela", "Pamba", "Kirumba", "Magu"],
+                "Sengerema": ["Sengerema Town", "Buzuruga", "Ngole", "Kisorya", "Nyaishozi"]
+            },
+            "Tanga": {
+                "Tanga City": ["Kilimanjaro", "Nguvumali", "Mikindani", "Songeni", "Pangani"],
+                "Muheza": ["Muheza Town", "Mkata", "Mamboya", "Amani", "Wami"]
+            },
+            "Mbeya": {
+                "Mbeya City": ["Igao", "Isanga", "Mwakibete", "Nsalaga", "Rungwe"],
+                "Rungwe": ["Rungwe Town", "Kawetele", "Kibogoye", "Kibisi", "Mubunda"]
+            },
+            "Morogoro": {
+                "Morogoro City": ["Kihonda", "Mafiga", "Mzumbe", "Mji Mpya", "Mikumi"],
+                "Kilombero": ["Kilombero Town", "Ifakara", "Kidatu", "Lumemo", "Sanje"]
+            },
+            "Zanzibar": {
+                "Zanzibar City": ["Stone Town", "Mkunazini", "Mombasa", "Kisauni", "Kendwa"],
+                "Pemba": ["Wete", "Chake Chake", "Mkoani", "Pujini", "Konde"]
+            },
+            "Kilimanjaro": {
+                "Moshi": ["Moshi Town", "Kilimanjaro", "Uru", "Mweka", "Sanya Juu"],
+                "Hai": ["Hai Town", "Masama", "Mrijo", "Kia", "Kibosho"]
+            },
+            "Mtwara": {
+                "Mtwara City": ["Mtwara Town", "Mikindani", "Naliendele", "Lulindi", "Kipuguni"],
+                "Newala": ["Newala Town", "Ngarambe", "Kawawa", "Masasi", "Mwambao"]
+            }
+            // Add more regions, districts, and streets as needed
+        };
+
+        function updateDistricts() {
+            const regionSelect = document.getElementById("region-select");
+            const districtSelect = document.getElementById("district-select");
+            const streetSelect = document.getElementById("street-select");
+            const estateSelect = document.getElementById("estate-select");
+            const selectedRegion = regionSelect.value;
+
+            districtSelect.innerHTML = '<option value="" disabled selected>Select a district/city</option>';
+            streetSelect.innerHTML = '<option value="" disabled selected>Select a street</option>';
+            estateSelect.innerHTML = '<option value="" disabled selected>Select an estate</option>';
+
+            if (selectedRegion) {
+                const districts = Object.keys(locationData[selectedRegion]);
+                districts.forEach(district => {
+                    const option = document.createElement("option");
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            }
+        }
+
+        function updateStreets() {
+            const regionSelect = document.getElementById("region-select");
+            const districtSelect = document.getElementById("district-select");
+            const streetSelect = document.getElementById("street-select");
+            const estateSelect = document.getElementById("estate-select");
+            const selectedRegion = regionSelect.value;
+            const selectedDistrict = districtSelect.value;
+
+            streetSelect.innerHTML = '<option value="" disabled selected>Select a street</option>';
+            estateSelect.innerHTML = '<option value="" disabled selected>Select an estate</option>';
+
+            if (selectedRegion && selectedDistrict) {
+                const streets = locationData[selectedRegion][selectedDistrict];
+                streets.forEach(street => {
+                    const option = document.createElement("option");
+                    option.value = street;
+                    option.textContent = street;
+                    streetSelect.appendChild(option);
+                });
+            }
+        }
+
+        function updateEstates() {
+            const estateSelect = document.getElementById("estate-select");
+            const selectedStreet = document.getElementById("street-select").value;
+
+            estateSelect.innerHTML = '<option value="" disabled selected>Select an estate</option>';
+
+            // Example estates based on the street selected
+            const estates = {
+                // Dar es Salaam
+            "Kariakoo": ["Kariakoo Estate 1", "Kariakoo Estate 2"],
+            "Upanga": ["Upanga Estate 1", "Upanga Estate 2"],
+            "Mtaa wa Uhuru": ["Uhuru Estate 1", "Uhuru Estate 2"],
+            "Gerezani": ["Gerezani Estate 1", "Gerezani Estate 2"],
+            "Kivukoni": ["Kivukoni Estate 1", "Kivukoni Estate 2"],
+            "Masaki": ["Masaki Estate 1", "Masaki Estate 2"],
+            "Oysterbay": ["Oysterbay Estate 1", "Oysterbay Estate 2"],
+            "Mtaa wa Kenyatta": ["Kenyatta Estate 1", "Kenyatta Estate 2"],
+            "Sinza": ["Sinza Estate 1", "Sinza Estate 2"],
+            "Mwenge": ["Mwenge Estate 1", "Mwenge Estate 2"],
+            "Mbagala": ["Mbagala Estate 1", "Mbagala Estate 2"],
+            "Chang'ombe": ["Chang'ombe Estate 1", "Chang'ombe Estate 2"],
+            "Mtaa wa Mandela": ["Mandela Estate 1", "Mandela Estate 2"],
+
+            // Add estates for all other streets here
+            // Arusha
+            "Sakina": ["Sakina Estate 1", "Sakina Estate 2"],
+            "Njiro": ["Njiro Estate 1", "Njiro Estate 2"],
+            "Mtaa wa Sokoine": ["Sokoine Estate 1", "Sokoine Estate 2"],
+            "Olasiti": ["Olasiti Estate 1", "Olasiti Estate 2"],
+            "Selian": ["Selian Estate 1", "Selian Estate 2"],
+
+            // Add estates for all other streets here
+            // Dodoma
+            "Chadulu": ["Chadulu Estate 1", "Chadulu Estate 2"],
+            "Kikuyu": ["Kikuyu Estate 1", "Kikuyu Estate 2"],
+            "Mtaa wa Sokoine": ["Sokoine Estate 1", "Sokoine Estate 2"],
+            "Mlimwa": ["Mlimwa Estate 1", "Mlimwa Estate 2"],
+            "Nzunguni": ["Nzunguni Estate 1", "Nzunguni Estate 2"],
+            "Mlazo": ["Mlazo Estate 1", "Mlazo Estate 2"],
+            "Msisi": ["Msisi Estate 1", "Msisi Estate 2"],
+            "Mtaa wa Uhuru": ["Uhuru Estate 1", "Uhuru Estate 2"],
+            "Mwagange": ["Mwagange Estate 1", "Mwagange Estate 2"],
+            "Kongwa": ["Kongwa Estate 1", "Kongwa Estate 2"],
+
+            // Add estates for all other streets here
+            // Mwanza
+            "Nyamagana": ["Nyamagana Estate 1", "Nyamagana Estate 2"],
+            "Ilemela": ["Ilemela Estate 1", "Ilemela Estate 2"],
+            "Pamba": ["Pamba Estate 1", "Pamba Estate 2"],
+            "Kirumba": ["Kirumba Estate 1", "Kirumba Estate 2"],
+            "Magu": ["Magu Estate 1", "Magu Estate 2"],
+            "Sengerema Town": ["Sengerema Estate 1", "Sengerema Estate 2"],
+            "Buzuruga": ["Buzuruga Estate 1", "Buzuruga Estate 2"],
+            "Ngole": ["Ngole Estate 1", "Ngole Estate 2"],
+            "Kisorya": ["Kisorya Estate 1", "Kisorya Estate 2"],
+            "Nyaishozi": ["Nyaishozi Estate 1", "Nyaishozi Estate 2"],
+
+            // Add estates for all other streets here
+            // Tanga
+            "Kilimanjaro": ["Kilimanjaro Estate 1", "Kilimanjaro Estate 2"],
+            "Nguvumali": ["Nguvumali Estate 1", "Nguvumali Estate 2"],
+            "Mikindani": ["Mikindani Estate 1", "Mikindani Estate 2"],
+            "Songeni": ["Songeni Estate 1", "Songeni Estate 2"],
+            "Pangani": ["Pangani Estate 1", "Pangani Estate 2"],
+            "Muheza Town": ["Muheza Estate 1", "Muheza Estate 2"],
+            "Mkata": ["Mkata Estate 1", "Mkata Estate 2"],
+            "Mamboya": ["Mamboya Estate 1", "Mamboya Estate 2"],
+            "Amani": ["Amani Estate 1", "Amani Estate 2"],
+            "Wami": ["Wami Estate 1", "Wami Estate 2"],
+
+            // Add estates for all other streets here
+            // Mbeya
+            "Igao": ["Igao Estate 1", "Igao Estate 2"],
+            "Isanga": ["Isanga Estate 1", "Isanga Estate 2"],
+            "Mwakibete": ["Mwakibete Estate 1", "Mwakibete Estate 2"],
+            "Nsalaga": ["Nsalaga Estate 1", "Nsalaga Estate 2"],
+            "Rungwe": ["Rungwe Estate 1", "Rungwe Estate 2"],
+            "Rungwe Town": ["Rungwe Town Estate 1", "Rungwe Town Estate 2"],
+            "Kawetele": ["Kawetele Estate 1", "Kawetele Estate 2"],
+            "Kibogoye": ["Kibogoye Estate 1", "Kibogoye Estate 2"],
+            "Kibisi": ["Kibisi Estate 1", "Kibisi Estate 2"],
+            "Mubunda": ["Mubunda Estate 1", "Mubunda Estate 2"],
+
+            // Add estates for all other streets here
+            // Morogoro
+            "Kihonda": ["Kihonda Estate 1", "Kihonda Estate 2"],
+            "Mafiga": ["Mafiga Estate 1", "Mafiga Estate 2"],
+            "Mzumbe": ["Mzumbe Estate 1", "Mzumbe Estate 2"],
+            "Mji Mpya": ["Mji Mpya Estate 1", "Mji Mpya Estate 2"],
+            "Mikumi": ["Mikumi Estate 1", "Mikumi Estate 2"],
+            "Kilombero Town": ["Kilombero Town Estate 1", "Kilombero Town Estate 2"],
+            "Ifakara": ["Ifakara Estate 1", "Ifakara Estate 2"],
+            "Kidatu": ["Kidatu Estate 1", "Kidatu Estate 2"],
+            "Lumemo": ["Lumemo Estate 1", "Lumemo Estate 2"],
+            "Sanje": ["Sanje Estate 1", "Sanje Estate 2"],
+
+            // Add estates for all other streets here
+            // Zanzibar
+            "Stone Town": ["Stone Town Estate 1", "Stone Town Estate 2"],
+            "Mkunazini": ["Mkunazini Estate 1", "Mkunazini Estate 2"],
+            "Mombasa": ["Mombasa Estate 1", "Mombasa Estate 2"],
+            "Kisauni": ["Kisauni Estate 1", "Kisauni Estate 2"],
+            "Kendwa": ["Kendwa Estate 1", "Kendwa Estate 2"],
+            "Wete": ["Wete Estate 1", "Wete Estate 2"],
+            "Chake Chake": ["Chake Chake Estate 1", "Chake Chake Estate 2"],
+            "Mkoani": ["Mkoani Estate 1", "Mkoani Estate 2"],
+            "Pujini": ["Pujini Estate 1", "Pujini Estate 2"],
+            "Konde": ["Konde Estate 1", "Konde Estate 2"],
+
+            // Add estates for all other streets here
+            // Kilimanjaro
+            "Moshi Town": ["Moshi Town Estate 1", "Moshi Town Estate 2"],
+            "Kilimanjaro": ["Kilimanjaro Estate 1", "Kilimanjaro Estate 2"],
+            "Uru": ["Uru Estate 1", "Uru Estate 2"],
+            "Mweka": ["Mweka Estate 1", "Mweka Estate 2"],
+            "Sanya Juu": ["Sanya Juu Estate 1", "Sanya Juu Estate 2"],
+            "Hai Town": ["Hai Town Estate 1", "Hai Town Estate 2"],
+            "Masama": ["Masama Estate 1", "Masama Estate 2"],
+            "Mrijo": ["Mrijo Estate 1", "Mrijo Estate 2"],
+            "Kia": ["Kia Estate 1", "Kia Estate 2"],
+            "Kibosho": ["Kibosho Estate 1", "Kibosho Estate 2"],
+
+            // Add estates for all other streets here
+            // Mtwara
+            "Mtwara Town": ["Mtwara Town Estate 1", "Mtwara Town Estate 2"],
+            "Mikindani": ["Mikindani Estate 1", "Mikindani Estate 2"],
+            "Naliendele": ["Naliendele Estate 1", "Naliendele Estate 2"],
+            "Lulindi": ["Lulindi Estate 1", "Lulindi Estate 2"],
+            "Kipuguni": ["Kipuguni Estate 1", "Kipuguni Estate 2"],
+            "Newala Town": ["Newala Town Estate 1", "Newala Town Estate 2"],
+            "Ngarambe": ["Ngarambe Estate 1", "Ngarambe Estate 2"],
+            "Kawawa": ["Kawawa Estate 1", "Kawawa Estate 2"],
+            "Masasi": ["Masasi Estate 1", "Masasi Estate 2"],
+            "Mwambao": ["Mwambao Estate 1", "Mwambao Estate 2"]
+                // Add more streets and corresponding estates
+            };
+
+            if (selectedStreet && estates[selectedStreet]) {
+                estates[selectedStreet].forEach(estate => {
+                    const option = document.createElement("option");
+                    option.value = estate;
+                    option.textContent = estate;
+                    estateSelect.appendChild(option);
+                });
+            }
+        }
+
         async function submitLocation() {
-            const selectElement = document.getElementById('location-select');
-            const areaInput = document.getElementById('area-input').value;
-            const selectedLocation = selectElement.value;
+            const region = document.getElementById('region-select').value;
+            const district = document.getElementById('district-select').value;
+            const street = document.getElementById('street-select').value;
+            const estate = document.getElementById('estate-select').value;
             const locationOutput = document.getElementById('location-output');
 
-            if (selectedLocation && areaInput) {
-                const combinedLocation = `${areaInput}, ${selectedLocation}`;
+            if (region && district && street && estate) {
+                const combinedLocation = `${estate}, ${street}, ${district}, ${region}`;
                 localStorage.setItem('userLocation', combinedLocation);
                 const phone = localStorage.getItem("phone");
                 
                 // Store the cart items to the server
                 const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                            const cartResponse = await fetch('http://localhost:3000/api/add-items', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({ cartItems: cart, phone, location: combinedLocation }),
-                            });
+                const cartResponse = await fetch('http://localhost:3000/api/add-items', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ cartItems: cart, phone, location: combinedLocation }),
+                });
 
-                            if (cartResponse.ok) {
-                                const order = await cartResponse.json();
-                                localStorage.removeItem('cart');
-                                
-                                const orderId = order.orderId
-                                // Redirect to the next page
-                                window.location.href = `../pages/payment.html?id=${orderId}`;
-                            } else {
-                                throw new Error('Failed to store cart items');
-                            }
+                if (cartResponse.ok) {
+                    const order = await cartResponse.json();
+                    localStorage.removeItem('cart');
+                    
+                    const orderId = order.orderId;
+                    // Redirect to the next page
+                    window.location.href = `../pages/payment.html?id=${orderId}`;
+                } else {
+                    throw new Error('Failed to store cart items');
+                }
                 locationOutput.textContent = `You have selected: ${combinedLocation}`;
             } else {
                 locationOutput.textContent = 'Please select a location and enter an area.';
@@ -76,6 +327,7 @@
                 document.getElementById('location-output').textContent = `Stored Location: ${storedLocation}`;
             }
         });
+
     </script>
 </body>
 

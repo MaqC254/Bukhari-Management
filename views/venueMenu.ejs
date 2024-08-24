@@ -11,7 +11,7 @@
         <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
         <h1 class="menu-heading">Menu</h1>
         <div class="header-icons">
-            <a href="../pages/waiter_orders.html"><img src="../images/orders.png" alt="Cart"></a>
+            <a href="../pages/waiter_orders.html"><img src="../images/clock.png" alt="Cart"></a>
             <a href="../pages/localCart.html"><img src="../images/icons8-cart-24.png" alt="Cart"></a>
         </div>
     </header>
@@ -36,7 +36,7 @@
                     <img src="<%= meal.image %>" alt="<%= meal.name %>">
                     <h2><%= meal.name %></h2>
                     <p><%= meal.description %></p>
-                    <p>Cost Tsh: <%= meal.price %></p>
+                    <p>Cost USD: <%= meal.price %></p>
                     <button class="add-to-cart" data-id="<%= meal.id %>" data-name="<%= meal.name %>" data-description="<%= meal.description %>" data-image="<%= meal.image %>" data-price="<%= meal.price %>" onclick="addItemToCart()">Add to Order</button>
                 </div>
             <% }); %>
@@ -49,6 +49,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Function to update the cart counter
+            const updateCartCounter = () => {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                // Calculate the total number of items in the cart
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                document.getElementById('cart-counter').textContent = totalItems;
+            };
+
+
             document.querySelectorAll('.add-to-cart').forEach(button => {
                 button.addEventListener('click', () => {
                     const id = button.getAttribute('data-id');
@@ -74,10 +83,21 @@
                     // Save the updated cart back to localStorage
                     localStorage.setItem('cart', JSON.stringify(cart));
 
+                    // Update the cart counter
+                    updateCartCounter();
+
+                    // Show the modal
+                    const modal = document.getElementById("myModal");
+                    modal.style.display = "block";
+
                     // Optionally show a message or update the cart icon
                     // alert(`${name} has been added to the cart.`);
                 });
             });
+
+            // Initial update of cart counter
+            updateCartCounter();
+
         });
     
 

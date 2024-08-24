@@ -10,9 +10,6 @@
     <header>
         <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
         <h1 class="cart-heading">Your Cart</h1>
-        <div class="header-icons">
-            <a href="../views/venueMenu.ejs"><img src="../images/icons8-home-24.png" alt="Home"></a>
-        </div>
     </header>
 
     <main>
@@ -23,9 +20,16 @@
             <p id="cart-total"></p>
         </div>
         <div class="table-number">
-            <label for="table-number">Table Number:</label>
-            <input type="text" id="table-number" placeholder="Enter table number">
+            <select id="table-number" required>
+                <option value="" disabled selected>Select a table number</option>
+                <option value="1">Table 1</option>
+                <option value="2">Table 2</option>
+                <option value="3">Table 3</option>
+                <option value="4">Table 4</option>
+                <option value="5">Table 5</option>
+            </select>
         </div>
+
         <div class="confirm-order">
             <button id="confirm-order-btn">Confirm Order</button>
         </div>
