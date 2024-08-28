@@ -9,6 +9,8 @@ const mongoDBSession = require('connect-mongodb-session')(session);
 const { v4: uuidv4 } = require('uuid'); // Import UUID v4
 const Delivery = require("./models/deliveries.js");
 const axios = require('axios');
+const cors = require('cors');
+const Transaction = require('./models/transaction'); // Ensure the path is correct
 
 const app = express();
 const port = 3000;
@@ -743,3 +745,4 @@ app.delete('/employees/:id', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+

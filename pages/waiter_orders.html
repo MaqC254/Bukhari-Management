@@ -89,6 +89,19 @@
                             </div>
                         `;
                         tableDiv.appendChild(itemDiv);
+
+                        // Show "Proceed to Payment" button if status is "Ready to Collect"
+                        if (status === 'Ready to Collect') {
+                            const paymentButton = document.createElement('button');
+                            paymentButton.classList.add('proceed-payment');
+                            paymentButton.textContent = 'Proceed to Payment';
+                            paymentButton.addEventListener('click', () => {
+                                localStorage.setItem('selectedTableTotal', totalAmount);
+                                localStorage.setItem('selectedTableNumber', tableNumber);
+                                window.location.href = 'payment_details.html';
+                            });
+                    tableDiv.appendChild(paymentButton);
+                }
                     });
 
                     orderList.appendChild(tableDiv);

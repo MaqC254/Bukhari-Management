@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waiter Transaction History</title>
+    <link rel="stylesheet" href="../styles/waiter_transactions.css">
+</head>
+<body>
+    <header>
+        <h1 class="history-heading">Transaction History</h1>
+    </header>
+
+    <main>
+        <div class="transaction-list" id="transaction-list">
+            <!-- Transaction history will be inserted here by JavaScript -->
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Bukhari Restaurant</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const transactionList = document.getElementById('transaction-list');
+            const waiterId = localStorage.getItem('workId');
+
+            if (!waiterId) {
+                transactionList.innerHTML = '<p>No waiter ID found in local storage.</p>';
+                return;
+            }
+
+            try {
+                // Fetch the transaction history for the waiter
+                const response = await fetch(`/api/transactions?waiterId=${waiterId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch transaction history');
+                }
+
+                const transactions = await response.json();
+
+                if (transactions.length === 0) {
+                    transactionList.innerHTML = '<p>No transactions found.</p>';
+                    return;
+                }
+
+                // Render transactions
+                transactions.forEach(transaction => {
+                    const transactionDiv = document.createElement('div');
+                    transactionDiv.classList.add('transaction-item');
+                    transactionDiv.innerHTML = `
+                        <p>Table: ${transaction.tableNumber}</p>
+                        <p>Total: USD ${transaction.totalAmount}</p>
+                        <p>Date: ${new Date(transaction.date).toLocaleString()}</p>
+                    `;
+                    transactionList.appendChild(transactionDiv);
+                });
+            } catch (error) {
+                console.error('Error fetching transaction history:', error);
+                transactionList.innerHTML = '<p>Failed to load transaction history. Please try again later.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

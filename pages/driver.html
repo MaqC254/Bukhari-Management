@@ -114,6 +114,32 @@
             showPopup(orderId);
         }
 
+        // Function to start delivery
+        async function startDelivery(orderId) {
+            try {
+                const response = await fetch(`/start-delivery/${orderId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        driver: driverId // Pass the driver ID or other relevant data
+                    })
+                });
+
+                const result = await response.json();
+                alert(result.message);
+
+                if (response.ok && result.success) {
+                    fetchDeliveries(); // Refresh the list
+                }
+            } catch (error) {
+                console.error('Error starting delivery:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+
+
         // Initialize orders on page load
         document.addEventListener('DOMContentLoaded', fetchDeliveries);
     </script>
