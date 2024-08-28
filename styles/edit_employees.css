@@ -11,12 +11,11 @@ body {
     padding: 0;
     background-color: #f8f9fa;
     color: #000;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Ensure content is centered vertically */
-    text-align: center; /* Center text horizontally */
+    min-height: 100vh;
+    background-image: url('../images/Wall.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
 }
 
 header {
@@ -24,88 +23,119 @@ header {
     padding: 20px;
     color: #333;
     width: 100%;
+    height: 100px;
 }
 
 h1 {
     margin: 0;
     font-size: 2em;
+    color: #333;
 }
 
 main {
     padding: 20px;
-    max-width: 1000px;
+    max-width: 100%;
     margin: 0 auto;
 }
 
-.employee-section {
-    margin: 0 auto;
-    max-width: 800px;
+#employeeContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
 }
 
-.employee-list {
-    margin-bottom: 20px;
-}
-
-.employee {
+#employeeContainer section {
     background-color: #fff;
     border: 1px solid #ddd;
+    padding: 15px;
     border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease;
-    text-align: center; /* Center text within employee cards */
 }
 
-.employee:hover {
+#employeeContainer section:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.employee p {
-    margin: 10px 0;
-    line-height: 1.6;
-}
-
-.employee h2 {
+#employeeContainer section h2 {
     margin-top: 0;
     font-size: 1.5em;
-    color: #007bff;
+    color: #000; /* Orange color */
 }
 
-button {
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
+#employeeContainer section div {
+    margin-bottom: 10px;
+}
+
+#employeeContainer section div p {
+    margin: 5px 0;
+}
+
+#employeeContainer section button {
     margin-right: 10px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin: 10px auto; /* Center buttons horizontally */
+    padding: 5px 10px;
+    background-color: #4CAF50; /* Green color */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 
-button:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
+#employeeContainer section button:hover {
+    background-color: #e69500;
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.7);
 }
 
 button.delete-btn {
-    background-color: #dc3545;
+    background-color: #FF5733; /* Orange color */
 }
 
 button.delete-btn:hover {
-    background-color: #c82333;
+    background-color: #E94E1B; /* Darker Orange color on hover */
+    box-shadow: 0 0 15px rgba(255, 87, 51, 0.6); /* Orange glow effect */
 }
 
 footer {
-    background-color: #343a40;
-    color: #fff;
+    background-color: #ffff;
+    color: #000;
     padding: 10px;
     text-align: center;
     width: 100%;
-    margin-top: 20px;
     font-size: 14px;
     position: relative;
     bottom: 0;
+    margin-top: 160px;
+}
+
+.logo {
+    height: 50px;
+    margin-left: 0px;
+
+  }
+  /* Style for employee sections */
+section {
+    margin-bottom: 20px;
+}
+
+section h2 {
+    margin-bottom: 10px;
+}
+
+/* Style for individual employee entries */
+section div {
+    border-bottom: 1px solid #ddd; /* Light gray line */
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
+
+/* Remove bottom border for the last employee in each section */
+section div:last-child {
+    border-bottom: none;
+}
+
+button {
+    margin-right: 5px;
 }

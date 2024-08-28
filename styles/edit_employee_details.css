@@ -1,56 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+* {
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #000;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
+    background-image: url('../images/Wall.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
 }
 
 header {
-    background-color: #f4f4f4;
-    padding: 10px;
+    background-color: #fff;
+    padding: 20px;
+    color: #333;
     text-align: center;
+    width: 100%;
 }
 
-h1 {
+header h1 {
+    font-size: 2em;
+    color: #333;
     margin: 0;
 }
 
 main {
     padding: 20px;
+    max-width: 60%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
 }
 
 form {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-label {
-    display: block;
-    margin: 10px 0 5px;
-}
-
-input, textarea {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    font-size: 16px;
+    width: 100%;
+}
+
+form input:focus {
+    border-color: #4CAF50; /* Green color */
+    outline: none;
 }
 
 button {
-    background-color: #007bff;
+    background-color: #28a745; /* Green color */
     color: #fff;
     border: none;
     padding: 10px;
-    border-radius: 4px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #e69500;
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.7);
+}
+
+button.delete-btn {
+    background-color: #FF5733; /* Orange color */
+}
+
+button.delete-btn:hover {
+    background-color: #E94E1B; /* Darker Orange color */
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(255, 87, 51, 0.6); /* Orange glow effect */
 }
 
 footer {
-    background-color: #f4f4f4;
-    padding: 10px;
+    background-color: #9f9f9f;
+    color: #fff;
+    padding: 6px;
     text-align: center;
+    width: 100%;
+    font-size: 14px;
+    position: fixed;
+    margin-top: 50px;
 }
