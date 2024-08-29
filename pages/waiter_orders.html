@@ -95,8 +95,9 @@
                         paymentButton.textContent = 'Proceed to Payment';
                         paymentButton.addEventListener('click', () => {
                             const mealInfo = `
-                                Meal: ${item.name}<br>
-                                Amount: USD ${item.price * item.quantity}
+                                ${item.name}<br>
+                                
+                                
                             `;
                             mealDetails.innerHTML = mealInfo;
                             paymentPopup.style.display = 'block'; // Show the pop-up
@@ -194,6 +195,7 @@
         <div class="popup-content">
             <span class="close-btn">&times;</span>
             <h2>Payment Details</h2>
+            <p id="meal-details"></p>
             <form id="payment-form">
                 <label for="customer-name">Customer Name:</label>
                 <input type="text" id="customer-name" name="customerName" required>
@@ -203,8 +205,6 @@
                     <option value="cash">Cash</option>
                     <option value="card">Card</option>
                 </select>
-
-                <p id="meal-details"></p>
                 <button class="confirm-button" onclick="confirmPayment()" type="submit">Confirm Payment</button>
             </form>
         </div>

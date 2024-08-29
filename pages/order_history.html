@@ -33,6 +33,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
             try {
                 const response = await fetch('/api/order-history');
                 if (!response.ok) {

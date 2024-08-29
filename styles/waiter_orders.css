@@ -272,6 +272,10 @@ footer {
 }
 
 .popup-content #meal-details {
+    margin: 0px 0;
+    font-size: 13px;
     font-weight: bold;
-    margin: 10px 0;
+    color:#008000;
+    align-items: left;
+    margin-left: 50px;
 }

@@ -761,6 +761,7 @@ app.post('/api/order-history', async (req, res) => {
             confirmedAt,
             customerName,
             foodOrdered: mealDetails, // This assumes mealDetails is an array; adjust if necessary
+            tableNumber,
             totalAmount,
             paymentMethod
         });
