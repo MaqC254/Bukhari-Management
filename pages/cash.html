@@ -14,7 +14,7 @@
             <div class="icon"><!-- Add icon here --></div>
         </header>
         <main>
-            <p class="payment-confirmation">Confirm Cash Payment<br>
+            <p class="payment-confirmation">Confirm Payment Of<br>
                 <span id="amount"></span>
             </p>
             <button class="confirm-button" onclick="confirmPayment()">Confirm</button>
@@ -26,7 +26,7 @@
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const total = localStorage.getItem('selectedTableTotal');
-                document.getElementById('amount').textContent = `Amount: Tsh. ${total}`;
+                document.getElementById('amount').textContent = `Amount: USD. ${total}`;
             });
 
             async function confirmPayment() {

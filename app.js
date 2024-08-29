@@ -746,3 +746,49 @@ app.delete('/employees/:id', async (req, res) => {
     }
 });
 
+const OrderHistory = require('./models/orderHistory'); // Your Mongoose model for order history
+
+// Middleware
+app.use(express.json()); // For parsing application/json
+
+// Route to save order history
+app.post('/api/order-history', async (req, res) => {
+    const { customerName, paymentMethod, totalAmount, tableNumber, mealDetails } = req.body;
+    const confirmedAt = new Date(); // Current time
+
+    try {
+        const newOrder = new OrderHistory({
+            confirmedAt,
+            customerName,
+            foodOrdered: mealDetails, // This assumes mealDetails is an array; adjust if necessary
+            totalAmount,
+            paymentMethod
+        });
+
+        await newOrder.save();
+        res.status(201).json({ message: 'Order history saved successfully' });
+    } catch (err) {
+        console.error('Error saving order history:', err);
+        res.status(500).json({ error: 'Failed to save order history' });
+    }
+});
+
+// API endpoint to get order history data
+app.get('/api/order-history', async (req, res) => {
+    try {
+        const orders = await OrderHistory.find().sort({ confirmedAt: -1 });
+        res.json(orders); // Send data as JSON
+    } catch (err) {
+        console.error('Error fetching order history:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}); 
+
+app.get('/order-history', async (req, res) => {
+    try {
+        const orders = await Order.find({});
+        res.render('order_history', { orders });
+    } catch (err) {
+        res.status(500).send('Error fetching order history');
+    }
+});

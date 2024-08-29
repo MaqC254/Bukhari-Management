@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-
+* {
+    font-family: 'Montserrat', sans-serif;
+}
 
 body {
     font-family: 'Montserrat', sans-serif;
@@ -167,4 +169,109 @@ footer {
     color: #005700; /* Darker green text color */
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
+}
+
+/* Pop-up Window Styles */
+.popup {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.popup-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    width: 80%;
+    max-width: 300px;
+    margin: 10% auto;
+}
+
+.popup-content h2 {
+    color: #000000;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.popup-content form {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    margin-left: 50px;
+}
+
+.popup-content form input{
+    width: 70%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.popup-content form select {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.popup-content form input:focus,
+.popup-content form select:focus {
+    border-color: #e67e22; /* Orange border */
+    box-shadow: 0 0 8px rgba(230, 126, 34, 0.8); /* Orange glow */
+    outline: none;
+}
+
+.popup-content button {
+    width: 80%;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    background-color: #28a745; /* Green button */
+    font-weight: bolder;
+    margin-top: 10px;
+}
+
+.popup-content button:hover {
+    border-color: #e67e22;
+    background-color: #e67e22;
+    box-shadow: 0 0 8px rgba(230, 126, 34, 0.8);
+}
+
+/* Close button style */
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Make labels bold */
+.popup-content form label {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.popup-content #meal-details {
+    font-weight: bold;
+    margin: 10px 0;
 }

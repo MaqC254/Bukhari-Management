@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+</head>
+<body>
+    <h1>Order History</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Customer Name</th>
+                <th>Food Ordered</th>
+                <th>Amount Paid</th>
+                <th>Payment Method</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach(order => { %>
+                <tr>
+                    <td><%= new Date(order.confirmedAt).toLocaleString() %></td>
+                    <td><%= order.customerName %></td>
+                    <td><%= order.foodOrdered.join(', ') %></td>
+                    <td>USD <%= order.totalAmount %></td>
+                    <td><%= order.paymentMethod %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>
