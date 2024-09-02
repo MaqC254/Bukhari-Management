@@ -18,15 +18,52 @@
         <section class="payment-details">
             <h3>Payment Details</h3>
             <p id="amount"></p>
-            <div class="payment-buttons">
-                <button type="button" class="payment-button cash">Cash</button>
+            <form>
+                <input type="text" id="customer-name" name="customer-name" placeholder="Enter Customer Name">
                 
-            </div>
+                <select id="payment-method" name="payment-method">
+                    <option value="cash">Cash</option>
+                    <option value="debit-card">Debit Card</option>
+                </select>
+                
+                <div class="payment-buttons">
+                    <button type="button" class="payment-button cash">Confirm Payment</button>
+                </div>
+            </form>
             <div id="paypal-button-container" style="display: none;"></div>
         </section>
     </main>
 
     <script>
+        document.querySelector(".cash").addEventListener("click", function() {
+        const customerName = document.getElementById('customer-name').value;
+        const paymentMethod = document.getElementById('payment-method').value;
+        const totalAmount = localStorage.getItem('selectedTableTotal');
+        const foodOrdered = ["Pizza", "Pasta"]; // Example food items, you need to replace this with actual data
+
+        if (!customerName.trim()) {
+            alert('Please enter the customer name.');
+            return;
+        }
+
+        fetch('/api/payment/confirm', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ customerName, paymentMethod, foodOrdered, totalAmount }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            window.location.href = '../views/venueMenu.ejs';
+        })
+        .catch(error => {
+            console.error('Error confirming payment:', error);
+            alert('Failed to confirm payment. Please try again.');
+        });
+    });
+
         document.addEventListener('DOMContentLoaded', () => {
             const total = localStorage.getItem('selectedTableTotal');
             document.getElementById('amount').textContent = `Amount: USD. ${total}`;
