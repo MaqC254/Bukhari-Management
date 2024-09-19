@@ -154,6 +154,7 @@ section {
     box-shadow: 0 0 15px rgba(72, 191, 88, 0.7); /* Green glow effect */
   }
 
+
   /* Modal Styles */
   .modal {
     display: none; /* Hidden by default */
@@ -166,6 +167,7 @@ section {
     overflow: auto; /* Enable scroll if needed */
     background-color: rgba(0, 0, 0, 0.5); /* Black with 50% opacity */
     padding-top: 60px;
+
     align-items: center;
 }
 
@@ -174,6 +176,7 @@ section {
     margin: 5% auto; /* Centered */
     padding: 20px;
     border: 1px solid #888;
+
     width: 300px; /* Adjusted width */
     max-width: 600px; /* Maximum width for larger screens */
     opacity: 1; /* Ensure opacity for content */
@@ -209,12 +212,15 @@ section {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+
     background-color: #28a745;
+
     color: white;
     width: 80%; /* Adjusted width */
     max-width: 300px; /* Maximum width for buttons */
 }
 
 .modal-buttons button:hover {
+
     background-color: #218838;
 }
