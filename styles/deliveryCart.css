@@ -99,7 +99,7 @@ input {
     width: 100px;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     margin-bottom: 20px;
 }
@@ -108,6 +108,11 @@ input:focus {
     border-color: #FFA500;
     box-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
     outline: none;
+}
+
+.table-number {
+    align-items: center;
+    margin-left: 600px;
 }
 
 /* Styling for the cart list container */
@@ -150,13 +155,13 @@ input:focus {
 
 /* Styling for cart item names */
 .cart-item h2 {
-    font-size: 24px; /* Font size */
+    font-size: 20px; /* Font size */
     margin: 0 0 10px 0; /* Margin */
 }
 
 /* Styling for cart item descriptions */
 .cart-item p {
-    font-size: 16px; /* Font size */
+    font-size: 14px; /* Font size */
     color: #666; /* Gray color */
     margin: 5px 0; /* Margin */
 }
@@ -164,15 +169,17 @@ input:focus {
 .cart-total {
     font-size: 20px;
     font-weight: bold;
-    text-align: right;
-    margin: 20px;
+    text-align: center;
+    /* margin: 275px; */
+    margin-left: 275px;
     width: 80%;
     max-width: 800px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     border-top: 2px solid #ddd;
     padding-top: 15px;
+    flex-direction: column;  /* Stack content vertically if necessary */
 }
 
 #cart-total-container {
@@ -370,4 +377,45 @@ footer p {
 @keyframes confettiFall {
     0% { transform: translateY(-100%); }
     100% { transform: translateY(100%); }
+}
+/* Styling for the table-number container */
+.table-number {
+    margin: 20px 0;
+    text-align: center; /* Center the select box horizontally */
+}
+
+/* Styling for the select element */
+#table-number {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    width: 200px; /* Adjust width as needed */
+    max-width: 100%; /* Ensure it doesn't overflow the container */
+}
+
+/* Styling for the select element when focused */
+#table-number:focus {
+    border-color: #FFA500; /* Orange border on focus */
+    outline: none;
+    background-color: #f9f9f9; /* Slight background change on focus */
+}
+
+/* Optional: Add a custom arrow (cross-browser compatible) */
+#table-number::-ms-expand {
+    display: none; /* Hides default dropdown arrow in Internet Explorer */
+}
+
+/* Custom dropdown arrow */
+#table-number {
+    appearance: none; /* Remove default dropdown arrow */
+    -webkit-appearance: none; /* For Safari */
+    -moz-appearance: none; /* For Firefox */
+    background: url('path/to/your-custom-arrow.svg') no-repeat right center;
+    background-size: 20px;
 }

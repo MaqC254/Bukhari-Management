@@ -10,7 +10,6 @@
     <div class="container">
         <header>
             <a href="../pages/index.html">
-            <img src="../images/Bukhari logo.jpg" alt="Bukhari Logo" class="logo">
             </a>
             <h1>Add a new Employee</h1>
         </header>
@@ -26,7 +25,13 @@
                 <input type="text" id="work-id" name="work-id" placeholder="Enter your work ID" required> <!-- Corrected name attribute -->
                 
                 <label for="role">Role:</label>
-                <input type="text" id="role" name="role" placeholder="Enter your role" required>
+                    <select id="role" name="role" required>
+                        <option value="" disabled selected>Select a role</option>
+                        <option value="waiter">Waiter</option>
+                        <option value="chef">Chef</option>
+                        <option value="driver">Driver</option>
+                    </select>
+
                 
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
@@ -38,7 +43,6 @@
             </form>
         </main>
         <footer>
-            <img src="../images/Bukhari logo.jpg" alt="Bukhari Small Logo" class="small-logo">
             <p>Bukhari</p>
             <p>version 1.0.0</p>
         </footer>

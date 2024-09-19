@@ -1,5 +1,10 @@
 /* payment.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
+* {
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+}
 /* Reset some default styles */
 body, h1 {
     margin: 0;
@@ -16,6 +21,10 @@ body {
     align-items: center;
     height: 100vh;
     text-align: center;
+    background-image: url('../images/bg3.jpg');
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
 }
 
 /* Container for the payment section */
@@ -25,13 +34,14 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     padding: 20px;
     width: 90%;
-    max-width: 500px; /* Maximum width for the payment box */
+    max-width: 400px; /* Maximum width for the payment box */
 }
 
 /* Heading styles */
 h1 {
-    color: #333; /* Dark text color */
+    color: black; /* Dark text color */
     margin-bottom: 20px; /* Space below the heading */
+    font-size: 30px;
 }
 
 /* Center PayPal button container */
