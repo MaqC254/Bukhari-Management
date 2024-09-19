@@ -727,6 +727,18 @@ app.put('/update-employee/:id', async (req, res) => {
     }
 });
 
+// Route to get delivery history for a specific driver
+app.get("/driver-history/:driverId", async (req, res) => {
+    try {
+        const deliveries = await Delivery.find({ driver: req.params.driverId });
+        res.json(deliveries);
+    } catch (error) {
+        console.error("Error fetching delivery history:", error);
+        res.status(500).send("Server error");
+    }
+});
+
+
 // Route to delete an employee
 app.delete('/employees/:id', async (req, res) => {
     const employeeId = req.params.id;

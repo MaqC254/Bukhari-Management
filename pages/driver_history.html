@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery History</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .history-card {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-card h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+
+        .history-card p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .back-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button class="back-button" onclick="window.location.href='driver.html'">Back</button>
+        <h1>Delivery History</h1>
+        <div id="history">
+            <!-- Delivery history will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        // Get the driver ID from localStorage
+        const driverId = localStorage.getItem("workId");
+
+        // Function to fetch delivery history from the server
+        async function fetchDeliveryHistory() {
+            try {
+                const response = await fetch(`/driver-history/${driverId}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const deliveries = await response.json();
+                renderHistory(deliveries);
+            } catch (error) {
+                console.error('Error fetching delivery history:', error);
+            }
+        }
+
+        // Function to render delivery history
+        function renderHistory(deliveries) {
+            const historyContainer = document.getElementById('history');
+            historyContainer.innerHTML = ''; // Clear existing history
+
+            deliveries.forEach(delivery => {
+                const historyCard = document.createElement('div');
+                historyCard.className = 'history-card';
+
+                historyCard.innerHTML = `
+                    <h3>Order ID: ${delivery.orderId}</h3>
+                    <p>Code: ${delivery.code}</p>
+                    <p>Status: ${delivery.status ? 'Delivered' : 'Pending'}</p>
+                    <p>ETA: ${delivery.ETA} minutes</p>
+                    <p>Location: ${delivery.location}</p>
+                    <p>Phone: ${delivery.phone}</p>
+                `;
+
+                historyContainer.appendChild(historyCard);
+            });
+        }
+
+        // Initialize delivery history on page load
+        document.addEventListener('DOMContentLoaded', fetchDeliveryHistory);
+    </script>
+</body>
+
+</html>
