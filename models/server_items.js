@@ -15,6 +15,8 @@ const itemSchema = new mongoose.Schema({
     paid: { type: Boolean, default: false },
     orderId: { type: String }, // Add UUID field
     location: String,
+    serverID: {type: String, default: 'nan' },
+    
 });
 
 // Middleware to set the month before saving

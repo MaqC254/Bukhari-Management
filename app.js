@@ -384,10 +384,19 @@ app.get('/get-items', (req, res) => {
 // Route to update item state on server screen
 app.put('/update-item/:id', (req, res) => {
     const { id } = req.params;
-    Item.findByIdAndUpdate(id, { state: 'done' }, { new: true })
-        .then(item => res.status(200).json(item))
-        .catch(err => res.status(400).send(err));
+    const { serverId } = req.body;
+    console.log(serverId);  // The server ID is passed from the client
+
+    // Find the item by its ID and update its state and serverId
+    Item.findByIdAndUpdate(id, 
+        { state: 'done', serverID: serverId },  // Update the state and add serverId
+        { new: true }  // Return the updated item
+    )
+    .then(item => res.status(200).json(item))
+    .catch(err => res.status(400).send(err));
 });
+
+
 
 app.put('/update-paid/:id', (req, res) => {
     const { id } = req.params;
@@ -729,18 +738,6 @@ app.put('/update-employee/:id', async (req, res) => {
     }
 });
 
-// Route to get delivery history for a specific driver
-app.get("/driver-history/:driverId", async (req, res) => {
-    try {
-        const deliveries = await Delivery.find({ driver: req.params.driverId });
-        res.json(deliveries);
-    } catch (error) {
-        console.error("Error fetching delivery history:", error);
-        res.status(500).send("Server error");
-    }
-});
-
-
 // Route to delete an employee
 app.delete('/employees/:id', async (req, res) => {
     const employeeId = req.params.id;
@@ -803,5 +800,29 @@ app.get('/order-history', async (req, res) => {
         res.render('order_history', { orders });
     } catch (err) {
         res.status(500).send('Error fetching order history');
+    }
+});
+
+// Route to get all orders served by a specific server
+app.get('/server-history/:serverId', async (req, res) => {
+    const { serverId } = req.params;
+    console.log("ServerID on order history "+serverId);
+    try {
+        // Fetch orders served by the specific server
+        const orders = await Item.find({ serverID: serverId, state: 'done' });
+        res.json(orders);
+    } catch (error) {
+        res.status(500).send('Server Error');
+    }
+});
+
+// Route to get delivery history for a specific driver
+app.get("/driver-history/:driverId", async (req, res) => {
+    try {
+        const deliveries = await Delivery.find({ driver: req.params.driverId });
+        res.json(deliveries);
+    } catch (error) {
+        console.error("Error fetching delivery history:", error);
+        res.status(500).send("Server error");
     }
 });
