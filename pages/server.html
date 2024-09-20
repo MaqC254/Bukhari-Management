@@ -23,6 +23,7 @@
 
     <main>
         <a href="../views/available.ejs" class="nav-button">Modify Available Meals</a>  
+        <a href="my_server_history.html" class="nav-button">View Server History</a>
         <h3>Orders List</h3>
         <table id="orders-list">
             <thead>
@@ -63,7 +64,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const ordersList = document.getElementById('orders-list').getElementsByTagName('tbody')[0];
-
+                    const serverId = localStorage.getItem('workId');
                     // Group items by phone number
                     const groupedItems = data.reduce((acc, item) => {
                         if (!acc[item.customerPhone]) {
@@ -107,8 +108,13 @@
                             } else {
                                 // Update the state of all items in the group to 'done'
                                 Promise.all(items.map(item => 
-                                    fetch(`/update-item/${item._id}`, { method: 'PUT' })
-                                        .then(response => response.json())
+                                    fetch(`/update-item/${item._id}`, { method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ serverId })  // Send serverId in the request body
+                                    })
+                                    .then(response => response.json())
                                 ))
                                 .then(() => {
                                     // Remove the row after updating all items

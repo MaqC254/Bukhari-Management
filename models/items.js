@@ -12,6 +12,7 @@ const itemSchema = new mongoose.Schema({
     orderId: String,
     location: String,
     tableNumber: String,
+    serverId: {type: String, default: 'na'},
     paid: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now }
 });
