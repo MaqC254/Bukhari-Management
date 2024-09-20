@@ -6,7 +6,7 @@ const session = require('express-session');
 const ejs = require('ejs');
 const multer = require('multer');
 const mongoDBSession = require('connect-mongodb-session')(session);
-const { v4: uuidv4 } = require('uuid'); // Import UUID v4
+const { v4: uuidv4 } = require('uuid');
 const Delivery = require("./models/deliveries.js");
 const axios = require('axios');
 const cors = require('cors');
@@ -362,8 +362,6 @@ app.post('/api/add-order', async (req, res) => {
             orderId: orderId // Assign the same UUID to each item
         }));
 
-        console.log(itemsToInsert);
-
         // Insert all items into MongoDB using create() method
         const createdItems = await Item.create(itemsToInsert);
 
@@ -385,7 +383,6 @@ app.get('/get-items', (req, res) => {
 app.put('/update-item/:id', (req, res) => {
     const { id } = req.params;
     const { serverId } = req.body;
-    console.log(serverId);  // The server ID is passed from the client
 
     // Find the item by its ID and update its state and serverId
     Item.findByIdAndUpdate(id, 
@@ -806,7 +803,6 @@ app.get('/order-history', async (req, res) => {
 // Route to get all orders served by a specific server
 app.get('/server-history/:serverId', async (req, res) => {
     const { serverId } = req.params;
-    console.log("ServerID on order history "+serverId);
     try {
         // Fetch orders served by the specific server
         const orders = await Item.find({ serverID: serverId, state: 'done' });
