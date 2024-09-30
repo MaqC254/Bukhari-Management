@@ -279,3 +279,53 @@ footer {
     align-items: left;
     margin-left: 50px;
 }
+.side-menu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #ffffff;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.side-menu a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #000000;
+    display: block;
+    transition: 0.3s;
+}
+
+.side-menu a:hover {
+    color: #FFA500;
+    font-weight: bolder;
+}
+
+.side-menu .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.open-menu {
+    font-size: 24px;
+    cursor: pointer;
+    color: #fff;
+    background-color: #FFA500;
+    padding: 8px;
+    border-radius: 30px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 100;
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.8);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}

@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="../styles/waiter_orders.css">
 </head>
 <body>
+    <!-- Side Menu -->
+    <span class="open-menu" onclick="openMenu()">&#9776;</span>
+    <div id="mySideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+        <a href="../views/venueMenu.ejs">Menu</a>
+        <a href="../pages/localCart.html">Cart</a>
+        <a href="../pages/order_history.html">History</a>
+        <a href="../pages/employee_signin.html">Log Out</a>
+    </div>
     <header>
         <h1 class="orders-heading">Pending Orders</h1>
     </header>
@@ -186,6 +195,17 @@
                     console.error('Error confirming payment:', error);
                     alert(`Failed to confirm payment: ${error.message}. Please try again.`);
                 }
+            }
+            // Function to open side menu
+        function openMenu() {
+                        document.getElementById("mySideMenu").style.width = "200px";
+                        document.body.style.marginLeft = "200px";
+                    }
+
+            // Function to close side menu
+            function closeMenu() {
+                document.getElementById("mySideMenu").style.width = "0";
+                document.body.style.marginLeft = "0";
             }
 
     </script>
