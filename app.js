@@ -793,3 +793,18 @@ app.get('/order-history', async (req, res) => {
         res.status(500).send('Error fetching order history');
     }
 });
+
+app.get('/deliveries/:driverId', async (req, res) => {
+    const driverId = req.params.driverId;
+
+    try {
+        const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+        const db = client.db(dbName);
+        const deliveries = await db.collection('deliveries').find({ driverId }).toArray();
+        res.json(deliveries);
+        client.close();
+    } catch (err) {
+        console.error('Database query error:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});

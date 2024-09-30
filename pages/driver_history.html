@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery History</title>
+    <link rel="stylesheet" href="../styles/driver_history.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <!-- Side Menu -->
+    <span class="open-menu" onclick="openMenu()">&#9776;</span>
+    <div id="mySideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+        <a href="../pages/driver.html">Pending Orders</a>
+        <a href="../pages/driver_history.html">History</a>
+        <a href="../pages/employee_signin.html">Log Out</a>
+    </div>
+
+    <div class="container">
+        <h1>Delivery History</h1>
+        <table id="history-table">
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Location</th>
+                    <th>Phone</th>
+                    <th>Confirmation Code</th>
+                    <th>Driver</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Delivery history rows will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const driverId = localStorage.getItem("workId");
+
+        async function fetchDeliveries() {
+        try {
+            const response = await fetch(`/deliveries/${driverId}`);
+            if (!response.ok) {
+                console.error('Network response was not ok:', response.statusText);
+                return;
+            }
+            const deliveries = await response.json();
+            console.log('Fetched deliveries:', deliveries); // Log fetched data for debugging
+            renderHistory(deliveries);
+        } catch (error) {
+            console.error('Error fetching deliveries:', error);
+        }
+}
+
+        function renderHistory(deliveries) {
+            const tableBody = document.querySelector('#history-table tbody');
+            tableBody.innerHTML = '';
+
+            deliveries.forEach(delivery => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${new Date(delivery.timestamp).toLocaleString()}</td>
+                    <td>${delivery.location}</td>
+                    <td>${delivery.phone}</td>
+                    <td>${delivery.confirmationCode}</td>
+                    <td>${delivery.driver}</td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchDeliveries);
+
+        function openMenu() {
+            document.getElementById("mySideMenu").style.width = "200px";
+            document.body.style.marginLeft = "200px";
+        }
+
+        function closeMenu() {
+            document.getElementById("mySideMenu").style.width = "0";
+            document.body.style.marginLeft = "0";
+        }
+    </script>
+</body>
+</html>
