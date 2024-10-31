@@ -70,9 +70,9 @@
           outputHtml = '<p>No data available for the selected date range.</p>';
         } else {
           outputHtml = '<table>';
-          outputHtml += '<tr><th>Name</th><th>Quantity</th><th>Price</th><th>Month</th></tr>';
+          outputHtml += '<tr><th>Customer Name</th><th>Name</th><th>Quantity</th><th>Price</th><th>Month</th></tr>';
           data.forEach(item => {
-            outputHtml += `<tr><td>${item.name}</td><td>${item.quantity}</td><td>${item.price}</td><td>${item.month}</td></tr>`;
+            outputHtml += `<tr><td>${item.customerName}</td><td>${item.name}</td><td>${item.quantity}</td><td>${item.price}</td><td>${item.month}</td></tr>`;
           });
           outputHtml += '</table>';
         }

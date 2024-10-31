@@ -507,9 +507,34 @@ app.get('/api/reports/:year/:month/:week?/:day?', async (req, res) => {
                 $gte: startDate,
                 $lte: endDate
             }
-        }).select('name quantity price month');
+        }).select('name quantity price customerPhone month');
 
-        res.json(reportData);
+        // Create an array to hold promises for fetching customer names
+        const reportWithCustomerNames = await Promise.all(reportData.map(async (item) => {
+            let customerName = '';
+
+            if (item.customerPhone.startsWith('w')) {
+                // Lookup in Employee database
+                const employee = await Employee.findOne({ workID: item.customerPhone });
+                customerName = employee ? employee.name : 'Unknown Employee';
+            } else if (item.customerPhone.startsWith('0')) {
+                // Lookup in Customer database
+                const customer = await Customer.findOne({ phone: item.customerPhone });
+                customerName = customer ? customer.name : 'Unknown Customer';
+            }
+
+            return {
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+                month: item.month,
+                customerName: customerName
+            };
+        }));
+
+        res.json(reportWithCustomerNames);
+
+        //res.json(reportData);
     } catch (err) {
         console.error('Error generating report:', err);
         res.status(500).send(err.message);
