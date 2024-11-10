@@ -57,6 +57,9 @@
                                 }else if (workId[0] === "d") {
                                     page = "driver.html";
                                 }
+                                else if (workId[0] === "c"){
+                                    page = "https://www.sandbox.paypal.com/unifiedtransactions/?filter=0&query=";
+                                }
                                 window.location.href = `${page}`;
                             } else {
                                 // alert(data.message);

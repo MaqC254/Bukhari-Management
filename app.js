@@ -373,11 +373,36 @@ app.post('/api/add-order', async (req, res) => {
 });
 
 // Route to get all items to server screen that are not "done"
-app.get('/get-items', (req, res) => {
-    Item.find({ state: { $ne: 'done' } })
-        .then(items => res.status(200).json(items))
-        .catch(err => res.status(400).send(err));
+app.get('/get-items', async (req, res) => {
+    try {
+        // Fetch all items that are not done
+        const items = await Item.find({ state: { $ne: 'done' } });
+        
+        // Extract unique waiter workIDs from the items
+        const waiterWorkIDs = [...new Set(items.map(item => item.waiterId))]; // replace `waiterId` with the correct field
+
+        // Find employee details for each waiter workID
+        const employees = await Employee.find({ workID: { $in: waiterWorkIDs } });
+
+        // Map workID to employee details for easy lookup
+        const employeeMap = employees.reduce((acc, emp) => {
+            acc[emp.workID] = { name: emp.name, phone: emp.phone };
+            return acc;
+        }, {});
+
+        // Attach employee details to each item
+        const itemsWithEmployeeDetails = items.map(item => ({
+            ...item.toObject(),
+            waiter: employeeMap[item.waiterId] // Adds name and phone from Employee model
+        }));
+
+        res.status(200).json(itemsWithEmployeeDetails);
+    } catch (error) {
+        console.error(error);
+        res.status(400).send("Error fetching items");
+    }
 });
+
 
 // Route to update item state on server screen
 app.put('/update-item/:id', (req, res) => {
@@ -534,7 +559,7 @@ app.get('/api/reports/:year/:month/:week?/:day?', async (req, res) => {
 
         res.json(reportWithCustomerNames);
 
-        //res.json(reportData);
+    
     } catch (err) {
         console.error('Error generating report:', err);
         res.status(500).send(err.message);
@@ -847,3 +872,26 @@ app.get("/driver-history/:driverId", async (req, res) => {
         res.status(500).send("Server error");
     }
 });
+
+app.get('/get-employee', async (req, res) => {
+    const { workId } = req.query;
+    try {
+        const employee = await Employee.findOne({ workID: workId });
+        res.json(employee || {});
+    } catch (error) {
+        console.error('Error fetching employee:', error);
+        res.status(500).json({ error: 'Error fetching employee' });
+    }
+});
+
+app.get('/get-customer', async (req, res) => {
+    const { phone } = req.query;
+    try {
+        const customer = await Customer.findOne({ phone });
+        res.json(customer || {});
+    } catch (error) {
+        console.error('Error fetching customer:', error);
+        res.status(500).json({ error: 'Error fetching customer' });
+    }
+});
+
