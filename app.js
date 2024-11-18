@@ -11,6 +11,7 @@ const Delivery = require("./models/deliveries.js");
 const axios = require('axios');
 const cors = require('cors');
 const Transaction = require('./models/transaction'); // Ensure the path is correct
+const OrderHistory = require('./models/orderHistory'); // Your Mongoose model for order history
 
 const app = express();
 const port = 3000;
@@ -42,7 +43,8 @@ mongoose.connect(dbURI, {})
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');// Set EJS as the view engine
-app.set('views', __dirname + '/views'); // Specify the vies directory
+app.set('views', __dirname + '/views'); // Specify the views directory
+app.use(express.json()); // For parsing application/json
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -168,7 +170,6 @@ app.post('/employee_signin', async (req, res) => {
             return res.status(401).json({ success: false, message: 'Incorrect work ID or password' });
         }
         res.status(200).json({ success: true, message: 'Sign in successful' });
-        // Set session for logged-in waiter
         req.session.employeeId = employee._id;
         req.session.role = employee.role;
 
@@ -246,7 +247,7 @@ app.post('/add-meal', upload.single('image'), async (req, res) => {
         image,
         quantity,
         category,
-        price // Include category in the new meal object
+        price
     });
 
     try {
@@ -309,7 +310,7 @@ app.get('/menu', async (req, res) => {
 // Route to handle adding multiple items from cart to MongoDB
 app.post('/api/add-items', async (req, res) => {
     try {
-        const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
+        const cartItems = req.body.cartItems;
         const phone = req.body.phone;
         const location = req.body.location;
 
@@ -319,10 +320,10 @@ app.post('/api/add-items', async (req, res) => {
         const itemsToInsert = cartItems.map(item => ({
             name: item.name,
             description: item.description,
-            image: item.image || '', // Optional image property
+            image: item.image || '',
             quantity: item.quantity,
             price: item.price,
-            category: item.category, // Assuming each item has a category property
+            category: item.category,
             state: 'online', // Default state for new items
             customerPhone: phone,
             orderId: orderId,
@@ -335,13 +336,13 @@ app.post('/api/add-items', async (req, res) => {
         res.status(201).json({"orderId": createdItems[0].orderId}); // Respond with created items in JSON format
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Server error' }); // Handle server errors
+        res.status(500).json({ error: 'Server error' });
     }
 });
 
 app.post('/api/add-order', async (req, res) => {
     try {
-        const cartItems = req.body.cartItems; // Assuming cart items are sent in an array in req.body.cartItems
+        const cartItems = req.body.cartItems;
         const workID = req.body.workID;
         const tableNumber = req.body.tableNumber;
 
@@ -352,14 +353,14 @@ app.post('/api/add-order', async (req, res) => {
         const itemsToInsert = cartItems.map(item => ({
             name: item.name,
             description: item.description,
-            image: item.image || '', // Optional image property
+            image: item.image || '',
             quantity: item.quantity,
             price: item.price,
-            category: item.category, // Assuming each item has a category property
-            state: 'venue', // Default state for new items
+            category: item.category,
+            state: 'venue',
             customerPhone: workID,
             tableNumber: tableNumber,
-            orderId: orderId // Assign the same UUID to each item
+            orderId: orderId
         }));
 
         // Insert all items into MongoDB using create() method
@@ -368,7 +369,7 @@ app.post('/api/add-order', async (req, res) => {
         res.status(201).json(createdItems); // Respond with created items in JSON format
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Server error' }); // Handle server errors
+        res.status(500).json({ error: 'Server error' });
     }
 });
 
@@ -802,10 +803,7 @@ app.delete('/employees/:id', async (req, res) => {
     }
 });
 
-const OrderHistory = require('./models/orderHistory'); // Your Mongoose model for order history
 
-// Middleware
-app.use(express.json()); // For parsing application/json
 
 // Route to save order history
 app.post('/api/order-history', async (req, res) => {
