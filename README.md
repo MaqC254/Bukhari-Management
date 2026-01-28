@@ -1,3 +1,5 @@
+THIS PROJECT IS NOW AVAILABLE TO VIEW ON: https://bukhari-management.onrender.com
+
 
 # Bukhari Restaurant Management System
 ## Overview
